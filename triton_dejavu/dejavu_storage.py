@@ -73,7 +73,6 @@ def _get_cache_template(fn, configs_len=0, autotuner_keys=None):
     }
     return ret
 
-
 def _create_config_args(v):
     vlist = v.split(", ")
     ret = {"kwargs": {}}
@@ -141,6 +140,11 @@ def _get_folder_name(fn_name, fn_hash, configs_hash, key_hash, param_hash):
     folder_tree_name = f"{fn_name}/autotune_config-{param_hash}/code_version-{fn_hash_256}/tune_features-{key_hash}/kernel_configs-{configs_hash}/{storage_tag}"
     return folder_tree_name
 
+def _get_folder_name_all(fn_name, fn_hash, configs_hash, key_hash, param_hash):
+    storage_tag = get_storage_tag()
+    fn_hash_256 = get_string_hash(f"{fn_hash}")
+    folder_tree_name = f"{fn_name}/autotune_config-{param_hash}/code_version-{fn_hash_256}/tune_features-{key_hash}/kernel_configs-{configs_hash}/all/{storage_tag}"
+    return folder_tree_name
 
 def get_config_list_hash(configs):
     # sorted_configs = configs.sort()
@@ -183,10 +187,13 @@ class DejavuStorage:
         for folder_name in self.fn_storage:
             file_name = self._get_cache_file_path(folder_name)
             dir_name = os.path.dirname(file_name)
+            print(f'Folder name in the store function is {folder_name} *** file name is {file_name} dir name is {dir_name}')
             create_dir_if_not_exist_recursive(dir_name)
             if file_name not in self._known_files:
+                print(f"file name is not known {file_name}")
                 self._known_files.append(file_name)
             with open(file_name, "w") as f:
+                print(f"Dumping all {self.fn_storage[folder_name]}")
                 json.dump(self.fn_storage[folder_name], f, indent=4)
             try:
                 os.chmod(file_name, 0o0777)
@@ -218,6 +225,7 @@ class DejavuStorage:
 
     def _get_cache_file_prefix(self, folder_name):
         if folder_name in self.folder_name_to_storage_path:
+            print(f"folder name in get cache file prefix {folder_name}")
             if flag_print_debug_verbose:
                 print(
                     f"[triton-dejavu] Using {self.folder_name_to_storage_path[folder_name]} as custom dejavu storage path for {folder_name}."
@@ -230,6 +238,55 @@ class DejavuStorage:
             self._get_cache_file_prefix(folder_name), folder_name, "cache.json"
         )
         return file_name
+    
+    def store_all_config_results(self, cache, all_timings, fn, configs_hash, key_hash, param_hash, configs_len, bench_time, use_cuda_graph, autotuner_keys):
+        fn_hash = _get_weak_fn_hash(fn)
+        fn_name = str(fn).split(":")[1][:-1]
+        folder_name = _get_folder_name(
+            fn_name, fn_hash, configs_hash, key_hash, param_hash
+        )
+        print(f"Folder name all is {folder_name}")
+        if folder_name not in self.fn_storage:
+            cache_json = _get_cache_template(fn, configs_len, autotuner_keys)
+            tmp_used_configs = []
+        else:
+            # TODO: reload content to avoid overwriting in case of parallel processes?
+            cache_json = self.fn_storage[folder_name]
+            tmp_used_configs = self.used_configs[folder_name]
+        changes_made = False
+        timings_data = None
+        for key, config in cache.items():
+            print(f"******** {key} and {config}")
+            if str(key) in cache_json["cache"]:
+                continue
+            # compatability with cuda stream feature of triton 3
+            vals = all_timings[key] # A list of config and time 
+
+            for item in vals:
+                item['config'] = str(item['config'])
+
+            print(f"number of values if {len(vals)} and the first is {vals[0]}")
+
+            if float("inf") in [item['time'] for item in vals]:
+                continue
+            #cache_json["cache"][str(key)] = str(config)
+            #cache_json["cache"].append(str(key))
+            cache_json["timings"][str(key)] = vals
+            cache_json["evaluated_configs"] = configs_len
+            if config not in tmp_used_configs:
+                tmp_used_configs.append(config)
+            changes_made = True
+            if flag_print_debug:
+                print(
+                    f"[triton-dejavu] added {str(config)} for {folder_name} and key {key}"
+                )
+        if changes_made:
+            #cache_json["timings_data"] = timings_data
+            cache_json["total_bench_time_s"] += bench_time
+            cache_json["keys"] = autotuner_keys
+            self.fn_storage[folder_name] = cache_json
+            self.used_configs[folder_name] = tmp_used_configs
+            self.__store__()
 
     def add_autotuner_cache(
         self,
@@ -251,11 +308,14 @@ class DejavuStorage:
         folder_name = _get_folder_name(
             fn_name, fn_hash, configs_hash, key_hash, param_hash
         )
+        print(f'the function name is {fn}, hash is {fn_hash}, name is {fn_name}, and folder name {folder_name}')
         if folder_name not in self.fn_storage:
+            print(f"Entered not in storage {self.fn_storage}")
             cache_json = _get_cache_template(fn, configs_len, autotuner_keys)
             tmp_used_configs = []
         else:
             # TODO: reload content to avoid overwriting in case of parallel processes?
+            print("Entered in storage")
             cache_json = self.fn_storage[folder_name]
             tmp_used_configs = self.used_configs[folder_name]
         changes_made = False
@@ -297,6 +357,7 @@ class DejavuStorage:
             cache_json["keys"] = autotuner_keys
             self.fn_storage[folder_name] = cache_json
             self.used_configs[folder_name] = tmp_used_configs
+            print("Now we are about to store")
             self.__store__()
 
     def restore_autotuner_cache(
