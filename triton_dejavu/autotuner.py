@@ -778,8 +778,6 @@ class Autotuner(KernelInterface):
                 config = self.configs[0]
             self.best_config = config
             if not used_cached_result:
-                global_dejavu_storage.dump_storage()
-                print(f"Using add autotuner cache")
                 global_dejavu_storage.store_all_config_results(
                     self.cache,
                     self.all_timings,
@@ -792,21 +790,20 @@ class Autotuner(KernelInterface):
                     self.use_cuda_graph,
                     self.orig_keys
                 )
-                print(f"DOne doing some stuff")
-                # global_dejavu_storage.add_autotuner_cache(
-                #     self.cache,
-                #     self.fn,
-                #     self.configs_hash,
-                #     self.key_hash,
-                #     self._param_hash,
-                #     self.configs_len,
-                #     self._timings,
-                #     self.rep_t,
-                #     self.warmup_t,
-                #     self.bench_time,
-                #     self.use_cuda_graph,
-                #     self.orig_keys,
-                # )
+                global_dejavu_storage.add_autotuner_cache(
+                    self.cache,
+                    self.fn,
+                    self.configs_hash,
+                    self.key_hash,
+                    self._param_hash,
+                    self.configs_len,
+                    self._timings,
+                    self.rep_t,
+                    self.warmup_t,
+                    self.bench_time,
+                    self.use_cuda_graph,
+                    self.orig_keys,
+                )
                 if flag_print_autotuning:
                     print(
                         f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] "
