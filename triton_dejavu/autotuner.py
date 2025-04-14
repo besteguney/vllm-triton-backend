@@ -211,6 +211,7 @@ class Autotuner(KernelInterface):
         while not inspect.isfunction(self.base_fn):
             self.base_fn = self.base_fn.fn
         self._timings = {}
+        self.all_timings = {}
         if triton_major_version >= 3:
             self.use_cuda_graph = use_cuda_graph and torch.cuda.is_available()
             self.benchmarking_stream = (
@@ -756,6 +757,11 @@ class Autotuner(KernelInterface):
                                 f"All autotune examples failed (timing is {self._timings[key]})."
                             )
                         self.configs_timings = timings
+                        self.all_timings[key] = []
+
+                        for cfg in pruned_configs:
+                            self.all_timings[key].append({"config": cfg, "time": timings[cfg]}) 
+
                         self.pre_hook(args, reset_only=True)
                     else:
                         self.cache[key] = self._fallback_call(key_orig)
@@ -772,6 +778,18 @@ class Autotuner(KernelInterface):
                 config = self.configs[0]
             self.best_config = config
             if not used_cached_result:
+                global_dejavu_storage.store_all_config_results(
+                    self.cache,
+                    self.all_timings,
+                    self.fn,
+                    self.configs_hash,
+                    self.key_hash,
+                    self._param_hash,
+                    self.configs_len,
+                    self.bench_time,
+                    self.use_cuda_graph,
+                    self.orig_keys
+                )
                 global_dejavu_storage.add_autotuner_cache(
                     self.cache,
                     self.fn,
