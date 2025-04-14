@@ -471,7 +471,8 @@ class Autotuner(KernelInterface):
                 else [float("inf"), float("inf"), float("inf")]
             )
 
-    def _run_benchmarks(self, *args, configs, **kwargs):
+    def _run_benchmarks(self, *args, configs, key, **kwargs):
+        self.all_timings.setdefault(key, [])
         if self._use_split_cache:
             self._update_triton_cache_path()
         if flag_print_debug:
@@ -479,10 +480,23 @@ class Autotuner(KernelInterface):
                 f"[triton-dejavu] [{time.strftime('%Y-%m-%d %H:%M:%S')}]  Started benchmarking of {len(configs)} configurations... (use_bo: {self.use_bo}, run: {self.run_id})"
             )
         if not self.use_bo and not self.use_random_search:
-            timings = {
-                config: self._bench(*args, config=config, **kwargs)
-                for config in configs
-            }
+            timings = {}
+            for config in configs:
+                result = self._bench(*args, config=config, **kwargs)
+                self.all_timings[key].append({"config": config, "time": result}) 
+                global_dejavu_storage.store_all_config_results(self.cache, self.all_timings, key, self.fn,
+                    self.configs_hash,
+                    self.key_hash,
+                    self._param_hash,
+                    self.configs_len,
+                    self.bench_time,
+                    self.use_cuda_graph,
+                    self.orig_keys)
+                timings[config] = result
+            # timings = {
+            #     config: self._bench(*args, config=config, **kwargs)
+            #     for config in configs
+            # }
             best_config = builtins.min(timings, key=timings.get)
 
         elif self.use_bo:
@@ -731,7 +745,7 @@ class Autotuner(KernelInterface):
                         pruned_configs = self.prune_configs(kwargs)
                         bench_start = time.time()
                         timings, best_config = self._run_benchmarks(
-                            *args, configs=pruned_configs, **kwargs
+                            *args, configs=pruned_configs, key=key, **kwargs
                         )
                         bench_end = time.time()
                         self.bench_time = bench_end - bench_start
@@ -757,10 +771,6 @@ class Autotuner(KernelInterface):
                                 f"All autotune examples failed (timing is {self._timings[key]})."
                             )
                         self.configs_timings = timings
-                        self.all_timings[key] = []
-
-                        for cfg in pruned_configs:
-                            self.all_timings[key].append({"config": cfg, "time": timings[cfg]}) 
 
                         self.pre_hook(args, reset_only=True)
                     else:
@@ -778,18 +788,6 @@ class Autotuner(KernelInterface):
                 config = self.configs[0]
             self.best_config = config
             if not used_cached_result:
-                global_dejavu_storage.store_all_config_results(
-                    self.cache,
-                    self.all_timings,
-                    self.fn,
-                    self.configs_hash,
-                    self.key_hash,
-                    self._param_hash,
-                    self.configs_len,
-                    self.bench_time,
-                    self.use_cuda_graph,
-                    self.orig_keys
-                )
                 global_dejavu_storage.add_autotuner_cache(
                     self.cache,
                     self.fn,

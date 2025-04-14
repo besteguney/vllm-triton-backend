@@ -62,11 +62,12 @@ __config_args__ = (
 __skip_config_args__ = ["enable_persistent"]
 
 
-def _get_cache_template(fn, configs_len=0, autotuner_keys=None):
+def _get_cache_template(fn, configs_len=0, evaluated_configs_len=0, autotuner_keys=None):
     ret = {
         "signature": str(fn),
         "total_bench_time_s": 0.0,
-        "evaluated_configs": configs_len,
+        "total_configs": configs_len,
+        "evaluated_configs": evaluated_configs_len,
         "keys": autotuner_keys,
         "cache": {},
         "timings": {},
@@ -234,7 +235,50 @@ class DejavuStorage:
         )
         return file_name
 
-    def store_all_config_results(self, cache, all_timings, fn, configs_hash, key_hash, param_hash, configs_len, bench_time, use_cuda_graph, autotuner_keys):
+    # def store_all_config_results(self, cache, all_timings, fn, configs_hash, key_hash, param_hash, configs_len, bench_time, use_cuda_graph, autotuner_keys):
+    #     fn_hash = _get_weak_fn_hash(fn)
+    #     fn_name = str(fn).split(":")[1][:-1]
+    #     folder_name = _get_folder_name(
+    #         fn_name, fn_hash, configs_hash, key_hash, param_hash
+    #     )
+    #     if folder_name not in self.all_storage:
+    #         all_json = _get_cache_template(fn, configs_len, autotuner_keys)
+    #         tmp_used_configs = []
+    #     else:
+    #         all_json = self.all_storage[folder_name]
+    #         tmp_used_configs = self.used_configs[folder_name]
+    #     changes_made = False
+    #     for key, config in cache.items():
+    #         # if str(key) in all_json["cache"]:
+    #         #     continue
+    #         # compatability with cuda stream feature of triton 3
+    #         vals = all_timings[key] # A list of config and time 
+    #         for item in vals:
+    #             item['config'] = str(item['config'])
+
+    #         if float("inf") in [item['time'] for item in vals]:
+    #             continue
+    #         #TODO: Store the key values in the cache field
+    #         #cache_json["cache"][str(key)] = str(config)
+    #         #cache_json["cache"].append(str(key))
+    #         all_json["timings"][str(key)] = vals
+    #         all_json["evaluated_configs"] = configs_len
+    #         if config not in tmp_used_configs:
+    #             tmp_used_configs.append(config)
+    #         changes_made = True
+    #         if flag_print_debug:
+    #             print(
+    #                 f"[triton-dejavu] added {str(config)} for {folder_name} and key {key}"
+    #             )
+    #     if changes_made:
+    #         all_json["total_bench_time_s"] += bench_time
+    #         all_json["keys"] = autotuner_keys
+    #         self.all_storage[folder_name] = all_json
+    #         self.used_configs[folder_name] = tmp_used_configs
+    #         print("Now we are about to store all configurations")
+    #         self.__store__(is_all_config=True)
+
+    def store_all_config_results(self, cache, all_timings, key, fn, configs_hash, key_hash, param_hash, configs_len, bench_time, use_cuda_graph, autotuner_keys):
         fn_hash = _get_weak_fn_hash(fn)
         fn_name = str(fn).split(":")[1][:-1]
         folder_name = _get_folder_name(
@@ -247,28 +291,21 @@ class DejavuStorage:
             all_json = self.all_storage[folder_name]
             tmp_used_configs = self.used_configs[folder_name]
         changes_made = False
-        for key, config in cache.items():
-            # if str(key) in all_json["cache"]:
-            #     continue
-            # compatability with cuda stream feature of triton 3
+        if key not in cache.items() or len(cache[key]) < len(all_timings[key]):
+            changes_made = True
             vals = all_timings[key] # A list of config and time 
             for item in vals:
                 item['config'] = str(item['config'])
-
-            if float("inf") in [item['time'] for item in vals]:
-                continue
-            #TODO: Store the key values in the cache field
-            #cache_json["cache"][str(key)] = str(config)
-            #cache_json["cache"].append(str(key))
+                if item['config'] not in tmp_used_configs:
+                    tmp_used_configs.append(item['config'])
+                    if flag_print_debug:
+                        print(
+                            f"[triton-dejavu] added {str(item['config'])} for {folder_name} and key {key}"
+                        )
             all_json["timings"][str(key)] = vals
-            all_json["evaluated_configs"] = configs_len
-            if config not in tmp_used_configs:
-                tmp_used_configs.append(config)
-            changes_made = True
-            if flag_print_debug:
-                print(
-                    f"[triton-dejavu] added {str(config)} for {folder_name} and key {key}"
-                )
+            all_json["total_configurations"] = configs_len
+            all_json["evaluated_configs"] = len(all_timings[key])
+            
         if changes_made:
             all_json["total_bench_time_s"] += bench_time
             all_json["keys"] = autotuner_keys
@@ -276,7 +313,7 @@ class DejavuStorage:
             self.used_configs[folder_name] = tmp_used_configs
             print("Now we are about to store all configurations")
             self.__store__(is_all_config=True)
-
+    
     def add_autotuner_cache(
         self,
         cache,
