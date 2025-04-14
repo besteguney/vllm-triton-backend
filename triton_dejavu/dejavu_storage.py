@@ -260,7 +260,7 @@ class DejavuStorage:
                             f"[triton-dejavu] added {str(item['config'])} for {folder_name} and key {key}"
                         )
             all_json["timings"][str(key)] = vals
-            all_json["total_configurations"] = configs_len
+            all_json["total_configs"] = configs_len
             all_json["current_eval"][str(key)] = len(all_timings[key])
             
         if changes_made:
@@ -325,7 +325,7 @@ class DejavuStorage:
                 continue
             cache_json["cache"][str(key)] = str(config)
             cache_json["timings"][str(key)] = vals
-            cache_json["evaluated_configs"] = configs_len
+            cache_json["total_configs"] = configs_len
             if config not in tmp_used_configs:
                 tmp_used_configs.append(config)
             changes_made = True
