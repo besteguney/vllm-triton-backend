@@ -370,6 +370,7 @@ class DejavuStorage:
             self.all_storage[folder_name] = all_json
             self.used_configs[folder_name] = []
             self.__store__()
+            self.__store__(True)
             return {}
         if cache_file not in self._known_files:
             self._known_files.append(cache_file)
