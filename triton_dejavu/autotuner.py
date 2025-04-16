@@ -443,7 +443,7 @@ class Autotuner(KernelInterface):
                 run_id=self.run_id,
                 path_prefix=str(self._obj_hash),
             )
-            return bench_res
+            return bench_res, kernel_call_obj.compile_time
         except (
             OutOfResources,
             CompileTimeAssertionFailure,
@@ -482,8 +482,8 @@ class Autotuner(KernelInterface):
         if not self.use_bo and not self.use_random_search:
             timings = {}
             for config in configs:
-                result = self._bench(*args, config=config, **kwargs)
-                self.all_timings[key].append({"config": config, "time": result}) 
+                result, compile_time = self._bench(*args, config=config, **kwargs)
+                self.all_timings[key].append({"config": config, "runtime": result, 'compile_time': compile_time}) 
                 global_dejavu_storage.store_all_config_results(self.cache, self.all_timings, key, self.fn,
                     self.configs_hash,
                     self.key_hash,
@@ -535,7 +535,7 @@ class Autotuner(KernelInterface):
                 # Necessary to avoid persistent RuntimeErrors
                 # args_copy = [a.clone() if isinstance(a, torch.Tensor) else a for a in args]
                 # bench_timings = self._bench(*args_copy, config=triton_config, **kwargs)
-                bench_timings = self._bench(*args, config=triton_config, **kwargs)
+                bench_timings, compile_time = self._bench(*args, config=triton_config, **kwargs)
                 print(f"_bench returned {bench_timings}")
                 # if self.use_cuda_graph:
                 if self.quantiles is None:
@@ -657,7 +657,7 @@ class Autotuner(KernelInterface):
                 for ci in random_search_list:
                     this_config = self.configs[ci]
                     print(f"\ntesting {this_config}")
-                    bench_timings = self._bench(*args, config=this_config, **kwargs)
+                    bench_timings, compile_time = self._bench(*args, config=this_config, **kwargs)
                     print(f"_bench returned {bench_timings}")
                     timings[this_config] = bench_timings
                     if self.quantiles is None:
