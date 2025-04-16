@@ -284,7 +284,7 @@ class Autotuner(KernelInterface):
                 self.key_hash,
                 self._param_hash,
             )
-        self.cache = global_dejavu_storage.restore_autotuner_cache(
+        self.cache, self.partial_configs = global_dejavu_storage.restore_autotuner_cache(
             fn,
             self.configs_hash,
             self.key_hash,
@@ -481,7 +481,16 @@ class Autotuner(KernelInterface):
             )
         if not self.use_bo and not self.use_random_search:
             timings = {}
-            for config in configs:
+
+            computed_configs = []
+            if key in self.partial_configs:
+                for val in self.partial_configs[key]:
+                    self.all_timings[key].append(val) 
+                    computed_configs.append(val['config'])
+
+            computed_configs = [_all_kwargs(v) for v in computed_configs]
+            filtered_list = [item for item in configs if _all_kwargs(item) not in computed_configs]
+            for config in filtered_list:
                 result, compile_time = self._bench(*args, config=config, **kwargs)
                 self.all_timings[key].append({"config": config, "runtime": result, 'compile_time': compile_time}) 
                 global_dejavu_storage.store_all_config_results(self.cache, self.all_timings, key, self.fn,

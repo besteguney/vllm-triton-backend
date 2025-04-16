@@ -177,6 +177,7 @@ class DejavuStorage:
         self.measured_timings = {}
         self._known_files = []
         self.used_configs = {}
+        self.partial_results = []
         self.folder_name_to_storage_path = {}
 
     def __store__(self, is_all_config=False):
@@ -364,7 +365,7 @@ class DejavuStorage:
             self.used_configs[folder_name] = []
             self.__store__()
             self.__store__(True)
-            return {}
+            return {}, {}
         if cache_file not in self._known_files:
             self._known_files.append(cache_file)
         if all_config_cache not in self._known_files:
@@ -377,8 +378,12 @@ class DejavuStorage:
         self.all_storage[folder_name] = all_json
         ret = {}
         tmp_used_configs = []
+        partial_configs = {}
+        key_list = []     
+
         for k, v in cache_json["cache"].items():
             kt = _create_tuple(k)
+            key_list.append(kt)
             va = _create_config_args(v)
             if all_pre_hook is not None:
                 va["pre_hook"] = all_pre_hook
@@ -391,11 +396,21 @@ class DejavuStorage:
                     f"[triton-dejavu] restored {str(c)} for {folder_name} and key {kt}"
                 )
         self.used_configs[folder_name] = tmp_used_configs
+
+        for k, v in all_json['timings'].items():
+            kt = _create_tuple(k)
+            if kt not in key_list:
+                print("KT NOT THERERE")
+                partial_configs[kt] = []
+                for val in v:
+                    va = _create_config_args(val['config'])
+                    partial_configs[kt].append({'config': triton.Config(**va), 'runtime': val['runtime'], 'compile_time': val['compile_time']})
+                    # partial_configs[kt].append(val)
         if flag_print_debug:
             print(
                 f"[triton-dejavu] restored {len(ret)} configurations for {folder_name}."
             )
-        return ret
+        return ret, partial_configs
 
     def get_used_configs(self, fn, configs_hash, key_hash, param_hash):
         fn_hash = _get_weak_fn_hash(fn)
