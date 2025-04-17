@@ -735,8 +735,8 @@ select_prepare_informed_fallback = lambda: _select_informed_fallback()[1]
 @triton_dejavu.autotune(
     config_space=triton_dejavu.ConfigSpace(
         {
-            "BLOCK_M": [16, 32, 64, 128, 256],
-            "BLOCK_N": [16, 32, 64, 128, 256],
+            "BLOCK_M": [16],
+            "BLOCK_N": [16],
             "PRE_LOAD_V": [True, False],
             "GRID_CU_MULTIP": [2],  # only relevant for persistent
         },

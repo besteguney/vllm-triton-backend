@@ -79,8 +79,8 @@ SEEDS = [0]
 
 #BATCH_SIZES = [1, 2, 4, 8, 16, 32, 64, 128]
 # BATCH_SIZES = [128]
-# BATCH_SIZES = [64]
-BATCH_SIZES = [1]
+BATCH_SIZES = [64]
+# BATCH_SIZES = [4]
 # BATCH_SIZES = [1, 2, 4, 8, 16, 32, 64, 128, 256]
 # BATCH_SIZES = [1, 2, 3, 4, 5, 7, 8, 12, 16, 32, 64, 128]
 
@@ -90,7 +90,7 @@ NUM_HEADS = [(32, 8)]
 # NUM_HEADS = [(32, 32)]
 
 # SEQUENCE_LENGTHS = [16, 32, 64, 128, 512, 1024, 2048, 4096]
-SEQUENCE_LENGTHS = [16]
+SEQUENCE_LENGTHS = [8]
 # SEQUENCE_LENGTHS = [64]
 # SEQUENCE_LENGTHS = [16, 17]
 # SEQUENCE_LENGTHS = [4096]
@@ -516,7 +516,7 @@ def test_decode_attention(
             }
 
             if torch.version.hip and implementation == Implementation.FLASH_ATTN:
-                record['implementation'] = 'Implementation.ROCM_FLASH_ATTN'
+                record["implementation"] = "Implementation.ROCM_FLASH_ATTN"
 
             pytest.global_pds[my_name] = pd.concat(
                 [pytest.global_pds[my_name], pd.Series(record).to_frame().T]
@@ -801,9 +801,9 @@ def test_prefill_attention(
                 "proton_util_bw": proton_util_bw,
                 "captured": captured,
             }
-            
+
             if torch.version.hip and implementation == Implementation.FLASH_ATTN:
-                record['implementation'] = 'Implementation.ROCM_FLASH_ATTN'
+                record["implementation"] = "Implementation.ROCM_FLASH_ATTN"
 
             pytest.global_pds[my_name] = pd.concat(
                 [pytest.global_pds[my_name], pd.Series(record).to_frame().T]
