@@ -735,8 +735,8 @@ select_prepare_informed_fallback = lambda: _select_informed_fallback()[1]
 @triton_dejavu.autotune(
     config_space=triton_dejavu.ConfigSpace(
         {
-            "BLOCK_M": [16, 32, 64, 128, 256],
-            "BLOCK_N": [16, 32, 64, 128, 256],
+            "BLOCK_M": [16],
+            "BLOCK_N": [16],
             "PRE_LOAD_V": [True, False],
             "GRID_CU_MULTIP": [2],  # only relevant for persistent
         },
@@ -749,8 +749,8 @@ select_prepare_informed_fallback = lambda: _select_informed_fallback()[1]
             # lambda kwarg: kwarg['PRE_LOAD_V'] == True or 'H100' in gpu_name,   # to ensure pre load for all other GPUs
             lambda kwarg: kwarg["BLOCK_N"] >= 32 or "H100" not in gpu_name,
         ],
-        num_warps=[2, 4, 8],
-        num_stages=[1, 2, 4, 6, 8],
+        num_warps=[2**i for i in range(2)],
+        num_stages=[1],
         num_ctas=[1],  # although supported by H100, it causes a segfault if >1
         # TODO: add warp specialization parameters
     ),
@@ -786,7 +786,7 @@ select_prepare_informed_fallback = lambda: _select_informed_fallback()[1]
         "MAX_SEQLENS_K",
         "VARLEN",
         "ACTUAL_BLOCK_DMODEL",
-        # 'BATCH_SIZE'
+        #'BATCH_SIZE'
     ],
     # verbose=False,
     use_cuda_graph=True,
