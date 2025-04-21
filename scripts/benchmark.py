@@ -126,7 +126,7 @@ CAUSAL_FLASH = [True]  # vLLM only needs causal=True
 PROMPT_PATTERNS = []
 PROMPT_PATTERNS.append([1.0])
 # PROMPT_PATTERNS.append([1.0, 0.4, 0.5, 1.0, 0.2])
-PROMPT_PATTERNS.append([0.1, 0.4, 0.5, 1.0, 0.2])
+#PROMPT_PATTERNS.append([0.1, 0.4, 0.5, 1.0, 0.2])
 
 impl_translate = {i.name: i.value for i in Implementation}
 method_translate = {i.name: i.value for i in BenchmarkMode}
