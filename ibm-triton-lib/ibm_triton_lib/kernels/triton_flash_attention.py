@@ -711,7 +711,7 @@ def prepare_informed_fallback(cache):
 use_bo = lambda: os.getenv("NGL_EXP_USE_BO", "0") == "1"
 use_random = lambda: os.getenv("NGL_EXP_USE_RANDOM_SEARCH", "0") == "1"
 bo_time = lambda: int(os.getenv("NGL_EXP_BO_TIME", "360"))
-
+flash_preload = os.getenv("TRITON_FLASH_PRELOAD") 
 
 def _select_informed_fallback():
     fallback_mode = os.getenv("NGL_EXP_FALLBACK", "none")
@@ -731,13 +731,12 @@ select_fallback_heuristic = lambda: (
 select_informed_fallback = lambda: _select_informed_fallback()[0]
 select_prepare_informed_fallback = lambda: _select_informed_fallback()[1]
 
-
 @triton_dejavu.autotune(
     config_space=triton_dejavu.ConfigSpace(
         {
-            "BLOCK_M": [16],
-            "BLOCK_N": [16],
-            "PRE_LOAD_V": [True, False],
+            "BLOCK_M": [16, 32, 64, 128, 256],
+            "BLOCK_N": [16, 32, 64, 128, 256],
+            "PRE_LOAD_V": [flash_preload == '0'],
             "GRID_CU_MULTIP": [2],  # only relevant for persistent
         },
         kwarg_conditions=[
@@ -749,8 +748,8 @@ select_prepare_informed_fallback = lambda: _select_informed_fallback()[1]
             # lambda kwarg: kwarg['PRE_LOAD_V'] == True or 'H100' in gpu_name,   # to ensure pre load for all other GPUs
             lambda kwarg: kwarg["BLOCK_N"] >= 32 or "H100" not in gpu_name,
         ],
-        num_warps=[2**i for i in range(2)],
-        num_stages=[1],
+        num_warps=[2**i for i in range(5)],
+        num_stages=list(range(1,9)),
         num_ctas=[1],  # although supported by H100, it causes a segfault if >1
         # TODO: add warp specialization parameters
     ),
@@ -880,7 +879,6 @@ def attn_fwd(
     PRE_LOAD_V: tl.constexpr,
     GRID_CU_MULTIP: tl.constexpr,
 ):
-
     if PERSISTENT:  # if persistent, kernel loops over multiple tiles
         NUM_WG = NUM_CU * GRID_CU_MULTIP  # number of workgroups launched
         num_tiles_per_head = tl.cdiv(

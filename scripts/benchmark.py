@@ -112,11 +112,11 @@ PREFIX_PREFILL_SHARE_OF_PARTIAL_PREFILL = [0.5]
 # PREFIX_PREFILL_SHARE_OF_PARTIAL_PREFILL = [0.0]
 
 # HEAD_SIZES_FLASH = [32, 64, 128]  # only powers of 2!
-HEAD_SIZES = [128]  # only powers of 2! for llama2 & 3
+HEAD_SIZES = [32, 64, 128]  # only powers of 2! for llama2 & 3
 # head_size * head_numbers = hidden_size
 
 # BLOCK_SIZES = [8, 16, 32]
-BLOCK_SIZES = [16]
+BLOCK_SIZES = [8, 16, 32]
 # NUM_BLOCKS = [8, 16, 32]
 NUM_BLOCKS = [4321]  # "arbitrary values for testing..."
 
@@ -126,7 +126,7 @@ CAUSAL_FLASH = [True]  # vLLM only needs causal=True
 PROMPT_PATTERNS = []
 PROMPT_PATTERNS.append([1.0])
 # PROMPT_PATTERNS.append([1.0, 0.4, 0.5, 1.0, 0.2])
-#PROMPT_PATTERNS.append([0.1, 0.4, 0.5, 1.0, 0.2])
+PROMPT_PATTERNS.append([0.1, 0.4, 0.5, 1.0, 0.2])
 
 impl_translate = {i.name: i.value for i in Implementation}
 method_translate = {i.name: i.value for i in BenchmarkMode}
