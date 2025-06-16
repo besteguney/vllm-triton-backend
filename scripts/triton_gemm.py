@@ -249,7 +249,7 @@ def make_matmul_kernel(configurations):
     key=['M', 'N', 'K'],
     use_cuda_graph=True,
     custom_data_storage=os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "gemm_data_lhs_1000")
+        os.path.join(os.path.dirname(__file__), "gemm_data_lhs_10_50")
     ),
     )
     @triton.jit
@@ -454,7 +454,7 @@ def matmul(a, b, configurations, activation=""):
             ACTIVATION=activation  #
         )
     except Exception as e:
-        print("Could not run the kernel.")
+        print(f"Could not run the kernel exception is {e}", )
     return c
 
 

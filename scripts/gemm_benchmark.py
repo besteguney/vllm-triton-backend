@@ -56,4 +56,5 @@ for m, n, k in sampled_dim_combinations:
     triton_output = matmul(a, b, configurations)
     print("Ending matrix multiplication")
     configurations = []
-    # print(f"m={m}, n={n}, k={k}")
+
+            

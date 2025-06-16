@@ -1,0 +1,971 @@
+{
+    "signature": "JITFunction(triton_gemm:matmul_kernel)",
+    "total_bench_time_s": 181972.9311554432,
+    "total_configs": 100,
+    "current_eval": {},
+    "keys": [
+        "M",
+        "N",
+        "K"
+    ],
+    "cache": {
+        "('256', '256', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 4, num_warps: 4, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '256', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 16, num_warps: 4, num_ctas: 1, num_stages: 6, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '256', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 16, num_warps: 4, num_ctas: 1, num_stages: 6, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '256', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 16, num_warps: 4, num_ctas: 1, num_stages: 6, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '256', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 16, num_warps: 4, num_ctas: 1, num_stages: 6, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '512', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 64, GROUP_SIZE_M: 4, num_warps: 4, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '512', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 8, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '512', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 8, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '512', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 8, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '512', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 8, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '512', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 8, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '1024', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 64, GROUP_SIZE_M: 2, num_warps: 4, num_ctas: 1, num_stages: 6, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '1024', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 64, GROUP_SIZE_M: 2, num_warps: 4, num_ctas: 1, num_stages: 6, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '1024', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 8, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '1024', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 8, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '2048', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 2, num_warps: 8, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '2048', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 2, num_warps: 8, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '2048', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '2048', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 2, num_warps: 8, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '4096', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '4096', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 2, num_warps: 8, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '4096', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '4096', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 2, num_warps: 8, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '4096', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 2, num_warps: 8, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '4096', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '8192', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '8192', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '8192', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '8192', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '8192', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('257', '5377', '600', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 256, BLOCK_SIZE_K: 16, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('333', '1600', '6667', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 2, num_warps: 4, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('384', '3600', '3600', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 2, num_warps: 4, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('411', '1537', '3201', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 16, GROUP_SIZE_M: 4, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '256', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 8, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '256', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 8, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '256', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 8, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '256', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 8, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '256', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 8, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '512', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 64, GROUP_SIZE_M: 4, num_warps: 4, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '512', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 64, GROUP_SIZE_M: 2, num_warps: 4, num_ctas: 1, num_stages: 6, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '512', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 64, GROUP_SIZE_M: 4, num_warps: 4, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '512', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 8, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '1024', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 2, num_warps: 8, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '1024', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 2, num_warps: 8, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '1024', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 2, num_warps: 8, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '1024', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '1024', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '2048', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '2048', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '2048', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '2048', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '2048', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '2401', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 16, GROUP_SIZE_M: 2, num_warps: 32, num_ctas: 1, num_stages: 6, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '3073', '1920', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 16, GROUP_SIZE_M: 4, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '4096', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '4096', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '4096', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '4096', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '4096', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '4096', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '5760', '1801', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 16, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '8001', '5377', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '8192', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '8192', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '8192', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '8192', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '8192', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('701', '1024', '1600', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 2, num_warps: 2, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('701', '1111', '3841', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 16, GROUP_SIZE_M: 8, num_warps: 1, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('701', '3841', '5377', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 16, GROUP_SIZE_M: 4, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '256', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 64, GROUP_SIZE_M: 2, num_warps: 4, num_ctas: 1, num_stages: 6, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '256', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 64, GROUP_SIZE_M: 4, num_warps: 4, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '256', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 64, GROUP_SIZE_M: 4, num_warps: 4, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '256', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 8, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '256', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 8, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '512', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 2, num_warps: 8, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '512', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 2, num_warps: 8, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '512', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '512', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 2, num_warps: 8, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '555', '900', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 16, GROUP_SIZE_M: 4, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '1024', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '1024', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '1024', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '1024', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '1024', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '2048', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '2048', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '2048', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '2048', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '2048', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '4096', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '4096', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '4096', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '4096', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '4096', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '4096', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '8001', '701', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '8192', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '8192', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '8192', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '8192', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '8192', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '8192', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1200', '5760', '2880', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1303', '1537', '333', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1303', '1920', '1920', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1400', '3841', '8191', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1537', '8191', '5760', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1600', '1600', '7001', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 2, num_warps: 4, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1600', '4353', '4800', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 256, BLOCK_SIZE_K: 16, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1729', '2703', '5377', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1801', '8191', '3201', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1920', '900', '2305', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '256', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '256', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '256', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '256', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '256', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 2, num_warps: 8, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '256', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '512', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '512', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '512', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '512', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '512', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '512', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '1024', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '1024', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '1024', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '1024', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '1024', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '2048', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '2048', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '2048', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '2048', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '2048', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '4096', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '4096', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '4096', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '4096', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '5760', '1400', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 256, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 6, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '8192', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '8192', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '8192', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '8192', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '8192', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '8192', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2305', '300', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 16, GROUP_SIZE_M: 4, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2305', '7681', '6145', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2401', '4353', '4800', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2561', '1024', '2561', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 2, num_warps: 4, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2880', '257', '3600', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 16, GROUP_SIZE_M: 4, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2880', '1111', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 16, GROUP_SIZE_M: 4, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2880', '1200', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 2, num_warps: 8, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2880', '5377', '555', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('3073', '7681', '1920', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('3201', '1303', '5121', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('3201', '7001', '7001', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('3457', '2880', '768', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('3600', '2561', '768', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 256, BLOCK_SIZE_K: 16, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('3600', '4609', '5760', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('3841', '803', '701', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 16, GROUP_SIZE_M: 4, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '256', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '256', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '256', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '256', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '256', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 2, num_warps: 8, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '256', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 2, num_warps: 8, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '512', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '512', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '512', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '512', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '512', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '512', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '1024', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '1024', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '1024', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '2048', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '2048', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '2048', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '2048', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '2048', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '2048', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '2880', '7001', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '4096', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '4096', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '4096', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '4096', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '4096', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '8192', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '8192', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '8192', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '8192', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '8192', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '8192', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4353', '3841', '2561', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4609', '900', '3073', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4609', '3600', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4800', '8191', '8191', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('5760', '2703', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('6145', '5377', '2561', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('7001', '1200', '1303', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('7681', '5377', '4353', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('7681', '8001', '4353', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8191', '2177', '5377', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '256', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '256', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '256', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '256', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '512', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '512', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '512', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '512', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '512', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '512', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '1024', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '1024', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '1024', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '1024', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '1024', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '2048', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '2048', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '2048', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '2048', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '2048', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '4096', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '4096', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '4096', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '4096', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '4096', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '4096', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '8192', '256', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '8192', '512', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 2, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '8192', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '8192', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '8192', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '8192', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None"
+    },
+    "timings": {
+        "('256', '256', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.008640545420348644
+        ],
+        "('256', '256', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.014211270026862621
+        ],
+        "('256', '256', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.02464774064719677
+        ],
+        "('256', '256', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.04570106789469719
+        ],
+        "('256', '256', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.09675326943397522
+        ],
+        "('256', '512', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.006577730178833008
+        ],
+        "('256', '512', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.009934136644005775
+        ],
+        "('256', '512', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.016546549275517464
+        ],
+        "('256', '512', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.02962399460375309
+        ],
+        "('256', '512', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.05654791742563248
+        ],
+        "('256', '512', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.11499003320932388
+        ],
+        "('256', '1024', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.020713917911052704
+        ],
+        "('256', '1024', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.037313081324100494
+        ],
+        "('256', '1024', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.07545116543769836
+        ],
+        "('256', '1024', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.1450982391834259
+        ],
+        "('256', '2048', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.011521462351083755
+        ],
+        "('256', '2048', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.06092588230967522
+        ],
+        "('256', '2048', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.11534581333398819
+        ],
+        "('256', '2048', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.2259683609008789
+        ],
+        "('256', '4096', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.01657799817621708
+        ],
+        "('256', '4096', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.028116073459386826
+        ],
+        "('256', '4096', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.05014641582965851
+        ],
+        "('256', '4096', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.09261220693588257
+        ],
+        "('256', '4096', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.17802438139915466
+        ],
+        "('256', '4096', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.3484118580818176
+        ],
+        "('256', '8192', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.028643662109971046
+        ],
+        "('256', '8192', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.08681995421648026
+        ],
+        "('256', '8192', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.1627960503101349
+        ],
+        "('256', '8192', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.31406232714653015
+        ],
+        "('256', '8192', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.6182149052619934
+        ],
+        "('257', '5377', '600', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.11684846878051758
+        ],
+        "('333', '1600', '6667', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.22912000119686127
+        ],
+        "('384', '3600', '3600', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.23739026486873627
+        ],
+        "('411', '1537', '3201', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.28436946868896484
+        ],
+        "('512', '256', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.010040758177638054
+        ],
+        "('512', '256', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.01657957024872303
+        ],
+        "('512', '256', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.02957514487206936
+        ],
+        "('512', '256', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.05641762539744377
+        ],
+        "('512', '256', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.11582447588443756
+        ],
+        "('512', '512', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.008256648667156696
+        ],
+        "('512', '512', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.020736832171678543
+        ],
+        "('512', '512', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.03743676096200943
+        ],
+        "('512', '512', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.14891064167022705
+        ],
+        "('512', '1024', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.011498100124299526
+        ],
+        "('512', '1024', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.017987821251153946
+        ],
+        "('512', '1024', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.031221773475408554
+        ],
+        "('512', '1024', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.06033649668097496
+        ],
+        "('512', '1024', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.11461369693279266
+        ],
+        "('512', '2048', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.016587326303124428
+        ],
+        "('512', '2048', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.027932919561862946
+        ],
+        "('512', '2048', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.05016939342021942
+        ],
+        "('512', '2048', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.09263446182012558
+        ],
+        "('512', '2048', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.3485994338989258
+        ],
+        "('512', '2401', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.04929202049970627
+        ],
+        "('512', '3073', '1920', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.24615924060344696
+        ],
+        "('512', '4096', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.027434740215539932
+        ],
+        "('512', '4096', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.04673997685313225
+        ],
+        "('512', '4096', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.08461076021194458
+        ],
+        "('512', '4096', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.15916034579277039
+        ],
+        "('512', '4096', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.305752158164978
+        ],
+        "('512', '4096', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.6051318645477295
+        ],
+        "('512', '5760', '1801', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.2754198908805847
+        ],
+        "('512', '8001', '5377', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            1.6082943677902222
+        ],
+        "('512', '8192', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.052361126989126205
+        ],
+        "('512', '8192', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.09006276726722717
+        ],
+        "('512', '8192', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.1643311083316803
+        ],
+        "('512', '8192', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.6052632927894592
+        ],
+        "('512', '8192', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            1.2093567848205566
+        ],
+        "('701', '1024', '1600', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.06889861077070236
+        ],
+        "('701', '1111', '3841', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.3230547308921814
+        ],
+        "('701', '3841', '5377', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            1.5370078086853027
+        ],
+        "('1024', '256', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.008245868608355522
+        ],
+        "('1024', '256', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.020948389545083046
+        ],
+        "('1024', '256', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.03751884400844574
+        ],
+        "('1024', '256', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.07850918918848038
+        ],
+        "('1024', '256', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.15170195698738098
+        ],
+        "('1024', '512', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.018008168786764145
+        ],
+        "('1024', '512', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.03114231303334236
+        ],
+        "('1024', '512', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.11479596793651581
+        ],
+        "('1024', '512', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.226117804646492
+        ],
+        "('1024', '555', '900', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.05889246240258217
+        ],
+        "('1024', '1024', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.016597522422671318
+        ],
+        "('1024', '1024', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.05000976100564003
+        ],
+        "('1024', '1024', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.09244000911712646
+        ],
+        "('1024', '1024', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.17760810256004333
+        ],
+        "('1024', '1024', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.3481396734714508
+        ],
+        "('1024', '2048', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.026865802705287933
+        ],
+        "('1024', '2048', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.046430665999650955
+        ],
+        "('1024', '2048', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.15875397622585297
+        ],
+        "('1024', '2048', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.3072468638420105
+        ],
+        "('1024', '2048', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.6142156720161438
+        ],
+        "('1024', '4096', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.052015576511621475
+        ],
+        "('1024', '4096', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.08856699615716934
+        ],
+        "('1024', '4096', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.16174793243408203
+        ],
+        "('1024', '4096', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.30629903078079224
+        ],
+        "('1024', '4096', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.5958962440490723
+        ],
+        "('1024', '4096', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            1.18647038936615
+        ],
+        "('1024', '8001', '701', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.4776960015296936
+        ],
+        "('1024', '8192', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.09742564707994461
+        ],
+        "('1024', '8192', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.16954222321510315
+        ],
+        "('1024', '8192', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.31513509154319763
+        ],
+        "('1024', '8192', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.604824960231781
+        ],
+        "('1024', '8192', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            1.181875228881836
+        ],
+        "('1024', '8192', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            2.3538014888763428
+        ],
+        "('1200', '5760', '2880', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.676849365234375
+        ],
+        "('1303', '1537', '333', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.06594560295343399
+        ],
+        "('1303', '1920', '1920', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.15967100858688354
+        ],
+        "('1400', '3841', '8191', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            3.856588840484619
+        ],
+        "('1537', '8191', '5760', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            4.594200611114502
+        ],
+        "('1600', '1600', '7001', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.7940223813056946
+        ],
+        "('1600', '4353', '4800', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            2.367637872695923
+        ],
+        "('1729', '2703', '5377', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            1.5203311443328857
+        ],
+        "('1801', '8191', '3201', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            3.264716863632202
+        ],
+        "('1920', '900', '2305', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.33202701807022095
+        ],
+        "('2048', '256', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.011120619252324104
+        ],
+        "('2048', '256', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.01799742691218853
+        ],
+        "('2048', '256', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.03126455098390579
+        ],
+        "('2048', '256', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.06092476099729538
+        ],
+        "('2048', '256', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.11566261202096939
+        ],
+        "('2048', '256', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.2273251861333847
+        ],
+        "('2048', '512', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.016923317685723305
+        ],
+        "('2048', '512', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.02813076227903366
+        ],
+        "('2048', '512', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.05034393444657326
+        ],
+        "('2048', '512', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.09284401684999466
+        ],
+        "('2048', '512', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.17858850955963135
+        ],
+        "('2048', '512', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.35033702850341797
+        ],
+        "('2048', '1024', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.027073794975876808
+        ],
+        "('2048', '1024', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.04647967591881752
+        ],
+        "('2048', '1024', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.08472415804862976
+        ],
+        "('2048', '1024', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.30976930260658264
+        ],
+        "('2048', '1024', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.6165026426315308
+        ],
+        "('2048', '2048', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.052162181586027145
+        ],
+        "('2048', '2048', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.16496725380420685
+        ],
+        "('2048', '2048', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.31315383315086365
+        ],
+        "('2048', '2048', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.6090859174728394
+        ],
+        "('2048', '2048', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            1.2199808359146118
+        ],
+        "('2048', '4096', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.1681375801563263
+        ],
+        "('2048', '4096', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.3146611154079437
+        ],
+        "('2048', '4096', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.6019413471221924
+        ],
+        "('2048', '4096', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            1.177945613861084
+        ],
+        "('2048', '5760', '1400', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.6508355140686035
+        ],
+        "('2048', '8192', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.1733609139919281
+        ],
+        "('2048', '8192', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.3052479922771454
+        ],
+        "('2048', '8192', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.5764623284339905
+        ],
+        "('2048', '8192', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            1.1095621585845947
+        ],
+        "('2048', '8192', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            2.1792311668395996
+        ],
+        "('2048', '8192', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            4.307223320007324
+        ],
+        "('2305', '300', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.08072279393672943
+        ],
+        "('2305', '7681', '6145', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            7.779157638549805
+        ],
+        "('2401', '4353', '4800', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            3.42012357711792
+        ],
+        "('2561', '1024', '2561', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.34723445773124695
+        ],
+        "('2880', '257', '3600', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.29617035388946533
+        ],
+        "('2880', '1111', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.13744598627090454
+        ],
+        "('2880', '1200', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.147134929895401
+        ],
+        "('2880', '5377', '555', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.6964432001113892
+        ],
+        "('3073', '7681', '1920', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            3.121779680252075
+        ],
+        "('3201', '1303', '5121', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            1.4611704349517822
+        ],
+        "('3201', '7001', '7001', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            8.913175582885742
+        ],
+        "('3457', '2880', '768', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.26745444536209106
+        ],
+        "('3600', '2561', '768', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.5869085192680359
+        ],
+        "('3600', '4609', '5760', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            5.513998985290527
+        ],
+        "('3841', '803', '701', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.22289630770683289
+        ],
+        "('4096', '256', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.016962513327598572
+        ],
+        "('4096', '256', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.02831074595451355
+        ],
+        "('4096', '256', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.051091719418764114
+        ],
+        "('4096', '256', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.09353987872600555
+        ],
+        "('4096', '256', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.1800830066204071
+        ],
+        "('4096', '256', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.3519686460494995
+        ],
+        "('4096', '512', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.028408685699105263
+        ],
+        "('4096', '512', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.04835190996527672
+        ],
+        "('4096', '512', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.08707652986049652
+        ],
+        "('4096', '512', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.16411037743091583
+        ],
+        "('4096', '512', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.3174251616001129
+        ],
+        "('4096', '512', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.6232134699821472
+        ],
+        "('4096', '1024', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.05195605754852295
+        ],
+        "('4096', '1024', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.1653759926557541
+        ],
+        "('4096', '1024', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.613396167755127
+        ],
+        "('4096', '2048', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.09620795398950577
+        ],
+        "('4096', '2048', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.17054086923599243
+        ],
+        "('4096', '2048', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.31967419385910034
+        ],
+        "('4096', '2048', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.61236572265625
+        ],
+        "('4096', '2048', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            1.2033920288085938
+        ],
+        "('4096', '2048', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            2.4023807048797607
+        ],
+        "('4096', '2880', '7001', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            3.0668139457702637
+        ],
+        "('4096', '4096', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.17071957886219025
+        ],
+        "('4096', '4096', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.3041715621948242
+        ],
+        "('4096', '4096', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.5727984309196472
+        ],
+        "('4096', '4096', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            1.109544277191162
+        ],
+        "('4096', '4096', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            4.299915790557861
+        ],
+        "('4096', '8192', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.32613450288772583
+        ],
+        "('4096', '8192', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.582961916923523
+        ],
+        "('4096', '8192', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            1.1016945838928223
+        ],
+        "('4096', '8192', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            2.0821259021759033
+        ],
+        "('4096', '8192', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            4.066730976104736
+        ],
+        "('4096', '8192', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            8.028244972229004
+        ],
+        "('4353', '3841', '2561', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            2.9262197017669678
+        ],
+        "('4609', '900', '3073', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.8739983439445496
+        ],
+        "('4609', '3600', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            1.129472017288208
+        ],
+        "('4800', '8191', '8191', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            18.48975372314453
+        ],
+        "('5760', '2703', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            2.0101120471954346
+        ],
+        "('6145', '5377', '2561', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            5.55345344543457
+        ],
+        "('7001', '1200', '1303', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.4920486807823181
+        ],
+        "('7681', '5377', '4353', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            11.147263526916504
+        ],
+        "('7681', '8001', '4353', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            16.397653579711914
+        ],
+        "('8191', '2177', '5377', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            6.56431770324707
+        ],
+        "('8192', '256', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.028928576037287712
+        ],
+        "('8192', '256', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.04994416981935501
+        ],
+        "('8192', '256', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.16688568890094757
+        ],
+        "('8192', '256', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.32625260949134827
+        ],
+        "('8192', '512', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.052667226642370224
+        ],
+        "('8192', '512', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.09248300641775131
+        ],
+        "('8192', '512', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.1694466769695282
+        ],
+        "('8192', '512', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.3190150856971741
+        ],
+        "('8192', '512', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.625670850276947
+        ],
+        "('8192', '512', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            1.246679663658142
+        ],
+        "('8192', '1024', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.09620680660009384
+        ],
+        "('8192', '1024', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.16972236335277557
+        ],
+        "('8192', '1024', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.3191277086734772
+        ],
+        "('8192', '1024', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            1.2075681686401367
+        ],
+        "('8192', '1024', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            2.4207358360290527
+        ],
+        "('8192', '2048', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.17131157219409943
+        ],
+        "('8192', '2048', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.5814400315284729
+        ],
+        "('8192', '2048', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            1.1205817461013794
+        ],
+        "('8192', '2048', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            2.186077117919922
+        ],
+        "('8192', '2048', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            4.312669277191162
+        ],
+        "('8192', '4096', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.3240511417388916
+        ],
+        "('8192', '4096', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.5827794075012207
+        ],
+        "('8192', '4096', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            1.0932317972183228
+        ],
+        "('8192', '4096', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            2.0763602256774902
+        ],
+        "('8192', '4096', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            4.056319713592529
+        ],
+        "('8192', '4096', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            8.05188274383545
+        ],
+        "('8192', '8192', '256', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            0.6440268158912659
+        ],
+        "('8192', '8192', '512', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            1.1572284698486328
+        ],
+        "('8192', '8192', '1024', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            2.1882646083831787
+        ],
+        "('8192', '8192', '2048', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            4.156772136688232
+        ],
+        "('8192', '8192', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            8.112895965576172
+        ],
+        "('8192', '8192', '8192', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            16.078676223754883
+        ]
+    },
+    "timings_data": {
+        "labels": [
+            "ms"
+        ],
+        "rep_t_ms": 100,
+        "warmup_t_ms": 25,
+        "cuda_graphs": true
+    }
+}
