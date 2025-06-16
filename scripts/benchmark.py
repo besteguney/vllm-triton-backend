@@ -86,7 +86,7 @@ BATCH_SIZES = [64]
 
 # order:  num_query_heads, num_kv_heads
 #NUM_HEADS = [(32, 32), (32, 8)]
-NUM_HEADS = [(32, 8)]
+NUM_HEADS = [(32, 8), (32, 32)]
 # NUM_HEADS = [(32, 32)]
 
 # SEQUENCE_LENGTHS = [16, 32, 64, 128, 512, 1024, 2048, 4096]
@@ -171,7 +171,7 @@ elif os.getenv("NGL_FULL_TEST", "0") == "2":
         BenchmarkMode.END2END,
         BenchmarkMode.CUDA_GRAPHS,
     ]
-    SEQUENCE_LENGTHS = [32, 44, 54, 64, 511, 512, 513, 648, 912, 1024, 2025, 3030, 4096]
+    SEQUENCE_LENGTHS = [32, 44, 54, 64, 511, 512, 513, 648, 912, 1024, 2025, 3030, 4096, 8192]
     # SEQUENCE_LENGTHS = [6321]
     BATCH_SIZES = [
         1,
