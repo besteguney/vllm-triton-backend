@@ -12,8 +12,8 @@ from triton_gemm import matmul
 import pandas as pd
 
 DEVICE = 'cuda'
-random.seed(71)
-df = pd.read_csv('gemm_data_v100.csv')
+random.seed(42)
+df = pd.read_csv('gemm_data_a100.csv')
 
 # Group by 'm', 'n', 'k' and count appearances
 grouped = df.groupby(['M', 'N', 'K']).size().reset_index(name='count')
