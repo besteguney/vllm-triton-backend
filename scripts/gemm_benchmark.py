@@ -37,8 +37,14 @@ all_combinations_filtered = [
 
 for m, n, k in sampled_dim_combinations:
     print("Starting to create the matrices")
-    a = torch.randn((m, k), device=DEVICE, dtype=torch.float16)
-    b = torch.randn((k, n), device=DEVICE, dtype=torch.float16)
+    try:
+        a = torch.randn((m, k), device=DEVICE, dtype=torch.float16)
+        b = torch.randn((k, n), device=DEVICE, dtype=torch.float16)
+    except RuntimeError as e:
+        print(f"Tensor failed {e}")
+        a, b = None, None
+    if a is None or b is None:
+        continue
     assert a.is_cuda, "Matrix a is not on gpu"
     assert b.is_cuda, "Matrix b is not on gpu"
     print("Matrices are created")
@@ -56,5 +62,6 @@ for m, n, k in sampled_dim_combinations:
     triton_output = matmul(a, b, configurations)
     print("Ending matrix multiplication")
     configurations = []
+    del a, b, triton_output
 
             
