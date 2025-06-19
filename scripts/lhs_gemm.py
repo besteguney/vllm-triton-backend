@@ -69,8 +69,17 @@ def gemm_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_combi
 final_samples = gemm_lhs_sampler(10, 50)
 # print(final_samples)
 for ex in final_samples:
-    a = torch.randn((ex['m'], ex['k']), device=DEVICE, dtype=torch.float16)
-    b = torch.randn((ex['k'], ex['n']), device=DEVICE, dtype=torch.float16)
+    try:
+        a = torch.randn((ex['m'], ex['k']), device=DEVICE, dtype=torch.float16)
+        b = torch.randn((ex['k'], ex['n']), device=DEVICE, dtype=torch.float16)
+    except RuntimeError as e:
+        print(f"Could not allocate because of {e}")
+        continue
     quantiles = [0.5, 0.2, 0.8]
-    ms, min_ms, max_ms = triton.testing.do_bench(lambda: matmul(a, b, ex['cfgs']), quantiles=quantiles)
+
+    try: 
+        ms, min_ms, max_ms = triton.testing.do_bench(lambda: matmul(a, b, ex['cfgs']), quantiles=quantiles)
+    except RuntimeError as e:
+        print(f"Coult not run the benchmark because of {e}")
+        continue
     print(f"It took {ms}, {min_ms}, {max_ms}")
