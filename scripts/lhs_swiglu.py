@@ -69,13 +69,17 @@ def swiglu_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_com
             samples.append(sample)
         return samples
 
-final_samples = swiglu_lhs_sampler(10, 10)
+final_samples = swiglu_lhs_sampler(50, 10)
 # print(final_samples)
 for ex in final_samples:
     num_tokens = ex['seqlen'] * ex['batch_size']
     d = ex['d']
     max_value = ex['max_vals']
-    x = torch.randn(num_tokens, 2 * d, dtype=torch.float16, device='cuda').uniform_(-1 * max_value, max_value)
+    try:
+        x = torch.randn(num_tokens, 2 * d, dtype=torch.float16, device='cuda').uniform_(-1 * max_value, max_value)
+    except RuntimeError as e:
+        print(f"Could not allocated the size because of {e}")
+        continue
     fused_silu_and_mul_cfg(x, ex['cfgs'])
 
     # a = torch.randn((ex['m'], ex['k']), device=DEVICE, dtype=torch.float16)
