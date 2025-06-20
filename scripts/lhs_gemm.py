@@ -66,7 +66,7 @@ def gemm_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_combi
             samples.append(sample)
         return samples
 
-final_samples = gemm_lhs_sampler(10, 100)
+final_samples = gemm_lhs_sampler(10, 50)
 # print(final_samples)
 for ex in final_samples:
     try:
@@ -82,4 +82,5 @@ for ex in final_samples:
     except RuntimeError as e:
         print(f"Coult not run the benchmark because of {e}")
         continue
+    del a,b
     print(f"It took {ms}, {min_ms}, {max_ms}")
