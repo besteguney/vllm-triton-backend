@@ -10,6 +10,7 @@ import itertools
 from triton_gemm import matmul 
 
 DEVICE = 'cuda'
+random.seed(0)
 
 ## GEMM Search Space Dimensions
 problem_dimension = range(1,8192)

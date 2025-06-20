@@ -2,17 +2,12 @@ import torch
 import triton
 import triton.language as tl
 from triton import Config
+import random
 import triton_dejavu
 from triton_swiglu import fused_silu_and_mul_cfg
 from lhs import LatinHypercubeSampler
 
-# SEQUENCE_LENGTH = [16, 32, 44, 54, 64, 511, 512, 513, 648, 912, 1024]
-# BATCH_SIZES = [1, 2, 3, 4, 6, 8, 9, 12, 16, 22, 25, 28, 32, 54, 58, 64, 72, 84, 96, 128]
-# HEAD_SIZES = [32, 64, 128]
-# NUM_HEADS = [32]
-# heads = [2**i for i in range(4, 14)]
-# MAX_VALUES = [0.01, 0.1, 1.0
-
+random.seed(0)
 
 ## Problem dimensions
 heads = range(16, 2**14+1)
@@ -69,7 +64,7 @@ def swiglu_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_com
             samples.append(sample)
         return samples
 
-final_samples = swiglu_lhs_sampler(50, 10)
+final_samples = swiglu_lhs_sampler(5, 50)
 # print(final_samples)
 for ex in final_samples:
     num_tokens = ex['seqlen'] * ex['batch_size']
