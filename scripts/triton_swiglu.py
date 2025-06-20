@@ -113,7 +113,7 @@ def make_swiglu_kernel(configurations):
     key=['D', 'num_tokens', 'n_elements'], 
     use_cuda_graph=True,
     custom_data_storage=os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "swiglu_data_lhs")
+        os.path.join(os.path.dirname(__file__), "swiglu_data")
     ),
 )
 @triton.jit

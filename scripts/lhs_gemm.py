@@ -83,4 +83,5 @@ for ex in final_samples:
     except RuntimeError as e:
         print(f"Coult not run the benchmark because of {e}")
         continue
+    del a,b
     print(f"It took {ms}, {min_ms}, {max_ms}")
