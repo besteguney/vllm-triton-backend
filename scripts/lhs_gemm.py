@@ -10,6 +10,7 @@ import itertools
 from triton_gemm import matmul 
 
 DEVICE = 'cuda'
+random.seed(0)
 
 ## GEMM Search Space Dimensions
 problem_dimension = range(1,8192)
@@ -66,7 +67,7 @@ def gemm_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_combi
             samples.append(sample)
         return samples
 
-final_samples = gemm_lhs_sampler(20, 100)
+final_samples = gemm_lhs_sampler(100, 150)
 # print(final_samples)
 for ex in final_samples:
     try:
