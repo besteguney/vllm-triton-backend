@@ -7,6 +7,7 @@ import triton.language as tl
 import triton_dejavu
 import random
 import itertools
+from collections import defaultdict
 from triton_gemm import matmul 
 
 DEVICE = 'cuda'
@@ -33,8 +34,24 @@ def gemm_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_combi
             'num_stages': stage_size
         }
         lhs = LatinHypercubeSampler(search_dict)
-        samples = lhs.generate_new_categorical_samples(n_samples)
-        return samples
+        samples_combined = lhs.generate_new_categorical_samples(n_samples)
+        grouped = defaultdict(list)
+        for d in samples_combined:
+            key = (d['m'], d['n'], d['k'])
+            # Remove the shared keys for cfg
+            cfg = {k: v for k, v in d.items() if k not in ['m', 'n', 'k']}
+            configuration = triton.Config({'BLOCK_SIZE_M': cfg['block_size_m'], 'BLOCK_SIZE_N': cfg['block_size_n'], 'BLOCK_SIZE_K': cfg['block_size_k'], 'GROUP_SIZE_M': cfg['group_size_m']}, 
+                                                    num_stages=cfg['num_stages'],
+                                                    num_warps=cfg['num_warps'])
+            grouped[key].append(configuration)
+            grouped[key].append(configuration)
+        combined = []
+        for (m, n, k), cfgs in grouped.items():
+            combined.append({
+                'm': m, 'n': n, 'k': k,
+                'cfgs': cfgs
+            })
+        return combined
     else:
         ## Sampling in the problem size dimension
         search_dict_prob = {

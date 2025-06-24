@@ -13,7 +13,10 @@ gpus = ['V100', 'A100', 'L40S', 'H100']
 def read_json(file_path):
     data = None
     with open(file_path, 'r') as file:
-        data = json.load(file)
+        try:
+            data = json.load(file)
+        except json.JSONDecodeError as e:
+            print(f'Could not read the file {file_path} because of json error')
 
     return data
 
@@ -32,6 +35,8 @@ def parse_config(config_str, runtime, compile_time):
 ## Creating the data frame from the json results
 def create_data_frame_gemm(file_path):
     df = read_json(file_path)
+    if df is None:
+        return
     df = df['timings']
 
     new_df = pd.DataFrame()
@@ -49,20 +54,42 @@ def create_data_frame_gemm(file_path):
         new_df = pd.concat([new_df, cur_df])
     return new_df
 
+def create_data_frame_swiglu(file_path):
+    df = read_json(file_path)
+    if df is None:
+        return 
+    df = df['timings']
+
+    new_df = pd.DataFrame()
+    for key, value in df.items():
+        values = [val for val in value if 'runtime' in val]
+        values = [parse_config(val['config'], val['runtime'], val['compile_time']) for val in values]
+        key_config = ast.literal_eval(key)
+        tokens = int(key_config[0])
+        d = int(key_config[1])
+        cur_df = pd.DataFrame(values)
+        cur_df['tokens'] = tokens
+        cur_df['d'] = d
+        new_df = pd.concat([new_df, cur_df])
+    return new_df
+
 def is_power_of_two(n):
     n = int(n)
     return n > 0 and (n & (n - 1)) == 0
 
-def find_all_json_files(root_dir):
+def find_all_json_files(root_dir, is_gemm):
     result = []
     for dirpath, dirnames, filenames in os.walk(root_dir):
         base = os.path.basename(dirpath)
-        if base.startswith("gemm_data"):
+        if base.startswith("swiglu_data"):
             # print(base)
             base_path = Path(base)
             all_json_files = base_path.rglob('all.json')
             for json_file in all_json_files:
-                df_new = create_data_frame_gemm(json_file)
+                caller = create_data_frame_gemm if is_gemm else create_data_frame_swiglu
+                df_new = caller(json_file)
+                if df_new is None:
+                    continue
                 for gpu in gpus:
                     if gpu in str(json_file):
                         df_new['GPU'] = gpu
@@ -73,21 +100,29 @@ def find_all_json_files(root_dir):
 if __name__ == "__main__":
     # Set this to the root directory where the search should begin
     search_root = "."
-    all_data_frames= find_all_json_files(search_root)
+    is_gemm = False
+    all_data_frames= find_all_json_files(search_root, is_gemm)
 
     data = pd.concat(all_data_frames, axis=0)
     print(f'All the data shape before processing {data.shape}')
 
     ## Remove the duplicates
     print(data.columns)
-    data.drop_duplicates(subset=['M', 'N', 'K', 
-                                'BLOCK_SIZE_M', 
-                                'BLOCK_SIZE_N',
-                                'BLOCK_SIZE_K',
-                                'GROUP_SIZE_M',
-                                'num_warps',
-                                'num_stages',
-                                'GPU'], inplace=True)
+    if is_gemm:
+        data.drop_duplicates(subset=['M', 'N', 'K', 
+                                    'BLOCK_SIZE_M', 
+                                    'BLOCK_SIZE_N',
+                                    'BLOCK_SIZE_K',
+                                    'GROUP_SIZE_M',
+                                    'num_warps',
+                                    'num_stages',
+                                    'GPU'], inplace=True)
+    else:
+        data.drop_duplicates(subset=['BLOCK_SIZE', 
+                                     'tokens','d',
+                                    'num_warps',
+                                    'num_stages',
+                                    'GPU'], inplace=True)
     print(f'The data shape after dropping the duplicates {data.shape}')
 
     ## When the runtime is nan, replace with np.inf
@@ -96,5 +131,6 @@ if __name__ == "__main__":
     ## Remove all the columns where number of warps is not power of two
     data = data[data['num_warps'].apply(is_power_of_two)]
     print(f'The data shape after dropping the non power of two warps {data.shape}')
-    data.to_csv('all_gemm.csv')
+    csv_name = 'all_gemm.csv' if is_gemm else 'all_swiglu.csv'
+    data.to_csv(csv_name)
 
