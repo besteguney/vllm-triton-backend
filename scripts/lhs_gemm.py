@@ -84,7 +84,8 @@ def gemm_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_combi
             samples.append(sample)
         return samples
 
-final_samples = gemm_lhs_sampler(9, 6, 50, True)
+final_samples = gemm_lhs_sampler(10, 5)
+# print(final_samples)
 for ex in final_samples:
     try:
         a = torch.randn((ex['m'], ex['k']), device=DEVICE, dtype=torch.float16)
