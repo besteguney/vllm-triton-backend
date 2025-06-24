@@ -81,7 +81,7 @@ def find_all_json_files(root_dir, is_gemm):
     result = []
     for dirpath, dirnames, filenames in os.walk(root_dir):
         base = os.path.basename(dirpath)
-        if base.startswith("swiglu_data"):
+        if base.startswith("gemm_data"):
             # print(base)
             base_path = Path(base)
             all_json_files = base_path.rglob('all.json')
@@ -100,7 +100,7 @@ def find_all_json_files(root_dir, is_gemm):
 if __name__ == "__main__":
     # Set this to the root directory where the search should begin
     search_root = "."
-    is_gemm = False
+    is_gemm = True
     all_data_frames= find_all_json_files(search_root, is_gemm)
 
     data = pd.concat(all_data_frames, axis=0)
