@@ -249,7 +249,7 @@ def make_matmul_kernel(configurations):
     key=['M', 'N', 'K'],
     use_cuda_graph=True,
     custom_data_storage=os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "bao_data")
+        os.path.join(os.path.dirname(__file__), "gemm_data_1")
     ),
     )
     @triton.jit
