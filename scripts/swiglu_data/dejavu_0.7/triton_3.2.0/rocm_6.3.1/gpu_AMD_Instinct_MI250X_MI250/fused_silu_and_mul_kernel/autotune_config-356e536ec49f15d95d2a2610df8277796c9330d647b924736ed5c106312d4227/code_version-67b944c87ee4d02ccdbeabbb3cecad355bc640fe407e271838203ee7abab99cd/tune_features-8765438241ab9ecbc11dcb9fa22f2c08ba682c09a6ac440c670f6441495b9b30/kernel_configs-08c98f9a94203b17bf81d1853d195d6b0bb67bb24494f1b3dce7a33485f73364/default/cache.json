@@ -1,6 +1,6 @@
 {
     "signature": "JITFunction(triton_swiglu:fused_silu_and_mul_kernel)",
-    "total_bench_time_s": 52454.35061478615,
+    "total_bench_time_s": 74061.92698478699,
     "total_configs": 480,
     "current_eval": {},
     "keys": [
@@ -64,7 +64,18 @@
         "('64', '128', '16384', 'torch.float16', 'torch.float16')": "BLOCK_SIZE: 512, num_warps: 2, num_ctas: 1, num_stages: 8, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
         "('128', '128', '32768', 'torch.float16', 'torch.float16')": "BLOCK_SIZE: 128, num_warps: 2, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
         "('256', '128', '65536', 'torch.float16', 'torch.float16')": "BLOCK_SIZE: 256, num_warps: 2, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
-        "('512', '128', '131072', 'torch.float16', 'torch.float16')": "BLOCK_SIZE: 512, num_warps: 4, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None"
+        "('512', '128', '131072', 'torch.float16', 'torch.float16')": "BLOCK_SIZE: 512, num_warps: 4, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '128', '262144', 'torch.float16', 'torch.float16')": "BLOCK_SIZE: 1024, num_warps: 4, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('2048', '128', '524288', 'torch.float16', 'torch.float16')": "BLOCK_SIZE: 512, num_warps: 4, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('4096', '128', '1048576', 'torch.float16', 'torch.float16')": "BLOCK_SIZE: 1024, num_warps: 4, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('8192', '128', '2097152', 'torch.float16', 'torch.float16')": "BLOCK_SIZE: 2048, num_warps: 4, num_ctas: 1, num_stages: 6, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('16', '144', '4608', 'torch.float16', 'torch.float16')": "BLOCK_SIZE: 256, num_warps: 1, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('32', '144', '9216', 'torch.float16', 'torch.float16')": "BLOCK_SIZE: 512, num_warps: 4, num_ctas: 1, num_stages: 8, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('64', '144', '18432', 'torch.float16', 'torch.float16')": "BLOCK_SIZE: 512, num_warps: 4, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('128', '144', '36864', 'torch.float16', 'torch.float16')": "BLOCK_SIZE: 1024, num_warps: 4, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('256', '144', '73728', 'torch.float16', 'torch.float16')": "BLOCK_SIZE: 256, num_warps: 2, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('512', '144', '147456', 'torch.float16', 'torch.float16')": "BLOCK_SIZE: 512, num_warps: 4, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('1024', '144', '294912', 'torch.float16', 'torch.float16')": "BLOCK_SIZE: 512, num_warps: 4, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None"
     },
     "timings": {
         "('16', '16', '512', 'torch.float16', 'torch.float16')": [
@@ -234,6 +245,39 @@
         ],
         "('512', '128', '131072', 'torch.float16', 'torch.float16')": [
             0.0016391756944358349
+        ],
+        "('1024', '128', '262144', 'torch.float16', 'torch.float16')": [
+            0.00179757340811193
+        ],
+        "('2048', '128', '524288', 'torch.float16', 'torch.float16')": [
+            0.002419895026832819
+        ],
+        "('4096', '128', '1048576', 'torch.float16', 'torch.float16')": [
+            0.0035602778661996126
+        ],
+        "('8192', '128', '2097152', 'torch.float16', 'torch.float16')": [
+            0.005628475919365883
+        ],
+        "('16', '144', '4608', 'torch.float16', 'torch.float16')": [
+            0.001627755118533969
+        ],
+        "('32', '144', '9216', 'torch.float16', 'torch.float16')": [
+            0.0016284300945699215
+        ],
+        "('64', '144', '18432', 'torch.float16', 'torch.float16')": [
+            0.0016280782874673605
+        ],
+        "('128', '144', '36864', 'torch.float16', 'torch.float16')": [
+            0.0016294685192406178
+        ],
+        "('256', '144', '73728', 'torch.float16', 'torch.float16')": [
+            0.001629285397939384
+        ],
+        "('512', '144', '147456', 'torch.float16', 'torch.float16')": [
+            0.0016555003821849823
+        ],
+        "('1024', '144', '294912', 'torch.float16', 'torch.float16')": [
+            0.0019465107470750809
         ]
     },
     "timings_data": {
