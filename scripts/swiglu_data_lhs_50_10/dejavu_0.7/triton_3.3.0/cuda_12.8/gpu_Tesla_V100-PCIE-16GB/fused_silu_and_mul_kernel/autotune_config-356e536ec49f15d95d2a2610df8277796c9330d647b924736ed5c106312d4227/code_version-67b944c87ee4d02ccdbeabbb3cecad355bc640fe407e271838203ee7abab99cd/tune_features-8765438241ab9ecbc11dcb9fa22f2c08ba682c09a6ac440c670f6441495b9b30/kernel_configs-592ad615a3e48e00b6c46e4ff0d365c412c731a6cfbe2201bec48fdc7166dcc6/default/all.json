@@ -1,0 +1,39 @@
+{
+    "signature": "JITFunction(triton_swiglu:fused_silu_and_mul_kernel)",
+    "total_bench_time_s": 0.0,
+    "total_configs": 10,
+    "current_eval": {
+        "('11833', '10491', '248280006', 'torch.float16', 'torch.float16')": 4
+    },
+    "keys": [
+        "D",
+        "num_tokens",
+        "n_elements"
+    ],
+    "cache": {},
+    "timings": {
+        "('11833', '10491', '248280006', 'torch.float16', 'torch.float16')": [
+            {
+                "config": "BLOCK_SIZE: 512, num_warps: 8, num_ctas: 1, num_stages: 2, maxnreg: None",
+                "runtime": 1.3022500276565552,
+                "compile_time": 1.8146514892578125
+            },
+            {
+                "config": "BLOCK_SIZE: 64, num_warps: 8, num_ctas: 1, num_stages: 5, maxnreg: None",
+                "runtime": 3.0832319259643555,
+                "compile_time": 0.14693284034729004
+            },
+            {
+                "config": "BLOCK_SIZE: 128, num_warps: 16, num_ctas: 1, num_stages: 3, maxnreg: None",
+                "runtime": 2.9597322940826416,
+                "compile_time": 0.13541913032531738
+            },
+            {
+                "config": "BLOCK_SIZE: 1024, num_warps: 4, num_ctas: 1, num_stages: 1, maxnreg: None",
+                "runtime": 1.2242687940597534,
+                "compile_time": 0.20050501823425293
+            }
+        ]
+    },
+    "cuda_graphs": true
+}

@@ -1,0 +1,69 @@
+{
+    "signature": "JITFunction(triton_gemm:matmul_kernel)",
+    "total_bench_time_s": 0.0,
+    "total_configs": 10,
+    "current_eval": {
+        "('256', '512', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": 10
+    },
+    "keys": [
+        "M",
+        "N",
+        "K"
+    ],
+    "cache": {},
+    "timings": {
+        "('256', '512', '4096', 'torch.float16', 'torch.float16', 'torch.float16')": [
+            {
+                "config": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 256, BLOCK_SIZE_K: 16, GROUP_SIZE_M: 8, num_warps: 4, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.22527408599853516,
+                "compile_time": 0.39113354682922363
+            },
+            {
+                "config": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 16, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 4, num_warps: 1, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.18989738821983337,
+                "compile_time": 0.7876298427581787
+            },
+            {
+                "config": "BLOCK_SIZE_M: 16, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 64, GROUP_SIZE_M: 1, num_warps: 32, num_ctas: 1, num_stages: 6, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.39719584584236145,
+                "compile_time": 0.3530709743499756
+            },
+            {
+                "config": "BLOCK_SIZE_M: 16, BLOCK_SIZE_N: 16, BLOCK_SIZE_K: 16, GROUP_SIZE_M: 1, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.1749015748500824,
+                "compile_time": 0.2223193645477295
+            },
+            {
+                "config": "BLOCK_SIZE_M: 16, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 8, num_warps: 32, num_ctas: 1, num_stages: 7, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.3690289556980133,
+                "compile_time": 0.42648863792419434
+            },
+            {
+                "config": "BLOCK_SIZE_M: 16, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 16, num_warps: 16, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.1803218126296997,
+                "compile_time": 0.7063043117523193
+            },
+            {
+                "config": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 256, BLOCK_SIZE_K: 64, GROUP_SIZE_M: 16, num_warps: 32, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.2465370148420334,
+                "compile_time": 0.3811225891113281
+            },
+            {
+                "config": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.1725117266178131,
+                "compile_time": 0.586615800857544
+            },
+            {
+                "config": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 16, BLOCK_SIZE_K: 64, GROUP_SIZE_M: 8, num_warps: 1, num_ctas: 1, num_stages: 6, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.069979727268219,
+                "compile_time": 0.42876291275024414
+            },
+            {
+                "config": "BLOCK_SIZE_M: 16, BLOCK_SIZE_N: 16, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 1, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.08397019654512405,
+                "compile_time": 0.27660274505615234
+            }
+        ]
+    },
+    "cuda_graphs": true
+}

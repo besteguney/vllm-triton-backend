@@ -81,7 +81,8 @@ def find_all_json_files(root_dir, is_gemm):
     result = []
     for dirpath, dirnames, filenames in os.walk(root_dir):
         base = os.path.basename(dirpath)
-        if base.startswith("gemm_data_test"):
+        if base.startswith("gemm_data_random_50_10_power_of_two"):
+            # print("JDAKSJ")
             # print(base)
             base_path = Path(base)
             all_json_files = base_path.rglob('all*.json')
@@ -132,6 +133,6 @@ if __name__ == "__main__":
     data = data[data['num_warps'].apply(is_power_of_two)]
     print(f'The data shape after dropping the non power of two warps {data.shape}')
     csv_name = 'all_gemm.csv' if is_gemm else 'all_swiglu.csv'
-    csv_name = 'gemm_data_test.csv'
+    csv_name = 'gemm_data_v100_random_50_10_power_of_two.csv'
     data.to_csv(csv_name)
 

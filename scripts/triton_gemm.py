@@ -249,7 +249,7 @@ def make_matmul_kernel(configurations):
     key=['M', 'N', 'K'],
     use_cuda_graph=True,
     custom_data_storage=os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "bao_data")
+        os.path.join(os.path.dirname(__file__), "gemm_data_bao_lhs_10_stop_power_of_two")
     ),
     )
     @triton.jit
@@ -467,7 +467,7 @@ def matmul_kernel2(a_ptr, b_ptr, c_ptr, M, N, K,
         BLOCK_SIZE_M: tl.constexpr, 
         BLOCK_SIZE_N: tl.constexpr, 
         BLOCK_SIZE_K: tl.constexpr,  #
-        GROUP_SIZE_M: tl.constexpr,  ):
+        GROUP_SIZE_M: tl.constexpr  ):
     """Kernel for computing the matmul C = A x B.
     A has shape (M, K), B has shape (K, N) and C has shape (M, N)
     """

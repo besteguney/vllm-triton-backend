@@ -14,7 +14,8 @@ DEVICE = 'cuda'
 random.seed(0)
 
 ## GEMM Search Space Dimensions
-problem_dimension = range(1,8192)
+problem_dimension = [2**i for i in range(15)]
+# problem_dimension = range(1, 8193)
 block_sizes = [16, 32, 64, 128, 256]
 warp_size = [2** i for i in range(6)]
 stage_size = list(range(8))
@@ -84,8 +85,7 @@ def gemm_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_combi
             samples.append(sample)
         return samples
 
-final_samples = gemm_lhs_sampler(20, 5)
-# print(final_samples)
+final_samples = gemm_lhs_sampler(50, 10)
 for ex in final_samples:
     try:
         a = torch.randn((ex['m'], ex['k']), device=DEVICE, dtype=torch.float16)
