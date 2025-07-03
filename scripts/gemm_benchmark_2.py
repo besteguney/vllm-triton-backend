@@ -23,7 +23,7 @@ dimensions = [257, 300, 333, 384, 411, 512, 555, 600, 701, 768,
 all_dim_combinations = list(itertools.product(dimensions, repeat=3))
 
 # Randomly sample 100 unique combinations
-random.seed(0)  # for reproducibility
+random.seed(7)  # for reproducibility
 sampled_dim_combinations = random.sample(all_dim_combinations, 50)
 
 group_size = [1,2,4,8,16]

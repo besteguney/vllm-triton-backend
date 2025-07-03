@@ -107,7 +107,7 @@ def make_swiglu_kernel(configurations):
     config_space=triton_dejavu.ConfigSpace(
         {'BLOCK_SIZE': [16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192]},
         num_warps=[2**i for i in range(6)],
-        num_stages=[i for i in range(9)],
+        num_stages=[i for i in range(1, 9)],
         num_ctas=[1],
     ),
     key=['D', 'num_tokens', 'n_elements'], 
