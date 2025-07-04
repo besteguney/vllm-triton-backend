@@ -1,0 +1,44 @@
+{
+    "signature": "JITFunction(triton_gemm:matmul_kernel)",
+    "total_bench_time_s": 0.0,
+    "total_configs": 5,
+    "current_eval": {
+        "('5925', '1', '7828', 'torch.float32', 'torch.float32', 'torch.float16')": 5
+    },
+    "keys": [
+        "M",
+        "N",
+        "K"
+    ],
+    "cache": {},
+    "timings": {
+        "('5925', '1', '7828', 'torch.float32', 'torch.float32', 'torch.float16')": [
+            {
+                "config": "BLOCK_SIZE_M: 16, BLOCK_SIZE_N: 32, BLOCK_SIZE_K: 64, GROUP_SIZE_M: 4, num_warps: 8, num_ctas: 1, num_stages: 5, maxnreg: None",
+                "runtime": 2.1890621185302734,
+                "compile_time": 0.4295804500579834
+            },
+            {
+                "config": "BLOCK_SIZE_M: 256, BLOCK_SIZE_N: 256, BLOCK_SIZE_K: 16, GROUP_SIZE_M: 1, num_warps: 16, num_ctas: 1, num_stages: 3, maxnreg: None",
+                "runtime": NaN,
+                "compile_time": 0
+            },
+            {
+                "config": "BLOCK_SIZE_M: 64, BLOCK_SIZE_N: 128, BLOCK_SIZE_K: 32, GROUP_SIZE_M: 16, num_warps: 1, num_ctas: 1, num_stages: 2, maxnreg: None",
+                "runtime": 84.01510620117188,
+                "compile_time": 6.9435436725616455
+            },
+            {
+                "config": "BLOCK_SIZE_M: 32, BLOCK_SIZE_N: 64, BLOCK_SIZE_K: 256, GROUP_SIZE_M: 8, num_warps: 16, num_ctas: 1, num_stages: 1, maxnreg: None",
+                "runtime": 4.955238342285156,
+                "compile_time": 0.9845385551452637
+            },
+            {
+                "config": "BLOCK_SIZE_M: 128, BLOCK_SIZE_N: 16, BLOCK_SIZE_K: 128, GROUP_SIZE_M: 2, num_warps: 2, num_ctas: 1, num_stages: 7, maxnreg: None",
+                "runtime": 4.370851039886475,
+                "compile_time": 3.7950165271759033
+            }
+        ]
+    },
+    "cuda_graphs": true
+}

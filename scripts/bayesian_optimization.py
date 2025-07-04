@@ -15,6 +15,7 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 from smac import HyperparameterOptimizationFacade, Scenario
 from smac.main.smbo import SMBO
 from smac.runhistory.runhistory import RunHistory
+from skopt.space.space import Categorical
 
 import lightgbm as lgb
 from sklearn.metrics import ndcg_score
@@ -51,7 +52,6 @@ group_size = [1,2,4,8,16]
 
 config_count = 10
 iteration = 0
-config_list = []
 search_dict_cfg = {
     'block_size_m': block_sizes,
     'block_size_n': block_sizes,
@@ -61,13 +61,13 @@ search_dict_cfg = {
     'num_stages': stage_size
 }
 
-lhs = LatinHypercubeSampler(search_dict_cfg)
+# lhs = LatinHypercubeSampler(search_dict_cfg)
 DEVICE = 'cuda'
-samples_cfg = lhs.generate_new_categorical_samples(config_count)
-for cfg in samples_cfg:
-    config_list.append(triton.Config({'BLOCK_SIZE_M': cfg['block_size_m'], 'BLOCK_SIZE_N': cfg['block_size_n'], 'BLOCK_SIZE_K': cfg['block_size_k'], 'GROUP_SIZE_M': cfg['group_size_m']}, 
-                                        num_stages=cfg['num_stages'],
-                                        num_warps=cfg['num_warps']))
+# samples_cfg = lhs.generate_new_categorical_samples(config_count)
+# for cfg in samples_cfg:
+#     config_list.append(triton.Config({'BLOCK_SIZE_M': cfg['block_size_m'], 'BLOCK_SIZE_N': cfg['block_size_n'], 'BLOCK_SIZE_K': cfg['block_size_k'], 'GROUP_SIZE_M': cfg['group_size_m']}, 
+#                                         num_stages=cfg['num_stages'],
+#                                         num_warps=cfg['num_warps']))
 
 class KernelTypes(Enum):
     GEMM = 1
@@ -192,9 +192,18 @@ def objective_function(config):
     global iteration
     collected_data.append(config)
 
+    lhs = LatinHypercubeSampler(search_dict_cfg)
+    config_list = []
+    samples_cfg = lhs.generate_new_categorical_samples(config_count)
+    for cfg in samples_cfg:
+        config_list.append(triton.Config({'BLOCK_SIZE_M': cfg['block_size_m'], 'BLOCK_SIZE_N': cfg['block_size_n'], 'BLOCK_SIZE_K': cfg['block_size_k'], 'GROUP_SIZE_M': cfg['group_size_m']}, 
+                                            num_stages=cfg['num_stages'],
+                                            num_warps=cfg['num_warps']))
+
+
     try:
-        a = torch.randn((config[0], config[1]), device=DEVICE, dtype=torch.float16)
-        b = torch.randn((config[1], config[2]), device=DEVICE, dtype=torch.float16)
+        a = torch.randn((config[0], config[1]), device=DEVICE)
+        b = torch.randn((config[1], config[2]), device=DEVICE)
     except RuntimeError as e:
         print(f"Could not allocate because of {e}")
     quantiles = [0.5, 0.2, 0.8]
@@ -268,5 +277,8 @@ def objective_function(config):
     return -ndcg
 
 print('Starting Bayesian Optimization')
-res = gp_minimize(objective_function, [(1, 8192), (1, 8192), (1, 8192)], n_calls=10)
+problem_sizes = [2**i for i in range(14)]
+
+# res = gp_minimize(objective_function, [(1, 8192), (1, 8192), (1, 8192)], n_calls=50)
+res = gp_minimize(objective_function, [Categorical(problem_sizes), Categorical(problem_sizes), Categorical(problem_sizes)], n_calls=50)
 print(results)

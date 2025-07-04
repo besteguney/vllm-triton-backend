@@ -1,0 +1,69 @@
+{
+    "signature": "JITFunction(triton_swiglu:fused_silu_and_mul_kernel_other)",
+    "total_bench_time_s": 0.0,
+    "total_configs": 10,
+    "current_eval": {
+        "('16384', '65536', '2147483648', 'torch.float16', 'torch.float16')": 10
+    },
+    "keys": [
+        "D",
+        "num_tokens",
+        "n_elements"
+    ],
+    "cache": {},
+    "timings": {
+        "('16384', '65536', '2147483648', 'torch.float16', 'torch.float16')": [
+            {
+                "config": "BLOCK_SIZE: 8192, num_warps: 1, num_ctas: 1, num_stages: 3, maxnreg: None",
+                "runtime": 69.38009643554688,
+                "compile_time": 1.5307934284210205
+            },
+            {
+                "config": "BLOCK_SIZE: 1024, num_warps: 2, num_ctas: 1, num_stages: 0, maxnreg: None",
+                "runtime": 7.663615703582764,
+                "compile_time": 0.19324421882629395
+            },
+            {
+                "config": "BLOCK_SIZE: 512, num_warps: 2, num_ctas: 1, num_stages: 4, maxnreg: None",
+                "runtime": 7.619977951049805,
+                "compile_time": 0.20008015632629395
+            },
+            {
+                "config": "BLOCK_SIZE: 2048, num_warps: 8, num_ctas: 1, num_stages: 5, maxnreg: None",
+                "runtime": 7.771221160888672,
+                "compile_time": 0.16429805755615234
+            },
+            {
+                "config": "BLOCK_SIZE: 64, num_warps: 8, num_ctas: 1, num_stages: 1, maxnreg: None",
+                "runtime": 26.177536010742188,
+                "compile_time": 0.14647841453552246
+            },
+            {
+                "config": "BLOCK_SIZE: 64, num_warps: 32, num_ctas: 1, num_stages: 4, maxnreg: None",
+                "runtime": 91.72787475585938,
+                "compile_time": 0.14399456977844238
+            },
+            {
+                "config": "BLOCK_SIZE: 512, num_warps: 4, num_ctas: 1, num_stages: 0, maxnreg: None",
+                "runtime": 7.584846496582031,
+                "compile_time": 0.1513972282409668
+            },
+            {
+                "config": "BLOCK_SIZE: 4096, num_warps: 4, num_ctas: 1, num_stages: 0, maxnreg: None",
+                "runtime": 7.824042797088623,
+                "compile_time": 0.25630950927734375
+            },
+            {
+                "config": "BLOCK_SIZE: 256, num_warps: 1, num_ctas: 1, num_stages: 5, maxnreg: None",
+                "runtime": 7.767381191253662,
+                "compile_time": 0.16530442237854004
+            },
+            {
+                "config": "BLOCK_SIZE: 16, num_warps: 1, num_ctas: 1, num_stages: 4, maxnreg: None",
+                "runtime": 104.68045043945312,
+                "compile_time": 0.14229655265808105
+            }
+        ]
+    },
+    "cuda_graphs": true
+}

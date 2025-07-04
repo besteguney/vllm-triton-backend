@@ -18,6 +18,7 @@ from skopt import gp_minimize
 from skopt.space.space import Categorical
 
 import triton
+from triton.runtime.errors import OutOfResources
 from triton_gemm import matmul, matmul_kernel2
 
 ## Global Variables
@@ -37,12 +38,13 @@ numerical_features = ['M', 'N', 'K']
 collected_data = [] ## The data that has been collected with bao so far
 
 problem_dimension = range(1,8192)
-block_sizes = [16, 32]
-warp_size = [2** i for i in range(6)]
+problem_sizes = [2**i for i in range(14)]
+block_sizes = [16, 32, 64, 128, 256]
+warp_size = [2** i for i in range(5)]
 stage_size = list(range(4))
 group_size = [1,2,4,8,16]
 
-config_count = 10
+config_count = 50
 iteration = 0
 config_list = []
 search_dict_cfg = {
@@ -54,7 +56,7 @@ search_dict_cfg = {
     'num_stages': stage_size
 }
 
-train_df = pd.DataFrame({
+data_frame = pd.DataFrame({
     'BLOCK_SIZE_M': pd.Series(dtype='int'),
     'BLOCK_SIZE_N': pd.Series(dtype='int'),
     'BLOCK_SIZE_K': pd.Series(dtype='int'),
@@ -192,33 +194,44 @@ def matrix_mul(a, b, config):
     # 1D launch kernel where each block gets its own program.
     grid = lambda META: (triton.cdiv(M, META['BLOCK_SIZE_M']) * triton.cdiv(N, META['BLOCK_SIZE_N']), )
 
-    matmul_kernel2[grid](
-        a, b, c,  #
-        M, N, K,  #
-        a.stride(0), a.stride(1),  #
-        b.stride(0), b.stride(1),  #
-        c.stride(0), c.stride(1),  #
-        **config
-    )
-        
+    try:
+        matmul_kernel2[grid](
+            a, b, c,  #
+            M, N, K,  #
+            a.stride(0), a.stride(1),  #
+            b.stride(0), b.stride(1),  #
+            c.stride(0), c.stride(1),  #
+            **config
+        )
+    except (RuntimeError, OutOfResources) as e:
+        print(f'Could not run the grid configuration {grid} because of {e}')
+        return None
     return c
 
 def objective_function_cfg(config, a, b):
-    global train_df
+    print("Trying another configuration")
+    global data_frame
     test_config = {'BLOCK_SIZE_M': config[0], 'BLOCK_SIZE_N': config[1], 'BLOCK_SIZE_K': config[2], 'GROUP_SIZE_M': config[3],'num_warps': config[4], 'num_stages': config[5]}
-    ms, min_ms, max_ms = triton.testing.do_bench(lambda: matrix_mul(a, b, test_config), quantiles=quantiles)
-    row = {**test_config, 'runtime':ms, 'M': a.shape[0], 'N': b.shape[1], 'K': a.shape[1]}
-    train_df = pd.concat([train_df, pd.DataFrame([row])], ignore_index=True)
+    output = {}
+    def wrapped_gemm():
+        res = matrix_mul(a, b, test_config)
+        output['result'] = res
+        return res
+    
+    ms, min_ms, max_ms = triton.testing.do_bench(wrapped_gemm, quantiles=quantiles)
+    runtime = np.inf if output['result'] is None else ms
+    row = {**test_config, 'runtime':runtime, 'M': a.shape[0], 'N': b.shape[1], 'K': a.shape[1]}
+    data_frame = pd.concat([data_frame, pd.DataFrame([row])], ignore_index=True)
     return ms
 
 ## The objective function maximizes the model performance on the given test set
 def objective_function(config):
-    global iteration, train_df
+    global iteration, data_frame
     collected_data.append(config)
 
     try:
-        a = torch.randn((config[0], config[1]), device=DEVICE, dtype=torch.float16)
-        b = torch.randn((config[1], config[2]), device=DEVICE, dtype=torch.float16)
+        a = torch.randn((config[0], config[1]), device=DEVICE)
+        b = torch.randn((config[1], config[2]), device=DEVICE)
     except RuntimeError as e:
         print(f"Could not allocate because of {e}")
 
@@ -226,7 +239,7 @@ def objective_function(config):
     res = gp_minimize(wrapped_objective, [Categorical(block_sizes), Categorical(block_sizes), Categorical(block_sizes), Categorical(group_size), Categorical(warp_size), Categorical(stage_size)], n_calls=config_count)
     del a,b
 
-    data = train_df
+    data = data_frame
     data['GPU'] = gpu
     print(f'All the data shape before processing {data.shape}')
 
@@ -282,12 +295,12 @@ def objective_function(config):
     ndcg = ndcg_score([y_test], [y_pred])
 
     results.append(ndcg)
-    ranker.save_model(f'ranker_model_{iteration}.json')
+    ranker.save_model(f'ranker_model_cfg_{iteration}.json')
     iteration += 1
 
     return -ndcg
 
 print('Starting Bayesian Optimization')
-res = gp_minimize(objective_function, [(16, 256), (16, 256), (16, 256)], n_calls=10)
-train_df.to_csv('bao_data.csv')
+res = gp_minimize(objective_function, [Categorical(problem_sizes), Categorical(problem_sizes), Categorical(problem_sizes)], n_calls=20)
+data_frame.to_csv('bao_data_50_50.csv')
 print(results)
