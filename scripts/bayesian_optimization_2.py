@@ -268,7 +268,7 @@ def objective_function(config, test_programs):
     return -ndcg
 
 df_full = process_data('all_gemm.csv')
-gpu = 'V100'
+gpu = 'A100'
 df_full = df_full[df_full['GPU'] == gpu]
 
 results = []

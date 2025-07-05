@@ -85,17 +85,20 @@ def find_all_json_files(root_dir, is_gemm):
             # print("JDAKSJ")
             # print(base)
             base_path = Path(base)
-            all_json_files = base_path.rglob('all*.json')
-            for json_file in all_json_files:
-                caller = create_data_frame_gemm if is_gemm else create_data_frame_swiglu
-                df_new = caller(json_file)
-                if df_new is None:
-                    continue
-                for gpu in gpus:
-                    if gpu in str(json_file):
-                        df_new['GPU'] = gpu
-                        break
-                result.append(df_new)
+            for subdir in base_path.rglob("*"):
+                if "A100" in str(subdir):
+                    all_json_files = subdir.rglob('all*.json')
+                    for json_file in all_json_files:
+                        # print(json_file)
+                        caller = create_data_frame_gemm if is_gemm else create_data_frame_swiglu
+                        df_new = caller(json_file)
+                        if df_new is None:
+                            continue
+                        for gpu in gpus:
+                            if gpu in str(json_file):
+                                df_new['GPU'] = gpu
+                                break
+                        result.append(df_new)
     return result
 
 if __name__ == "__main__":
@@ -131,6 +134,8 @@ if __name__ == "__main__":
 
     ## Remove all the columns where number of warps is not power of two
     data = data[data['num_warps'].apply(is_power_of_two)]
+    print(f'The data shape after dropping the non power of two warps {data.shape}')
+    # data = data.iloc[500:1001]
     print(f'The data shape after dropping the non power of two warps {data.shape}')
     csv_name = 'all_gemm.csv' if is_gemm else 'all_swiglu.csv'
     csv_name = 'all_gemm_data.csv'

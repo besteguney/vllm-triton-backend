@@ -1,0 +1,69 @@
+{
+    "signature": "JITFunction(triton_swiglu:fused_silu_and_mul_kernel_other)",
+    "total_bench_time_s": 0.0,
+    "total_configs": 10,
+    "current_eval": {
+        "('64', '4096', '524288', 'torch.float16', 'torch.float16')": 10
+    },
+    "keys": [
+        "D",
+        "num_tokens",
+        "n_elements"
+    ],
+    "cache": {},
+    "timings": {
+        "('64', '4096', '524288', 'torch.float16', 'torch.float16')": [
+            {
+                "config": "BLOCK_SIZE: 16, num_warps: 32, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.05669327452778816,
+                "compile_time": 0.25742530822753906
+            },
+            {
+                "config": "BLOCK_SIZE: 128, num_warps: 4, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.004504219628870487,
+                "compile_time": 0.09564065933227539
+            },
+            {
+                "config": "BLOCK_SIZE: 512, num_warps: 2, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.004758559633046389,
+                "compile_time": 0.10903048515319824
+            },
+            {
+                "config": "BLOCK_SIZE: 256, num_warps: 1, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.006174019537866116,
+                "compile_time": 0.10852766036987305
+            },
+            {
+                "config": "BLOCK_SIZE: 64, num_warps: 2, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.004723612684756517,
+                "compile_time": 0.09450721740722656
+            },
+            {
+                "config": "BLOCK_SIZE: 1024, num_warps: 2, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.006859159097075462,
+                "compile_time": 0.12700986862182617
+            },
+            {
+                "config": "BLOCK_SIZE: 2048, num_warps: 16, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0132416607812047,
+                "compile_time": 0.10301947593688965
+            },
+            {
+                "config": "BLOCK_SIZE: 256, num_warps: 2, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.004788296762853861,
+                "compile_time": 0.10531473159790039
+            },
+            {
+                "config": "BLOCK_SIZE: 4096, num_warps: 16, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.021357981488108635,
+                "compile_time": 0.10990262031555176
+            },
+            {
+                "config": "BLOCK_SIZE: 8192, num_warps: 2, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.04880590736865997,
+                "compile_time": 0.5283739566802979
+            }
+        ]
+    },
+    "cuda_graphs": true
+}

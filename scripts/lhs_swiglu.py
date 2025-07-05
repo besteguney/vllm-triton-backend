@@ -7,7 +7,7 @@ import triton_dejavu
 from triton_swiglu import fused_silu_and_mul_cfg
 from lhs import LatinHypercubeSampler
 
-random.seed(42)
+random.seed(0)
 
 # Problem dimensions
 # heads = range(16, 2**14+1)
@@ -84,7 +84,7 @@ for ex in final_samples:
         print(f"Could not allocated the size because of {e}")
         continue
     fused_silu_and_mul_cfg(x, ex['cfgs'])
-
+    del x
     # a = torch.randn((ex['m'], ex['k']), device=DEVICE, dtype=torch.float16)
     # b = torch.randn((ex['k'], ex['n']), device=DEVICE, dtype=torch.float16)
     # quantiles = [0.5, 0.2, 0.8]

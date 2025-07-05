@@ -248,7 +248,7 @@ def objective_function(config, test_programs):
 
 df_full = process_data('all_swiglu.csv')
 
-gpu = 'V100'
+gpu = 'A100'
 df_full = df_full[df_full['GPU'] == gpu]
 
 from skopt.space import Real, Integer, Categorical
