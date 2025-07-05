@@ -8,25 +8,25 @@ from triton_swiglu import fused_silu_and_mul_cfg
 from lhs import LatinHypercubeSampler
 import itertools
 
-random.seed(42)
+random.seed(71)
 
 # Problem dimensions
-heads = range(16, 2**14+1)
-seqlen = range(16, 1024)
-max_values = [0.01, 0.1, 1.0]
-batch = range(1, 128)
-block_sizes = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192]
-num_warps = [2**i for i in range(6)]
-num_stages = [i for i in range(6)]
-
-
-# heads = [2**i for i in range(4,15)]
-# seqlen = [2**i for i in range(4,11)]
+# heads = range(16, 2**14+1)
+# seqlen = range(16, 1024)
 # max_values = [0.01, 0.1, 1.0]
-# batch = [2**i for i in range(9)]
+# batch = range(1, 128)
 # block_sizes = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192]
 # num_warps = [2**i for i in range(6)]
 # num_stages = [i for i in range(6)]
+
+
+heads = [2**i for i in range(4,15)]
+seqlen = [2**i for i in range(4,11)]
+max_values = [0.01, 0.1, 1.0]
+batch = [2**i for i in range(9)]
+block_sizes = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192]
+num_warps = [2**i for i in range(6)]
+num_stages = [i for i in range(6)]
 
 # all_problems = list(itertools.product(heads, seqlen, max_values, batch))
 all_combinations = list(itertools.product(block_sizes, num_warps, num_stages))
@@ -57,6 +57,7 @@ for i in range(50):
         print(f"Could not allocated the size because of {e}")
         continue
     fused_silu_and_mul_cfg(x, configs)
+    del x
 
     # a = torch.randn((ex['m'], ex['k']), device=DEVICE, dtype=torch.float16)
     # b = torch.randn((ex['k'], ex['n']), device=DEVICE, dtype=torch.float16)

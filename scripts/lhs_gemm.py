@@ -11,7 +11,7 @@ from collections import defaultdict
 from triton_gemm import matmul 
 
 DEVICE = 'cuda'
-random.seed(0)
+random.seed(71)
 
 ## GEMM Search Space Dimensions
 problem_dimension = [2**i for i in range(15)]

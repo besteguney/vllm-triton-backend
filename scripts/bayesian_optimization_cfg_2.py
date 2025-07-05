@@ -24,7 +24,8 @@ from triton.compiler.errors import CompilationError
 from triton_gemm import matmul, matmul_kernel2
 
 ## Global Variables
-random.seed(0)
+seed_val = 42
+random.seed(seed_val)
 DEVICE = 'cuda'
 model_params = {
     'objective':'lambdarank',
@@ -209,7 +210,7 @@ def objective_function_cfg(config, a, b):
     runtime = np.inf if output['result'] is None else ms
     row = {**test_config, 'runtime':runtime, 'M': a.shape[0], 'N': b.shape[1], 'K': a.shape[1]}
     data_frame = pd.concat([data_frame, pd.DataFrame([row])], ignore_index=True)
-    if ms < best_ms - 1e-7:
+    if ms < best_ms - 1e-6:
         best_ms = ms
         no_improvement_rounds_config = 0
     else:
@@ -231,7 +232,7 @@ def objective_function(config, test_programs):
     search_space = [Categorical(block_sizes), Categorical(block_sizes), Categorical(block_sizes), Categorical(group_size), Categorical(warp_size), Categorical(stage_size)]
 
     # --- BO Loop with Custom Stopping ---
-    opt2= Optimizer(search_space, base_estimator="GP", acq_func="EI", random_state=42)
+    opt2= Optimizer(search_space, base_estimator="GP", acq_func="EI", random_state=seed_val)
 
     for i in range(max_number_configs):
         x1 = opt2.ask()
@@ -301,7 +302,7 @@ def objective_function(config, test_programs):
 
     results.append(ndcg)
     ranker.save_model(f'ranker_model_cfg_{iteration}.json')
-    if ndcg > best_ndcg + 1e-5:
+    if ndcg > best_ndcg + 1e-6:
         best_ndcg = ndcg
         no_improvement_rounds = 0
     else:
@@ -318,7 +319,9 @@ results = []
 
 problem_sizes = [2**i for i in range(15)]
 search_space = [Categorical(problem_sizes), Categorical(problem_sizes), Categorical(problem_sizes)]
-opt = Optimizer(search_space, base_estimator="GP", acq_func="EI", random_state=42)
+# problem_sizes = Integer(1, 8192)
+# search_space = [problem_sizes, problem_sizes, problem_sizes]
+opt = Optimizer(search_space, base_estimator="GP", acq_func="EI", random_state=seed_val)
 
 for i in range(50):
     ## Creating the test programs
@@ -333,4 +336,5 @@ for i in range(50):
         print(f"Stopped after {i+1} iterations due to no improvement.")
         break
 
-data_frame.to_csv('gemm_bao_data_power_of_two_stop.csv')
+print(data_frame.shape)
+data_frame.to_csv('gemm_data_v100_bao_power_of_two_2.csv')

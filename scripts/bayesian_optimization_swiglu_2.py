@@ -27,7 +27,8 @@ from collections import defaultdict
 from triton_swiglu import fused_silu_and_mul_cfg 
 
 ## Global Variables
-random.seed(42)
+seed_val = 71
+random.seed(seed_val)
 no_improvement_rounds = 0
 results = []
 best_ndcg = -np.inf
@@ -145,7 +146,7 @@ def find_all_json_files(root_dir):
     result = []
     for dirpath, dirnames, filenames in os.walk(root_dir):
         base = os.path.basename(dirpath)
-        if base.startswith("bao_data_swiglu_2"):
+        if base.startswith("swiglu_data_bao_lhs_stop_10_power_of_two_3"):
             # print(base)
             base_path = Path(base)
             all_json_files = base_path.rglob('all*.json')
@@ -252,22 +253,22 @@ df_full = df_full[df_full['GPU'] == gpu]
 
 from skopt.space import Real, Integer, Categorical
 
-search_space = [
-    Integer(16, 1024),      # tokens multiplier
-    Integer(1, 128),      # tokens multiplier
-    Integer(16, 2**14),   # d
-    Real(0.01, 1.0)      # max_value
-]
-
 # search_space = [
-#     Categorical([2**i for i in range(4, 10)]),
-#     Categorical([2**i for i in range(7)]),
-#     Categorical([2**i for i in range(4, 14)]),
-#     Categorical([0.01, 1.0])      # max_value
+#     Integer(16, 1024),      # tokens multiplier
+#     Integer(1, 128),      # tokens multiplier
+#     Integer(16, 2**14),   # d
+#     Real(0.01, 1.0)      # max_value
 # ]
 
+search_space = [
+    Categorical([2**i for i in range(4, 10)]),
+    Categorical([2**i for i in range(7)]),
+    Categorical([2**i for i in range(4, 14)]),
+    Categorical([0.01, 1.0])      # max_value
+]
+
 # --- BO Loop with Custom Stopping ---
-opt = Optimizer(search_space, base_estimator="GP", acq_func="EI", random_state=42)
+opt = Optimizer(search_space, base_estimator="GP", acq_func="EI", random_state=seed_val)
 
 for i in range(max_iterations):
     ## Creating the test programs
