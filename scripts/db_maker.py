@@ -81,22 +81,36 @@ def find_all_json_files(root_dir, is_gemm):
     result = []
     for dirpath, dirnames, filenames in os.walk(root_dir):
         base = os.path.basename(dirpath)
-        if base.startswith("gemm_data_bao_lhs_10_stop_power_of_two_3"):
+        if base.startswith("gemm_data"):
+            # print("JDAKSJ")
+            # print(base)
+            # base_path = Path(base)
+            # for subdir in base_path.rglob("*"):
+            #     if "A100" in str(subdir):
+            #         all_json_files = subdir.rglob('all*.json')
+            #         for json_file in all_json_files:
+            #             # print(json_file)
+            #             caller = create_data_frame_gemm if is_gemm else create_data_frame_swiglu
+            #             df_new = caller(json_file)
+            #             if df_new is None:
+            #                 continue
+            #             for gpu in gpus:
+            #                 if gpu in str(json_file):
+            #                     df_new['GPU'] = gpu
+            #                     break
+            #             result.append(df_new)
             base_path = Path(base)
-            for subdir in base_path.rglob("*"):
-                if "A100" in str(subdir):
-                    all_json_files = subdir.rglob('all*.json')
-                    for json_file in all_json_files:
-                        # print(json_file)
-                        caller = create_data_frame_gemm if is_gemm else create_data_frame_swiglu
-                        df_new = caller(json_file)
-                        if df_new is None:
-                            continue
-                        for gpu in gpus:
-                            if gpu in str(json_file):
-                                df_new['GPU'] = gpu
-                                break
-                        result.append(df_new)
+            all_json_files = base_path.rglob('all*.json')
+            for json_file in all_json_files:
+                caller = create_data_frame_gemm if is_gemm else create_data_frame_swiglu
+                df_new = caller(json_file)
+                if df_new is None:
+                    continue
+                for gpu in gpus:
+                    if gpu in str(json_file):
+                        df_new['GPU'] = gpu
+                        break
+                result.append(df_new)
     return result
 
 if __name__ == "__main__":
@@ -136,8 +150,6 @@ if __name__ == "__main__":
     # data = data.iloc[500:1001]
     print(f'The data shape after dropping the non power of two warps {data.shape}')
     csv_name = 'all_gemm.csv' if is_gemm else 'all_swiglu.csv'
-    csv_name = 'gemm_data_a100_bao_lhs_10_stop_power_of_two_3.csv'
-    # data = data.iloc[:300]
-    print(f'The data shape after dropping the non power of two warps {data.shape}')
+    csv_name = 'all_gemm_data.csv'
     data.to_csv(csv_name)
 

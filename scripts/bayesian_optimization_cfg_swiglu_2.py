@@ -350,5 +350,4 @@ for i in range(max_iterations):
         print(f"Stopped after {i+1} iterations due to no improvement.")
         break
 
-print(data_frame.shape)
-data_frame.to_csv('swiglu_data_bao_stop_non_two_2.csv')
+data_frame.to_csv('swiglu_data_v100_bao_stop_non_two_3.csv')
