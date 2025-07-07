@@ -31,7 +31,8 @@ from collections import defaultdict
 from triton_gemm import matmul 
 
 ## Global Variables
-random.seed(0)
+seed_val = 71
+random.seed(seed_val)
 model_params = {
     'objective':'lambdarank',
     'metric':'ndcg',
@@ -51,7 +52,7 @@ warp_size = [2** i for i in range(6)]
 stage_size = list(range(8))
 group_size = [1,2,4,8,16]
 
-config_count = 5
+config_count = 10
 max_iterations = 50
 no_improvement_rounds = 0
 n_rounds_no_improve = 10
@@ -160,7 +161,7 @@ def find_all_json_files(root_dir):
     result = []
     for dirpath, dirnames, filenames in os.walk(root_dir):
         base = os.path.basename(dirpath)
-        if base.startswith("bao_data"):
+        if base.startswith("gemm_data_bao_lhs_10_stop_power_of_two_3"):
             # print(base)
             base_path = Path(base)
             all_json_files = base_path.rglob('all*.json')
@@ -188,8 +189,8 @@ def objective_function(config, test_programs):
 
 
     try:
-        a = torch.randn((config[0], config[1]), device=DEVICE)
-        b = torch.randn((config[1], config[2]), device=DEVICE)
+        a = torch.randn((config[0], config[1]), device=DEVICE, dtype=torch.float16)
+        b = torch.randn((config[1], config[2]), device=DEVICE, dtype=torch.float16)
     except RuntimeError as e:
         print(f"Could not allocate because of {e}")
     quantiles = [0.5, 0.2, 0.8]
@@ -199,6 +200,7 @@ def objective_function(config, test_programs):
         print(f'The {config} took {ms} milliseconds')
     except RuntimeError as e:
         print(f"Could not run the benchmark because of {e}")
+
     del a,b
 
     all_data_frames= find_all_json_files('.')
@@ -257,7 +259,7 @@ def objective_function(config, test_programs):
     ndcg = ndcg_score([y_test], [y_pred])
 
     results.append(ndcg)
-    if ndcg > best_ndcg + 1e-4:
+    if ndcg > best_ndcg + 1e-5:
         best_ndcg = ndcg
         no_improvement_rounds = 0
     else:
@@ -266,7 +268,7 @@ def objective_function(config, test_programs):
     return -ndcg
 
 df_full = process_data('all_gemm.csv')
-gpu = 'V100'
+gpu = 'A100'
 df_full = df_full[df_full['GPU'] == gpu]
 
 results = []
@@ -278,9 +280,10 @@ problem_sizes = [2**i for i in range(14)]
 
 
 search_space = [Categorical(problem_sizes), Categorical(problem_sizes), Categorical(problem_sizes)]
+# search_space = [problem_sizes, problem_sizes, problem_sizes]
 
 # --- BO Loop with Custom Stopping ---
-opt = Optimizer(search_space, base_estimator="GP", acq_func="EI", random_state=42)
+opt = Optimizer(search_space, base_estimator="GP", acq_func="EI", random_state=seed_val)
 
 for i in range(max_iterations):
     ## Creating the test programs

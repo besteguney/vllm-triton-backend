@@ -27,7 +27,7 @@ from collections import defaultdict
 from triton_swiglu import fused_silu_and_mul_kernel2
 
 ## Global Variables
-seed_val = 0
+seed_val = 42
 random.seed(seed_val)
 model_params = {
     'objective':'lambdarank',
@@ -193,8 +193,11 @@ def objective_function_cfg(config, x):
         res = fused_mul(x, test_config)
         output['result'] = res
         return res
-    
-    ms, min_ms, max_ms = triton.testing.do_bench(wrapped_swiglu, quantiles=quantiles)
+    try:
+        ms, min_ms, max_ms = triton.testing.do_bench(wrapped_swiglu, quantiles=quantiles)
+    except RuntimeError as e:
+        print(f"Could not run the benchmark because of {e}")
+        ms = np.inf
     runtime = np.inf if output['result'] is None else ms
     row = {**test_config, 'runtime':runtime, 'd': x.shape[1] // 2, 'tokens': x.shape[0]}
     data_frame = pd.concat([data_frame, pd.DataFrame([row])], ignore_index=True)
@@ -297,7 +300,7 @@ def objective_function(config, test_programs):
     ndcg = ndcg_score([y_test], [y_pred])
 
     results.append(ndcg)
-    if ndcg > best_ndcg + 1e-5:
+    if ndcg > best_ndcg + 1e-6:
         best_ndcg = ndcg
         no_improvement_rounds = 0
     else:

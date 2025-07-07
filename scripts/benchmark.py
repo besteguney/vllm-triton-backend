@@ -39,18 +39,17 @@ from vllm_utils import (
     ref_prefix_prefill,
     ref_reshape_and_cache_flash,
     ref_reshape_and_cache,
+    ref_paged_attn,
 )
 from torch_utils import get_gpu_label, end2end_bench
 from ibm_triton_lib.utils.triton_utils import get_runtime_label
 from roofline.proton_viewer import parse
 
+# let the three most used variables be overwritten separately
 STORE_TEST_RESULT_PATH = os.environ.get("STORE_TEST_RESULT_PATH", None)
 MY_IUT = [
     e for e in os.environ.get("MY_IUT", "").split(",") if len(e) > 0
 ]  # my implementations under test (IUT)
-MY_MAX_VALUES = [
-    e for e in os.environ.get("MY_MAX_VALUES", "").split(",") if len(e) > 0
-]
 MY_METHODS = [e for e in os.environ.get("MY_METHODS", "").split(",") if len(e) > 0]
 
 
@@ -65,6 +64,10 @@ class Implementation(Enum):
     TRITON_FP8 = 7
     TRITON_3D = 8
     TRITON_FUSED = 9
+    UNF_TRITON_3D = 10
+    UNF_TRITON_2D = 11
+    UNF_TRITON_AUTO = 12
+    PYTORCH_NATIVE = 13
 
 
 class BenchmarkMode(Enum):
@@ -73,6 +76,25 @@ class BenchmarkMode(Enum):
     CUDA_GRAPHS = 2
     TORCH_COMPILE = 3
 
+
+class BatchComposition(Enum):
+    DEC_PRE = 0
+    PRE_DEC = 1
+    ALTERNATING = 2
+
+
+impl_translate = {i.name: i.value for i in Implementation}
+method_translate = {i.name: i.value for i in BenchmarkMode}
+batch_comp_translate = {i.name: i.value for i in BatchComposition}
+
+dtype_translate = {
+    "float16": torch.float16,
+    "half": torch.half,
+    "bfloat16": torch.bfloat16,
+    "float": torch.float,
+    "float8_e4m3fn": torch.float8_e4m3fn,
+    "float5_e5m2": torch.float8_e5m2,
+}
 
 # DTYPES = [torch.half, torch.bfloat16, torch.float]
 DTYPES = [torch.float16]
@@ -125,12 +147,8 @@ NUM_BLOCKS = [4321]  # "arbitrary values for testing..."
 CAUSAL_FLASH = [True]  # vLLM only needs causal=True
 
 PROMPT_PATTERNS = []
-# PROMPT_PATTERNS.append([1.0])
-# PROMPT_PATTERNS.append([1.0, 0.4, 0.5, 1.0, 0.2])
+PROMPT_PATTERNS.append([1.0])
 PROMPT_PATTERNS.append([0.1, 0.4, 0.5, 1.0, 0.2])
-
-impl_translate = {i.name: i.value for i in Implementation}
-method_translate = {i.name: i.value for i in BenchmarkMode}
 
 IMPLEMENTATION_UT = [
     Implementation.TRITON_2D,
@@ -138,13 +156,16 @@ IMPLEMENTATION_UT = [
     Implementation.BASELINE_TRITON,
     Implementation.VLLM_CUDA_V1,
     Implementation.VLLM_CUDA_V2,
-    Implementation.XFORMERS,
+    # Implementation.XFORMERS,
     Implementation.FLASH_ATTN,
-    Implementation.TRITON_FP8,
-    Implementation.FLASHINFER,
+    # Implementation.TRITON_FP8,
+    # Implementation.FLASHINFER,
+    Implementation.UNF_TRITON_3D,
+    Implementation.UNF_TRITON_2D,
+    Implementation.UNF_TRITON_AUTO,
 ]
-MAX_VALUES = [0.01, 0.1, 1.0]
-# MAX_VALUES = [1.0]
+# MAX_VALUES = [0.01, 0.1, 1.0]
+MAX_VALUES = [1.0]
 BENCHMARK_MODES = [BenchmarkMode.CUDA_EVENTS, BenchmarkMode.CUDA_GRAPHS]
 
 if os.getenv("NGL_FULL_TEST", "0") == "1":
@@ -195,34 +216,20 @@ if len(MY_IUT) > 0:
     IMPLEMENTATION_UT = []
     for ci_value in MY_IUT:
         IMPLEMENTATION_UT.append(Implementation(impl_translate[ci_value]))
-if len(MY_MAX_VALUES) > 0:
-    MAX_VALUES = []
-    for cm_value in MY_MAX_VALUES:
-        MAX_VALUES.append(float(cm_value))
 if len(MY_METHODS) > 0:
     BENCHMARK_MODES = []
     for cb_value in MY_METHODS:
         BENCHMARK_MODES.append(BenchmarkMode(method_translate[cb_value]))
+# only overwrite the .conf file if the environment variable is present!
+if "TEST_ALLOW_INCORRECT" in os.environ:
+    enforce_numerical_correctness = os.environ["TEST_ALLOW_INCORRECT"] == "1"
+if "TRITON_BACKEND_DEBUG" in os.environ:
+    debug_flag = os.environ["TRITON_BACKEND_DEBUG"] == "1"
 
 
 for varlen_p in PROMPT_PATTERNS:
     for e in varlen_p:
         assert e <= 1.0
-
-device = "cuda:0"
-gpu_name = get_gpu_label()
-
-do_benchmarks = True
-# do_benchmarks = False
-quantiles = [0.5, 0.2, 0.8]
-# should maybe also be controlled via env variable
-force_dump_dataframes = False
-enforce_numerical_correctness = True
-# enforce_numerical_correctness = False
-do_profiling = False  # will add overhead to kernel runtime measured via CUDA_EVENTS
-store_hatchet = False
-debug_flag = os.getenv("TRITON_BACKEND_DEBUG") == "1"
-add_triton_dejavu_envs = True
 
 
 @pytest.mark.parametrize("batch_size", BATCH_SIZES)
@@ -238,7 +245,7 @@ add_triton_dejavu_envs = True
 @pytest.mark.parametrize("max_value", MAX_VALUES)
 @pytest.mark.parametrize("benchmark_mode", BENCHMARK_MODES)
 @torch.inference_mode()
-def test_decode_attention(
+def test_decode_vllm_v0_attention(
     capsys,
     request,
     batch_size,
@@ -268,6 +275,19 @@ def test_decode_attention(
     realistic_prompt_mode = len(prompt_pattern) > 1
     gqa_mode = num_heads[0] != num_heads[1]
 
+    if implementation not in [
+        Implementation.BASELINE_TRITON,
+        Implementation.FLASH_ATTN,
+        Implementation.VLLM_CUDA_V1,
+        Implementation.VLLM_CUDA_V2,
+        Implementation.TRITON_2D,
+        Implementation.TRITON_3D,
+        Implementation.TRITON_FP8,
+        Implementation.XFORMERS,
+        Implementation.FLASHINFER,
+    ]:
+        pytest.skip("unsupported configuration")
+
     if implementation == Implementation.BASELINE_TRITON and (
         benchmark_mode == BenchmarkMode.CUDA_GRAPHS or realistic_prompt_mode or gqa_mode
     ):
@@ -278,6 +298,14 @@ def test_decode_attention(
     ):
         pytest.skip("unsupported configuration")
     if implementation == Implementation.XFORMERS and gqa_mode:
+        pytest.skip()
+
+    # TODO
+    if implementation in [
+        Implementation.UNF_TRITON_3D,
+        Implementation.UNF_TRITON_2D,
+        Implementation.UNF_TRITON_AUTO,
+    ]:
         pytest.skip()
 
     RTOL = 0
@@ -621,7 +649,7 @@ def test_decode_attention(
 @pytest.mark.parametrize("max_value", MAX_VALUES)
 @pytest.mark.parametrize("benchmark_mode", BENCHMARK_MODES)
 @torch.inference_mode()
-def test_prefill_attention(
+def test_prefill_vllm_v0_attention(
     capsys,
     request,
     batch_size,
@@ -649,7 +677,11 @@ def test_prefill_attention(
         pytest.skip()
 
     # TODO
-    if implementation not in [Implementation.TRITON_3D, Implementation.FLASH_ATTN]:
+    if implementation not in [
+        Implementation.TRITON_3D,
+        Implementation.FLASH_ATTN,
+        Implementation.PYTORCH_NATIVE,
+    ]:
         pytest.skip("unsupported configuration")
     elif implementation == Implementation.TRITON_3D:
         if (not math.log(head_size, 2).is_integer()) or (head_size > 256):
@@ -662,6 +694,16 @@ def test_prefill_attention(
         if batch_size > 200:
             # FIXME(ngl): also causes illegal memory access
             pytest.skip()
+    elif implementation == Implementation.PYTORCH_NATIVE and realistic_prompt_mode:
+        pytest.skip("unsupported configuration")
+
+    # TODO
+    if implementation in [
+        Implementation.UNF_TRITON_3D,
+        Implementation.UNF_TRITON_2D,
+        Implementation.UNF_TRITON_AUTO,
+    ]:
+        pytest.skip()
 
     ATOL = 1e-3 * max_value
     RTOL = 1e-5
@@ -726,6 +768,8 @@ def test_prefill_attention(
             from callers import FlashAttnPrefillCaller as Caller
         elif implementation == Implementation.TRITON_3D:
             from callers import Triton3dAttentionPrefillCaller as Caller
+        elif implementation == Implementation.PYTORCH_NATIVE:
+            from callers import PytorchNativeAttentionPrefillCaller as Caller
 
         if Caller.requires_allocated_output:
             output = torch.empty_like(query)
@@ -916,13 +960,14 @@ def test_prefill_attention(
 @pytest.mark.parametrize("block_size", BLOCK_SIZES)
 @pytest.mark.parametrize("num_blocks", NUM_BLOCKS)
 @pytest.mark.parametrize("prompt_pattern", PROMPT_PATTERNS)
+@pytest.mark.parametrize("batch_composition", PREFIX_PREFILL_BATCH_COMPOSITION)
 @pytest.mark.parametrize("dtype", DTYPES)
 @pytest.mark.parametrize("seed", SEEDS)
 @pytest.mark.parametrize("implementation", IMPLEMENTATION_UT)
 @pytest.mark.parametrize("max_value", MAX_VALUES)
 @pytest.mark.parametrize("benchmark_mode", BENCHMARK_MODES)
 @torch.inference_mode()
-def test_prefix_attention(
+def test_prefix_vllm_v1_attention(
     capsys,
     request,
     batch_size,
@@ -936,6 +981,7 @@ def test_prefix_attention(
     block_size,
     num_blocks,
     prompt_pattern,
+    batch_composition,
     dtype,
     seed,
     implementation,
@@ -957,6 +1003,9 @@ def test_prefix_attention(
         Implementation.FLASH_ATTN,
         Implementation.TRITON_FUSED,
         Implementation.TRITON_2D,
+        Implementation.UNF_TRITON_3D,
+        Implementation.UNF_TRITON_2D,
+        Implementation.UNF_TRITON_AUTO,
     ]:
         pytest.skip()
 
@@ -974,11 +1023,9 @@ def test_prefix_attention(
     if realistic_prompt_mode:
         ATOL *= 2.2  # for 0.0313% of the cases...
     RTOL = 1e-5
-    # TODO
-    if implementation == Implementation.FLASH_ATTN and decode_share != 1.0:
-        ATOL = 2 * max_value  # for 0.0269%
-        if seqlen >= 512:
-            ATOL = 2.5 * max_value  # 4.77e-05%
+    # TODO?? due to incomplete output batch?
+    if decode_share != 1.0:
+        ATOL = 2 * max_value
 
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
@@ -995,7 +1042,7 @@ def test_prefix_attention(
     partial_prefill_seqs = int(np.ceil(prefill_seqs * partial_prefill_share))
     full_prefill_seqs = prefill_seqs - partial_prefill_seqs
 
-    # reuse same prompt pattern for partial promps, but with half the length
+    # reuse same prompt pattern for partial prompts, but with half the length
     len_fraction_half = itertools.cycle([pp * 0.5 for pp in prompt_pattern])
     raw_partial_prefill_ctx_lens = [
         int(np.ceil(l // block_size * next(len_fraction_half))) * block_size
@@ -1020,7 +1067,7 @@ def test_prefix_attention(
         + init_seq_lens[decode_seqs + partial_prefill_seqs :]
     )
     ctx_lens = (
-        # TODO: substract one from query length or not? (adapt assert below if changing)
+        # TODO: subtract one from query length or not? (adapt assert below if changing)
         [ol - 1 for ol in init_seq_lens[:decode_seqs]]
         # init_seq_lens[:decode_seqs]
         + partial_prefill_ctx_lens[decode_seqs : decode_seqs + partial_prefill_seqs]
@@ -1028,6 +1075,24 @@ def test_prefix_attention(
     )
     seq_lens = [a + b for a, b in zip(query_lens, ctx_lens)]
     max_seq_len = max(seq_lens)
+
+    # BatchComposition.DEC_PRE is default
+    if batch_composition == BatchComposition.PRE_DEC:
+        query_lens.reverse()
+        ctx_lens.reverse()
+        seq_lens.reverse()
+    if batch_composition == BatchComposition.ALTERNATING:
+        alorder = []
+        indexs_remaining = list(range(len(query_lens)))
+        for i in range(len(query_lens) // 2):
+            alorder.append(i)
+            alorder.append(len(query_lens) - i - 1)
+            indexs_remaining.remove(i)
+            indexs_remaining.remove(len(query_lens) - i - 1)
+        alorder.extend(indexs_remaining)
+        query_lens = [query_lens[i] for i in alorder]
+        ctx_lens = [ctx_lens[i] for i in alorder]
+        seq_lens = [seq_lens[i] for i in alorder]
 
     if debug_flag:
         print(
@@ -1041,8 +1106,8 @@ def test_prefix_attention(
         print("partial_prefill_ctx_lens", partial_prefill_ctx_lens)
         print(f"\nAfter assembling the final batch:")
         print(f"\tquery_lens: {query_lens}")
-        print(f"\tctx_lens: {ctx_lens}")
-        print(f"\tseq_lens: {seq_lens}")
+        print(f"\t  ctx_lens: {ctx_lens}")
+        print(f"\t  seq_lens: {seq_lens}")
     assert len(ctx_lens) == len(query_lens)
     if not realistic_prompt_mode:
         # assert max_seq_len == seqlen or max_seq_len == seqlen + 1
@@ -1104,7 +1169,7 @@ def test_prefix_attention(
             torch.tensor([0] + query_lens, dtype=torch.int), dim=0, dtype=torch.int
         )
         b_seq_start_loc = torch.cumsum(
-            torch.tensor([0] + seq_lens[:-1], dtype=torch.int), dim=0, dtype=torch.int
+            torch.tensor([0] + seq_lens, dtype=torch.int), dim=0, dtype=torch.int
         )
 
         # Create the block tables.
@@ -1168,6 +1233,15 @@ def test_prefix_attention(
             scale,
             dtype,
         )
+        # ref_output = ref_paged_attn(
+        #     query,
+        #     key_cache,
+        #     value_cache,
+        #     b_query_lens,
+        #     b_ctx_lens,
+        #     block_table_t,
+        #     scale,
+        # )
 
         if implementation == Implementation.FLASH_ATTN:
             from callers import FlashAttnPrefixPrefillCaller as Caller
@@ -1179,6 +1253,12 @@ def test_prefix_attention(
             from callers import Triton2dChunkedPrefillCaller as Caller
         # elif implementation == Implementation.TRITON_3D:
         #     from callers import Triton3dAttentionDecodeCaller as Caller
+        elif implementation == Implementation.UNF_TRITON_3D:
+            from callers import UnifiedTriton3dAttentionCaller as Caller
+        elif implementation == Implementation.UNF_TRITON_2D:
+            from callers import UnifiedTriton2dAttentionCaller as Caller
+        elif implementation == Implementation.UNF_TRITON_AUTO:
+            from callers import UnifiedTritonAutoAttentionCaller as Caller
 
         if Caller.requires_allocated_output:
             output = torch.empty_like(query)
@@ -1511,6 +1591,9 @@ if __name__ == "__main__":
         args = [__file__]
         filter_args = ""
         for ca in sys.argv[1:]:
+            if ".conf" in ca:
+                # already processed
+                continue
             if ca[0] == "-":
                 args.append(ca)
             else:

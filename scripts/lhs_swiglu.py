@@ -7,24 +7,24 @@ import triton_dejavu
 from triton_swiglu import fused_silu_and_mul_cfg
 from lhs import LatinHypercubeSampler
 
-random.seed(42)
+random.seed(0)
 
 # Problem dimensions
-heads = range(16, 2**14+1)
-seqlen = range(16, 1024)
-max_values = [0.01, 0.1, 1.0]
-batch = range(1, 128)
-block_sizes = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192]
-num_warps = [2**i for i in range(6)]
-num_stages = [i for i in range(6)]
-
-# heads = [2**i for i in range(4,15)]
-# seqlen = [2**i for i in range(4,11)]
+# heads = range(16, 2**14+1)
+# seqlen = range(16, 1024)
 # max_values = [0.01, 0.1, 1.0]
-# batch = [2**i for i in range(9)]
+# batch = range(1, 128)
 # block_sizes = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192]
 # num_warps = [2**i for i in range(6)]
 # num_stages = [i for i in range(6)]
+
+heads = [2**i for i in range(4,15)]
+seqlen = [2**i for i in range(4,11)]
+max_values = [0.01, 0.1, 1.0]
+batch = [2**i for i in range(9)]
+block_sizes = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192]
+num_warps = [2**i for i in range(6)]
+num_stages = [i for i in range(6)]
 
 
 
