@@ -27,7 +27,8 @@ from collections import defaultdict
 from triton_swiglu import fused_silu_and_mul_kernel2
 
 ## Global Variables
-random.seed(42)
+seed_val = 0
+random.seed(seed_val)
 model_params = {
     'objective':'lambdarank',
     'metric':'ndcg',
@@ -226,7 +227,7 @@ def objective_function(config, test_programs):
     ]
 
     # --- BO Loop with Custom Stopping ---
-    opt2= Optimizer(search_space, base_estimator="GP", acq_func="EI", random_state=42)
+    opt2= Optimizer(search_space, base_estimator="GP", acq_func="EI", random_state=seed_val)
 
     for i in range(max_number_configs):
         ## Creating the test programs
@@ -306,7 +307,7 @@ def objective_function(config, test_programs):
 
 df_full = process_data('all_swiglu.csv')
 
-gpu = 'V100'
+gpu = 'L40S'
 df_full = df_full[df_full['GPU'] == gpu]
 
 ## Creating the test programs
@@ -331,7 +332,7 @@ search_space = [
 ]
 
 # --- BO Loop with Custom Stopping ---
-opt = Optimizer(search_space, base_estimator="GP", acq_func="EI", random_state=42)
+opt = Optimizer(search_space, base_estimator="GP", acq_func="EI", random_state=seed_val)
 
 for i in range(max_iterations):
     ## Creating the test programs
@@ -346,4 +347,4 @@ for i in range(max_iterations):
         print(f"Stopped after {i+1} iterations due to no improvement.")
         break
 
-data_frame.to_csv('swiglu_data_bao_stop_non_two_2.csv')
+data_frame.to_csv('swiglu_data_bao_stop_non_two_1.csv')
