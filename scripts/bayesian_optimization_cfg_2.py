@@ -39,7 +39,7 @@ categorical_features = ['BLOCK_SIZE_M', 'BLOCK_SIZE_K', 'BLOCK_SIZE_N', 'GROUP_S
 numerical_features = ['M', 'N', 'K']
 collected_data = [] ## The data that has been collected with bao so far
 
-problem_dimension = range(1,8192)
+# problem_dimension = range(1,8192)
 # problem_sizes = [2**i for i in range(14)]
 block_sizes = [16, 32, 64, 128, 256]
 warp_size = [2** i for i in range(5)]
@@ -209,7 +209,7 @@ def objective_function_cfg(config, a, b):
     runtime = np.inf if output['result'] is None else ms
     row = {**test_config, 'runtime':runtime, 'M': a.shape[0], 'N': b.shape[1], 'K': a.shape[1]}
     data_frame = pd.concat([data_frame, pd.DataFrame([row])], ignore_index=True)
-    if ms < best_ms - 1e-7:
+    if ms < best_ms - 1e-6:
         best_ms = ms
         no_improvement_rounds_config = 0
     else:
@@ -301,7 +301,7 @@ def objective_function(config, test_programs):
 
     results.append(ndcg)
     ranker.save_model(f'ranker_model_cfg_{iteration}.json')
-    if ndcg > best_ndcg + 1e-5:
+    if ndcg > best_ndcg + 1e-6:
         best_ndcg = ndcg
         no_improvement_rounds = 0
     else:
@@ -311,13 +311,15 @@ def objective_function(config, test_programs):
 
 quantiles = [0.5, 0.2, 0.8]
 df_full = process_data('all_gemm.csv')
-gpu = 'V100'
+gpu = 'A100'
 df_full = df_full[df_full['GPU'] == gpu]
 
 results = []
 
 problem_sizes = [2**i for i in range(15)]
 search_space = [Categorical(problem_sizes), Categorical(problem_sizes), Categorical(problem_sizes)]
+# problem_sizes = Integer(1, 8192)
+# search_space = [problem_sizes, problem_sizes, problem_sizes]
 opt = Optimizer(search_space, base_estimator="GP", acq_func="EI", random_state=42)
 
 for i in range(50):
@@ -333,4 +335,4 @@ for i in range(50):
         print(f"Stopped after {i+1} iterations due to no improvement.")
         break
 
-data_frame.to_csv('gemm_bao_data_power_of_two_stop.csv')
+data_frame.to_csv('gemm_data_a100_bao_power_of_two_1.csv')

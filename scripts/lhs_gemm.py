@@ -14,8 +14,8 @@ DEVICE = 'cuda'
 random.seed(0)
 
 ## GEMM Search Space Dimensions
-problem_dimension = [2**i for i in range(15)]
-# problem_dimension = range(1, 8193)
+# problem_dimension = [2**i for i in range(15)]
+problem_dimension = range(1, 8193)
 block_sizes = [16, 32, 64, 128, 256]
 warp_size = [2** i for i in range(6)]
 stage_size = list(range(8))
