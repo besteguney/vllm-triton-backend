@@ -7,7 +7,7 @@ from pathlib import Path
 
 import json
 
-gpus = ['V100', 'A100', 'L40S', 'H100'] 
+gpus = ['V100', 'A100', 'L40S', 'H100', 'AMD'] 
 
 # Helper functions
 def read_json(file_path):
@@ -81,7 +81,7 @@ def find_all_json_files(root_dir, is_gemm):
     result = []
     for dirpath, dirnames, filenames in os.walk(root_dir):
         base = os.path.basename(dirpath)
-        if base.startswith("gemm_data"):
+        if base.startswith("swiglu_data"):
             # print("JDAKSJ")
             # print(base)
             # base_path = Path(base)
@@ -150,6 +150,7 @@ if __name__ == "__main__":
     # data = data.iloc[500:1001]
     print(f'The data shape after dropping the non power of two warps {data.shape}')
     csv_name = 'all_gemm.csv' if is_gemm else 'all_swiglu.csv'
-    csv_name = 'all_gemm_data.csv'
+    csv_name = 'all_swiglu_data.csv'
+    print(data[data['GPU'] == 'AMD'].shape)
     data.to_csv(csv_name)
 
