@@ -301,7 +301,7 @@ def prefill_heuristics_2d(MAX_SEQ_Q, MAX_SEQ_K):
            "stride_k_cache_3", "stride_v_cache_3"
            ],
     custom_data_storage=os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "dejavu_data")),
+        os.path.join(os.path.dirname(__file__), "unified_attention")),
     use_cuda_graph=True,
     use_bo=True,
     search_max_search_t=360,
