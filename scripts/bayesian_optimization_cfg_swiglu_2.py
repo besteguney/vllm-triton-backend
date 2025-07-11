@@ -310,7 +310,7 @@ def objective_function(config, test_programs):
 
 df_full = process_data('all_swiglu.csv')
 
-gpu = 'A100'
+gpu = 'L40S'
 df_full = df_full[df_full['GPU'] == gpu]
 
 ## Creating the test programs
@@ -350,5 +350,4 @@ for i in range(max_iterations):
         print(f"Stopped after {i+1} iterations due to no improvement.")
         break
 
-print(data_frame.shape)
-data_frame.to_csv('swiglu_data_bao_stop_non_two_2.csv')
+data_frame.to_csv('swiglu_data_bao_stop_non_two_1.csv')

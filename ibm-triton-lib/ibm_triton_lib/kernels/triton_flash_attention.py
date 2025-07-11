@@ -793,7 +793,8 @@ select_prepare_informed_fallback = lambda: _select_informed_fallback()[1]
     # prepare_informed_fallback = lambda cache: {int(k[27]): c for k, c in cache.items()},
     # informed_fallback = informed_fallback_next,
     # prepare_informed_fallback = prepare_informed_fallback,
-    fallback_heuristic=select_fallback_heuristic(),
+    # fallback_heuristic=select_fallback_heuristic(),
+    fallback_heuristic=fallback_heuristic,
     informed_fallback=select_informed_fallback(),
     prepare_informed_fallback=select_prepare_informed_fallback(),
     # use_bo=True,
@@ -1414,7 +1415,7 @@ def triton_wrapper_forward_prefill(
     # number of compute units available
     NUM_CU = torch.cuda.get_device_properties("cuda").multi_processor_count
 
-    # TODO: test persitent
+    # TODO: test persistent
     if metadata.persistent is not None:
         grid = lambda META: (
             min(

@@ -52,7 +52,7 @@ warp_size = [2** i for i in range(6)]
 stage_size = list(range(8))
 group_size = [1,2,4,8,16]
 
-config_count = 5
+config_count = 10
 max_iterations = 50
 no_improvement_rounds = 0
 n_rounds_no_improve = 10
@@ -200,6 +200,7 @@ def objective_function(config, test_programs):
         print(f'The {config} took {ms} milliseconds')
     except RuntimeError as e:
         print(f"Could not run the benchmark because of {e}")
+
     del a,b
 
     all_data_frames= find_all_json_files('.')
