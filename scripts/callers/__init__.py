@@ -15,45 +15,45 @@
 #  *******************************************************************************/
 #
 
-try:
-    from .flash_attn import (
-        FlashAttnDecodeCaller,
-        FlashAttnPrefillCaller,
-        FlashAttnPrefixPrefillCaller,
-    )
-except ModuleNotFoundError:
-    pass
+# try:
+#     from .flash_attn import (
+#         FlashAttnDecodeCaller,
+#         FlashAttnPrefillCaller,
+#         FlashAttnPrefixPrefillCaller,
+#     )
+# except ModuleNotFoundError:
+#     pass
 
-try:
-    from .xformers import XformersCaller
-except ModuleNotFoundError:
-    # print("[benchmark callers] xformers not present, skipping..")
-    pass
+# try:
+#     from .xformers import XformersCaller
+# except ModuleNotFoundError:
+#     # print("[benchmark callers] xformers not present, skipping..")
+#     pass
 
-try:
-    from .vllm_cuda_v2 import VllmCudaV2Caller
-    from .vllm_cuda_v1 import VllmCudaV1Caller
-    from .baseline_triton import BaselineTritonCaller, BaselineTritonPrefixPrefillCaller
-except ModuleNotFoundError:
-    pass
+# try:
+#     from .vllm_cuda_v2 import VllmCudaV2Caller
+#     from .vllm_cuda_v1 import VllmCudaV1Caller
+#     from .baseline_triton import BaselineTritonCaller, BaselineTritonPrefixPrefillCaller
+# except ModuleNotFoundError:
+#     pass
 
-from .triton_2d import Triton2dAttentionDecodeCaller, Triton2dChunkedPrefillCaller
-from .triton_3d import Triton3dAttentionDecodeCaller, Triton3dAttentionPrefillCaller
-from .triton_fp8 import TritonFp8Caller
+# from .triton_2d import Triton2dAttentionDecodeCaller, Triton2dChunkedPrefillCaller
+# from .triton_3d import Triton3dAttentionDecodeCaller, Triton3dAttentionPrefillCaller
+# from .triton_fp8 import TritonFp8Caller
 
-try:
-    from .flashinfer import FlashInferCaller
-except (ModuleNotFoundError, ImportError):
-    # print("[benchmark callers] flashinfer not present, skipping..")
-    pass
-from .fused_triton import (
-    FusedTritonChunkedPrefixPrefill25dCaller,
-    FusedTritonDecodeOnlyCaller,
-)
-from .pytorch_native import PytorchNativeAttentionPrefillCaller
+# try:
+#     from .flashinfer import FlashInferCaller
+# except (ModuleNotFoundError, ImportError):
+#     # print("[benchmark callers] flashinfer not present, skipping..")
+#     pass
+# from .fused_triton import (
+#     FusedTritonChunkedPrefixPrefill25dCaller,
+#     FusedTritonDecodeOnlyCaller,
+# )
+# from .pytorch_native import PytorchNativeAttentionPrefillCaller
 
 from .unified_triton import (
     UnifiedTriton2dAttentionCaller,
-    UnifiedTriton3dAttentionCaller,
-    UnifiedTritonAutoAttentionCaller,
+    # UnifiedTriton3dAttentionCaller,
+    # UnifiedTritonAutoAttentionCaller,
 )
