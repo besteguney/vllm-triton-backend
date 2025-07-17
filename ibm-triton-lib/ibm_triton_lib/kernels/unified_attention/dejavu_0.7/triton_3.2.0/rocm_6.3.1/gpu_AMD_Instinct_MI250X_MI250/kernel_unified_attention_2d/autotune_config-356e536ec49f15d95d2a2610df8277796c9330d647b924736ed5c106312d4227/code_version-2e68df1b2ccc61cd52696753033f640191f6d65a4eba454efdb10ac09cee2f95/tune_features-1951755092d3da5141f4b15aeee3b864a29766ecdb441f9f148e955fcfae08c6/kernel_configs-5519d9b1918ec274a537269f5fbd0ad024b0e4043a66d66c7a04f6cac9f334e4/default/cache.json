@@ -1,9 +1,44 @@
 {
     "signature": "JITFunction(ibm_triton_lib.kernels.triton_unified_attention:kernel_unified_attention_2d)",
-    "total_bench_time_s": 0.0,
-    "total_configs": 0,
+    "total_bench_time_s": 407397.48894810677,
+    "total_configs": 540,
     "current_eval": {},
-    "keys": null,
-    "cache": {},
-    "timings": {}
+    "keys": [
+        "MAX_SEQ_Q",
+        "MAX_SEQ_K",
+        "AVG_SEQ_Q",
+        "AVG_SEQ_K",
+        "num_query_heads",
+        "num_queries_per_kv",
+        "BLOCK_SIZE",
+        "HEAD_SIZE",
+        "HEAD_SIZE_PADDED",
+        "SLIDING_WINDOW",
+        "stride_k_cache_3",
+        "stride_v_cache_3"
+    ],
+    "cache": {
+        "('16', '16', '16', '16', '32', '4', '16', '128', '128', '0', '1', '1')": "BLOCK_N: 256, BLOCK_M: 512, num_warps: 2, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('32', '32', '32', '32', '32', '4', '16', '128', '128', '0', '1', '1')": "BLOCK_N: 32, BLOCK_M: 16, num_warps: 4, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+        "('64', '64', '64', '64', '32', '4', '16', '128', '128', '0', '1', '1')": "BLOCK_N: 64, BLOCK_M: 16, num_warps: 4, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None"
+    },
+    "timings": {
+        "('16', '16', '16', '16', '32', '4', '16', '128', '128', '0', '1', '1')": [
+            NaN
+        ],
+        "('32', '32', '32', '32', '32', '4', '16', '128', '128', '0', '1', '1')": [
+            0.00644924771040678
+        ],
+        "('64', '64', '64', '64', '32', '4', '16', '128', '128', '0', '1', '1')": [
+            0.010738699696958065
+        ]
+    },
+    "timings_data": {
+        "labels": [
+            "ms"
+        ],
+        "rep_t_ms": 100,
+        "warmup_t_ms": 25,
+        "cuda_graphs": true
+    }
 }
