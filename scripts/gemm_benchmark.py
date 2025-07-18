@@ -18,7 +18,7 @@ dimensions = [2**i for i in range(8,14)]
 all_dim_combinations = list(itertools.product(dimensions, repeat=3))
 
 # Randomly sample 100 unique combinations
-random.seed(9)  # for reproducibility
+random.seed(161)  # for reproducibility
 sampled_dim_combinations = random.sample(all_dim_combinations, 50)
 
 group_size = [1,2,4,8,16]
