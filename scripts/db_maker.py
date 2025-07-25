@@ -7,8 +7,8 @@ from pathlib import Path
 
 import json
 
-# gpus = ['V100', 'A100', 'L40S', 'H100', 'AMD'] 
-gpus = [ 'A100', 'L40S', 'H100', 'AMD'] 
+gpus = ['V100', 'A100', 'L40S', 'H100', 'AMD'] 
+# gpus = [ 'A100', 'L40S', 'H100', 'AMD'] 
 
 # Helper functions
 def read_json(file_path):
@@ -120,9 +120,9 @@ def find_all_json_files(root_dir, is_gemm):
     result = []
     for dirpath, dirnames, filenames in os.walk(root_dir):
         base = os.path.basename(dirpath)
-        if base.startswith("unified_attention"):
-            # print("JDAKSJ")
-            # print(base)
+        if base.startswith("swiglu_data_lhs_25_10_percent"):
+            print("JDAKSJ")
+            print(base)
             # base_path = Path(base)
             # for subdir in base_path.rglob("*"):
             #     if "A100" in str(subdir):
@@ -141,8 +141,8 @@ def find_all_json_files(root_dir, is_gemm):
             base_path = Path(base)
             all_json_files = base_path.rglob('all*.json')
             for json_file in all_json_files:
-                # caller = create_data_frame_gemm if is_gemm else create_data_frame_swiglu
-                caller = create_data_frame_attention
+                caller = create_data_frame_gemm if is_gemm else create_data_frame_swiglu
+                # caller = create_data_frame_attention
                 df_new = caller(json_file)
                 if df_new is None:
                     continue
@@ -156,7 +156,7 @@ def find_all_json_files(root_dir, is_gemm):
 if __name__ == "__main__":
     # Set this to the root directory where the search should begin
     search_root = "."
-    is_gemm = True
+    is_gemm = False
     all_data_frames= find_all_json_files(search_root, is_gemm)
 
     data = pd.concat(all_data_frames, axis=0)
@@ -164,24 +164,24 @@ if __name__ == "__main__":
 
     ## Remove the duplicates
     print(data.columns)
-    # if is_gemm:
-    #     data.drop_duplicates(subset=['M', 'N', 'K', 
-    #                                 'BLOCK_SIZE_M', 
-    #                                 'BLOCK_SIZE_N',
-    #                                 'BLOCK_SIZE_K',
-    #                                 'GROUP_SIZE_M',
-    #                                 'num_warps',
-    #                                 'num_stages',
-    #                                 'GPU'], inplace=True)
-    # else:
-    #     data.drop_duplicates(subset=['BLOCK_SIZE', 
-    #                                  'tokens','d',
-    #                                 'num_warps',
-    #                                 'num_stages',
-    #                                 'GPU'], inplace=True)
-    categorical_features = ['BLOCK_N', 'BLOCK_M', 'num_warps', 'num_stages', 'GPU']
-    numerical_features = ['max_seq_q', 'max_seq_k', 'avg_seq_q', 'avg_seq_k', 'num_query_heads', 'num_queries_per_kv']
-    data.drop_duplicates(subset=categorical_features+numerical_features )
+    if is_gemm:
+        data.drop_duplicates(subset=['M', 'N', 'K', 
+                                    'BLOCK_SIZE_M', 
+                                    'BLOCK_SIZE_N',
+                                    'BLOCK_SIZE_K',
+                                    'GROUP_SIZE_M',
+                                    'num_warps',
+                                    'num_stages',
+                                    'GPU'], inplace=True)
+    else:
+        data.drop_duplicates(subset=['BLOCK_SIZE', 
+                                     'tokens','d',
+                                    'num_warps',
+                                    'num_stages',
+                                    'GPU'], inplace=True)
+    # categorical_features = ['BLOCK_N', 'BLOCK_M', 'num_warps', 'num_stages', 'GPU']
+    # numerical_features = ['max_seq_q', 'max_seq_k', 'avg_seq_q', 'avg_seq_k', 'num_query_heads', 'num_queries_per_kv']
+    # data.drop_duplicates(subset=categorical_features+numerical_features )
     print(f'The data shape after dropping the duplicates {data.shape}')
 
     ## When the runtime is nan, replace with np.inf
@@ -193,7 +193,7 @@ if __name__ == "__main__":
     # data = data.iloc[500:1001]
     print(f'The data shape after dropping the non power of two warps {data.shape}')
     csv_name = 'all_gemm.csv' if is_gemm else 'all_swiglu.csv'
-    csv_name = 'all_attention_data.csv'
+    csv_name = 'swiglu_data_v100_lhs_25_10_percent.csv'
     # print(data[data['GPU'] == 'AMD'].shape)
     data.to_csv(csv_name)
 
