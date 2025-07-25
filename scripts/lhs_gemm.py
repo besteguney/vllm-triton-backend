@@ -11,11 +11,11 @@ from collections import defaultdict
 from triton_gemm import matmul 
 
 DEVICE = 'cuda'
-random.seed(71)
+seed = 42
 
 ## GEMM Search Space Dimensions
-# problem_dimension = [2**i for i in range(15)]
-problem_dimension = range(1, 8193)
+problem_dimension = [2**i for i in range(13)]
+# problem_dimension = range(1, 8193)
 block_sizes = [16, 32, 64, 128, 256]
 warp_size = [2** i for i in range(6)]
 stage_size = list(range(8))
@@ -34,7 +34,7 @@ def gemm_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_combi
             'num_warps': warp_size,
             'num_stages': stage_size
         }
-        lhs = LatinHypercubeSampler(search_dict)
+        lhs = LatinHypercubeSampler(search_dict, seed)
         samples_combined = lhs.generate_new_categorical_samples(n_samples)
         grouped = defaultdict(list)
         for d in samples_combined:
@@ -60,7 +60,7 @@ def gemm_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_combi
             'n': problem_dimension,
             'k': problem_dimension
         }
-        lhs = LatinHypercubeSampler(search_dict_prob)
+        lhs = LatinHypercubeSampler(search_dict_prob, seed)
         samples_prob = lhs.generate_new_categorical_samples(n_samples_prob)
 
         search_dict_cfg = {
@@ -72,7 +72,7 @@ def gemm_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_combi
             'num_stages': stage_size
         }
 
-        lhs = LatinHypercubeSampler(search_dict_cfg)
+        lhs = LatinHypercubeSampler(search_dict_cfg, seed)
         samples_cfg = lhs.generate_new_categorical_samples(n_samples_cfg)
         samples = []
         for s in samples_prob:
@@ -85,7 +85,7 @@ def gemm_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_combi
             samples.append(sample)
         return samples
 
-final_samples = gemm_lhs_sampler(50, 10)
+final_samples = gemm_lhs_sampler(30, 2880)
 for ex in final_samples:
     try:
         a = torch.randn((ex['m'], ex['k']), device=DEVICE, dtype=torch.float16)
@@ -94,11 +94,11 @@ for ex in final_samples:
         print(f"Could not allocate because of {e}")
         continue
     quantiles = [0.5, 0.2, 0.8]
-
-    try: 
-        ms, min_ms, max_ms = triton.testing.do_bench(lambda: matmul(a, b, ex['cfgs']), quantiles=quantiles)
-    except RuntimeError as e:
-        print(f"Coult not run the benchmark because of {e}")
-        continue
-    del a,b
-    print(f"It took {ms}, {min_ms}, {max_ms}")
+    matmul(a, b, ex['cfgs'])
+    # try: 
+    #     ms, min_ms, max_ms = triton.testing.do_bench(lambda: matmul(a, b, ex['cfgs']), quantiles=quantiles)
+    # except RuntimeError as e:
+    #     print(f"Coult not run the benchmark because of {e}")
+    #     continue
+    # del a,b
+    # print(f"It took {ms}, {min_ms}, {max_ms}")

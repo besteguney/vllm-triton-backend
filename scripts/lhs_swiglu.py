@@ -6,8 +6,8 @@ import random
 import triton_dejavu
 from triton_swiglu import fused_silu_and_mul_cfg
 from lhs import LatinHypercubeSampler
+import itertools
 
-random.seed(0)
 
 # Problem dimensions
 # heads = range(16, 2**14+1)
@@ -18,6 +18,8 @@ random.seed(0)
 # num_warps = [2**i for i in range(6)]
 # num_stages = [i for i in range(6)]
 
+seed = 42
+
 heads = [2**i for i in range(4,15)]
 seqlen = [2**i for i in range(4,11)]
 max_values = [0.01, 0.1, 1.0]
@@ -25,8 +27,8 @@ batch = [2**i for i in range(9)]
 block_sizes = [16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192]
 num_warps = [2**i for i in range(6)]
 num_stages = [i for i in range(6)]
-
-
+tokens = sorted(set(s * b for s, b in itertools.product(seqlen, batch)))
+print(len(tokens))
 
 def swiglu_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_combined=False):
     if is_combined:
@@ -39,18 +41,17 @@ def swiglu_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_com
             'num_warps': num_warps,
             'num_stages': num_stages,
         }
-        lhs = LatinHypercubeSampler(search_dict)
+        lhs = LatinHypercubeSampler(search_dict, seed)
         samples = lhs.generate_new_categorical_samples(n_samples)
         return samples
     else:
         ## Sampling in the problem size dimension
         search_dict_prob =  {
             'd': heads,
-            'seqlen': seqlen,
+            'tokens': tokens,
             'max_vals': max_values,
-            'batch_size': batch,
         }
-        lhs = LatinHypercubeSampler(search_dict_prob)
+        lhs = LatinHypercubeSampler(search_dict_prob, seed)
         samples_prob = lhs.generate_new_categorical_samples(n_samples_prob)
 
         search_dict_cfg =  {
@@ -59,7 +60,7 @@ def swiglu_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_com
             'num_stages': num_stages,
         }
 
-        lhs = LatinHypercubeSampler(search_dict_cfg)
+        lhs = LatinHypercubeSampler(search_dict_cfg, seed)
         samples_cfg = lhs.generate_new_categorical_samples(n_samples_cfg)
         samples = []
         for s in samples_prob:
@@ -72,10 +73,10 @@ def swiglu_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_com
             samples.append(sample)
         return samples
 
-final_samples = swiglu_lhs_sampler(50, 10)
+final_samples = swiglu_lhs_sampler(25, 54)
 # print(final_samples)
 for ex in final_samples:
-    num_tokens = ex['seqlen'] * ex['batch_size']
+    num_tokens = ex['tokens']
     d = ex['d']
     max_value = ex['max_vals']
     try:

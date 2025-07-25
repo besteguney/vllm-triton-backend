@@ -288,7 +288,48 @@ for varlen_p in PROMPT_PATTERNS:
 #     torch_profiling=False,
 #     prof_filename=None,
 # ):
+# @pytest.mark.parametrize("batch_size", BATCH_SIZES)
+# @pytest.mark.parametrize("num_heads", NUM_HEADS)
+# @pytest.mark.parametrize("seqlen", SEQUENCE_LENGTHS)
+# @pytest.mark.parametrize("head_size", HEAD_SIZES)
+# @pytest.mark.parametrize("block_size", BLOCK_SIZES)
+# @pytest.mark.parametrize("num_blocks", NUM_BLOCKS)
+# @pytest.mark.parametrize("prompt_pattern", PROMPT_PATTERNS)
+# @pytest.mark.parametrize("dtype", DTYPES)
+# @pytest.mark.parametrize("seed", SEEDS)
+# @pytest.mark.parametrize("implementation", IMPLEMENTATION_UT)
+# @pytest.mark.parametrize("max_value", MAX_VALUES)
+# @pytest.mark.parametrize("benchmark_mode", BENCHMARK_MODES)
+# @torch.inference_mode()
+# def test_decode_vllm_v0_attention(
+#     capsys,
+#     request,
+#     batch_size,
+#     num_heads,
+#     seqlen,
+#     head_size,
+#     block_size,
+#     num_blocks,
+#     prompt_pattern,
+#     dtype,
+#     seed,
+#     implementation,
+#     max_value,
+#     benchmark_mode,
+#     overwrite_df=None,
+#     df_file_prefix=None,
+#     torch_profiling=False,
+#     prof_filename=None,
+# ):
 
+#     my_name = "test_decode_attention"
+#     my_instance = "test_decode_attention"
+#     if request is not None:
+#         my_id = request.node.nodeid.split("::")[-1]
+#         my_name = my_id.split("[")[0]
+#         my_instance = my_id.split("[")[1][:-1]
+#     realistic_prompt_mode = len(prompt_pattern) > 1
+#     gqa_mode = num_heads[0] != num_heads[1]
 #     my_name = "test_decode_attention"
 #     my_instance = "test_decode_attention"
 #     if request is not None:
@@ -310,12 +351,34 @@ for varlen_p in PROMPT_PATTERNS:
 #         Implementation.FLASHINFER,
 #     ]:
 #         pytest.skip("unsupported configuration")
+#     if implementation not in [
+#         Implementation.BASELINE_TRITON,
+#         Implementation.FLASH_ATTN,
+#         Implementation.VLLM_CUDA_V1,
+#         Implementation.VLLM_CUDA_V2,
+#         Implementation.TRITON_2D,
+#         Implementation.TRITON_3D,
+#         Implementation.TRITON_FP8,
+#         Implementation.XFORMERS,
+#         Implementation.FLASHINFER,
+#     ]:
+#         pytest.skip("unsupported configuration")
 
 #     if implementation == Implementation.BASELINE_TRITON and (
 #         benchmark_mode == BenchmarkMode.CUDA_GRAPHS or realistic_prompt_mode or gqa_mode
 #     ):
 #         pytest.skip("unsupported configuration")
+#     if implementation == Implementation.BASELINE_TRITON and (
+#         benchmark_mode == BenchmarkMode.CUDA_GRAPHS or realistic_prompt_mode or gqa_mode
+#     ):
+#         pytest.skip("unsupported configuration")
 
+#     if implementation == Implementation.TRITON_FP8 and (
+#         seqlen % block_size != 0 or seqlen == 16
+#     ):
+#         pytest.skip("unsupported configuration")
+#     if implementation == Implementation.XFORMERS and gqa_mode:
+#         pytest.skip()
 #     if implementation == Implementation.TRITON_FP8 and (
 #         seqlen % block_size != 0 or seqlen == 16
 #     ):
@@ -329,11 +392,18 @@ for varlen_p in PROMPT_PATTERNS:
 #         Implementation.UNF_TRITON_2D,
 #         Implementation.UNF_TRITON_AUTO,
 #     ]:
-#         pytest.skip()
+#         pytest.skip('skipppingnggn')
 
 #     RTOL = 0
 #     ATOL = min(3.1e-3 * max_value, 1e-3)
+#     RTOL = 0
+#     ATOL = min(3.1e-3 * max_value, 1e-3)
 
+#     torch.manual_seed(seed)
+#     torch.cuda.manual_seed(seed)
+#     tdev = torch.device(device)
+#     torch.cuda.set_device(tdev)
+#     torch.set_default_device(tdev)
 #     torch.manual_seed(seed)
 #     torch.cuda.manual_seed(seed)
 #     tdev = torch.device(device)
@@ -349,7 +419,22 @@ for varlen_p in PROMPT_PATTERNS:
 #         if seq_len < block_size:
 #             ATOL = min(6.2e-3 * max_value, 1e-3)
 #             break
+#     seqlen_fraction = itertools.cycle(prompt_pattern)
+#     seq_lens = [int(np.ceil(seqlen * next(seqlen_fraction))) for _ in range(batch_size)]
+#     # NOTE(ngl): Some/all implementations (VLLM_CUDA_V1, XFORMERS, some triton version) assume
+#     #   there is at least one page per request. That's why apparently the numerical error is
+#     #   higher at random places if the request is very very small.
+#     for seq_len in seq_lens:
+#         if seq_len < block_size:
+#             ATOL = min(6.2e-3 * max_value, 1e-3)
+#             break
 
+#     kv_cache_dtype = "auto"
+#     scale = float(1.0 / (head_size**0.5))  # as done by vLLM
+#     num_query_heads, num_kv_heads = num_heads
+#     use_alignment_optimization = False
+#     if implementation in [Implementation.VLLM_CUDA_V1, Implementation.VLLM_CUDA_V2]:
+#         use_alignment_optimization = True
 #     kv_cache_dtype = "auto"
 #     scale = float(1.0 / (head_size**0.5))  # as done by vLLM
 #     num_query_heads, num_kv_heads = num_heads
@@ -367,7 +452,21 @@ for varlen_p in PROMPT_PATTERNS:
 #     ref_output = None
 #     output = None
 #     captured = ""
+#     # to avoid 'local variable referenced before assignment' when trying to del them
+#     query = None
+#     block_tables_lst: List[List[int]] = []
+#     key_caches = None
+#     value_caches = None
+#     key_cache = None
+#     value_cache = None
+#     ref_output = None
+#     output = None
+#     captured = ""
 
+#     inner_exception = None
+#     try:
+#         query = torch.empty(batch_size, num_query_heads, head_size, dtype=dtype)
+#         query.uniform_(-max_value, max_value)
 #     inner_exception = None
 #     try:
 #         query = torch.empty(batch_size, num_query_heads, head_size, dtype=dtype)
@@ -376,7 +475,12 @@ for varlen_p in PROMPT_PATTERNS:
 #         assert num_query_heads % num_kv_heads == 0
 #         num_queries_per_kv = num_query_heads // num_kv_heads
 #         alibi_slopes = None
+#         assert num_query_heads % num_kv_heads == 0
+#         num_queries_per_kv = num_query_heads // num_kv_heads
+#         alibi_slopes = None
 
+#         max_seq_len = max(seq_lens)
+#         seq_lens = torch.tensor(seq_lens, dtype=torch.int)
 #         max_seq_len = max(seq_lens)
 #         seq_lens = torch.tensor(seq_lens, dtype=torch.int)
 
@@ -384,7 +488,12 @@ for varlen_p in PROMPT_PATTERNS:
 #         max_num_blocks_per_seq = (max_seq_len + block_size - 1) // block_size
 #         if num_blocks < batch_size * max_num_blocks_per_seq:
 #             pytest.skip("unsupported configuration")
+#         # Create the block tables.
+#         max_num_blocks_per_seq = (max_seq_len + block_size - 1) // block_size
+#         if num_blocks < batch_size * max_num_blocks_per_seq:
+#             pytest.skip("unsupported configuration")
 
+#         assert num_blocks >= batch_size * max_num_blocks_per_seq
 #         assert num_blocks >= batch_size * max_num_blocks_per_seq
 
 #         for _ in range(batch_size):
@@ -392,7 +501,13 @@ for varlen_p in PROMPT_PATTERNS:
 #                 random.randint(0, num_blocks - 1) for _ in range(max_num_blocks_per_seq)
 #             ]
 #             block_tables_lst.append(block_table)
+#         for _ in range(batch_size):
+#             block_table = [
+#                 random.randint(0, num_blocks - 1) for _ in range(max_num_blocks_per_seq)
+#             ]
+#             block_tables_lst.append(block_table)
 
+#         block_tables = torch.tensor(block_tables_lst, dtype=torch.int)
 #         block_tables = torch.tensor(block_tables_lst, dtype=torch.int)
 
 #         # Create the KV caches.
@@ -409,7 +524,22 @@ for varlen_p in PROMPT_PATTERNS:
 #             device,
 #             alignment_optimization=use_alignment_optimization,
 #         )
+#         # Create the KV caches.
+#         key_caches, value_caches = create_kv_caches_with_random(
+#             num_blocks,
+#             block_size,
+#             1,
+#             num_kv_heads,
+#             head_size,
+#             max_value,
+#             kv_cache_dtype,
+#             dtype,
+#             seed,
+#             device,
+#             alignment_optimization=use_alignment_optimization,
+#         )
 
+#         key_cache, value_cache = key_caches[0], value_caches[0]
 #         key_cache, value_cache = key_caches[0], value_caches[0]
 
 #         ref_output = torch.empty_like(query)
@@ -425,7 +555,25 @@ for varlen_p in PROMPT_PATTERNS:
 #                 scale,
 #                 alibi_slopes,
 #             )
+#         ref_output = torch.empty_like(query)
+#         if not torch_profiling:
+#             ref_single_query_cached_kv_attention(
+#                 ref_output,
+#                 query,
+#                 num_queries_per_kv,
+#                 key_cache,
+#                 value_cache,
+#                 block_tables,
+#                 seq_lens,
+#                 scale,
+#                 alibi_slopes,
+#             )
 
+#         if implementation == Implementation.BASELINE_TRITON:
+#             from callers import BaselineTritonCaller as Caller
+#         elif implementation == Implementation.TRITON_2D:
+#             from callers import Triton2dAttentionDecodeCaller as Caller
+#             from triton_dejavu import global_cache_lock
 #         if implementation == Implementation.BASELINE_TRITON:
 #             from callers import BaselineTritonCaller as Caller
 #         elif implementation == Implementation.TRITON_2D:
@@ -449,7 +597,26 @@ for varlen_p in PROMPT_PATTERNS:
 #             from callers import FlashInferCaller as Caller
 #         elif implementation == Implementation.TRITON_FUSED:
 #             from callers import FusedTritonDecodeOnlyCaller as Caller
+#             global_cache_lock.unlock()
+#         elif implementation == Implementation.TRITON_3D:
+#             from callers import Triton3dAttentionDecodeCaller as Caller
+#         elif implementation == Implementation.TRITON_FP8:
+#             from callers import TritonFp8Caller as Caller
+#         elif implementation == Implementation.VLLM_CUDA_V1:
+#             from callers import VllmCudaV1Caller as Caller
+#         elif implementation == Implementation.VLLM_CUDA_V2:
+#             from callers import VllmCudaV2Caller as Caller
+#         elif implementation == Implementation.XFORMERS:
+#             from callers import XformersCaller as Caller
+#         elif implementation == Implementation.FLASH_ATTN:
+#             from callers import FlashAttnDecodeCaller as Caller
+#         elif implementation == Implementation.FLASHINFER:
+#             from callers import FlashInferCaller as Caller
+#         elif implementation == Implementation.TRITON_FUSED:
+#             from callers import FusedTritonDecodeOnlyCaller as Caller
 
+#         if Caller.requires_allocated_output:
+#             output = torch.empty_like(query)
 #         if Caller.requires_allocated_output:
 #             output = torch.empty_like(query)
 
@@ -466,7 +633,22 @@ for varlen_p in PROMPT_PATTERNS:
 #             alibi_slopes,
 #             kv_cache_dtype,
 #         )
+#         call_func_under_test = Caller.make_call_func(
+#             output,
+#             query,
+#             key_cache,
+#             value_cache,
+#             batch_size,
+#             seq_lens,
+#             max_seq_len,
+#             scale,
+#             block_tables,
+#             alibi_slopes,
+#             kv_cache_dtype,
+#         )
 
+#         output_ = call_func_under_test()
+#         output = Caller.select_output(output, output_)
 #         output_ = call_func_under_test()
 #         output = Caller.select_output(output, output_)
 
@@ -476,7 +658,23 @@ for varlen_p in PROMPT_PATTERNS:
 #                 if len(l) > 0:
 #                     # captured += l  # + '|'
 #                     captured += l + " "
+#         if capsys is not None:
+#             captured_raw = capsys.readouterr()  # returns stdout, stderr
+#             for l in captured_raw:
+#                 if len(l) > 0:
+#                     # captured += l  # + '|'
+#                     captured += l + " "
 
+#         # compare
+#         if not torch_profiling:
+#             if enforce_numerical_correctness:
+#                 # for better reports
+#                 triton.testing.assert_close(ref_output, output, atol=ATOL, rtol=RTOL)
+#                 allclose_pass = True
+#             else:
+#                 allclose_pass = torch.allclose(ref_output, output, atol=ATOL, rtol=RTOL)
+#         else:
+#             allclose_pass = None
 #         # compare
 #         if not torch_profiling:
 #             if enforce_numerical_correctness:
@@ -497,7 +695,38 @@ for varlen_p in PROMPT_PATTERNS:
 #                 pytest.global_pds[my_name] = pd.DataFrame()
 #             elif overwrite_df is not None and my_name not in overwrite_df:
 #                 overwrite_df[my_name] = pd.DataFrame()
+#         # benchmark only correct results
+#         if do_benchmarks:
+#             if implementation == Implementation.TRITON_2D:
+#                 # switch off compilation...hopefully
+#                 global_cache_lock.lock()
+#             if overwrite_df is None and my_name not in pytest.global_pds:
+#                 pytest.global_pds[my_name] = pd.DataFrame()
+#             elif overwrite_df is not None and my_name not in overwrite_df:
+#                 overwrite_df[my_name] = pd.DataFrame()
 
+#             profiling_started = False
+#             if (
+#                 do_profiling
+#                 and implementation
+#                 in [
+#                     Implementation.TRITON_2D,
+#                     Implementation.TRITON_3D,
+#                     Implementation.BASELINE_TRITON,
+#                 ]
+#                 and benchmark_mode == BenchmarkMode.CUDA_EVENTS
+#                 and not torch_profiling
+#             ):
+#                 if store_hatchet:
+#                     hatchet_name = os.path.abspath(
+#                         f"{pytest.global_pd_file_prefix}/{my_name}_profile_{my_instance}"
+#                     )
+#                 else:
+#                     hatchet_name = os.path.abspath(
+#                         f"/tmp/{my_name}_profile_{my_instance}"
+#                     )
+#                 proton.start(hatchet_name, hook="triton")
+#                 profiling_started = True
 #             profiling_started = False
 #             if (
 #                 do_profiling
@@ -544,7 +773,53 @@ for varlen_p in PROMPT_PATTERNS:
 #                 ms, min_ms, max_ms = measure_benchmarks(
 #                     benchmark_mode, call_func_under_test, warmup_rep, bench_rep
 #                 )
+#             warmup_rep = 25
+#             bench_rep = 100
+#             if torch_profiling:
+#                 warmup_rep = 1
+#                 bench_rep = 5
+#                 with torch.profiler.profile(
+#                     activities=[
+#                         torch.profiler.ProfilerActivity.CPU,
+#                         torch.profiler.ProfilerActivity.CUDA,
+#                     ],
+#                     record_shapes=True,
+#                     with_stack=True,
+#                 ) as prof:
+#                     torch.cuda.synchronize()
+#                     ms, min_ms, max_ms = measure_benchmarks(
+#                         benchmark_mode, call_func_under_test, warmup_rep, bench_rep
+#                     )
+#                     torch.cuda.synchronize()
+#                 prof.export_chrome_trace(prof_filename)
+#             else:
+#                 ms, min_ms, max_ms = measure_benchmarks(
+#                     benchmark_mode, call_func_under_test, warmup_rep, bench_rep
+#                 )
 
+#             proton_count = None
+#             proton_ns = None
+#             proton_util_compute = None
+#             proton_util_bw = None
+#             if profiling_started:
+#                 proton.finalize()
+#                 # readout
+#                 metrics = ["util_flops", "util_bytes"]
+#                 filter_for = ".*triton.*"
+#                 proton_graph = parse(
+#                     metrics,
+#                     f"{hatchet_name}.hatchet",
+#                     include=filter_for,
+#                     return_only_df=True,
+#                 )
+#                 proton_df = proton_graph.dataframe
+#                 assert (
+#                     len(proton_df) == 2
+#                 )  # TODO: update if multiple kernels are called
+#                 proton_count = proton_df.iloc[-1]["count"]
+#                 proton_ns = proton_df.iloc[-1]["time (ns)"]
+#                 proton_util_compute = proton_df.iloc[-1]["util_flops (inc)"]
+#                 proton_util_bw = proton_df.iloc[-1]["util_bytes (inc)"]
 #             proton_count = None
 #             proton_ns = None
 #             proton_util_compute = None
@@ -596,7 +871,47 @@ for varlen_p in PROMPT_PATTERNS:
 #                 "proton_util_bw": proton_util_bw,
 #                 "captured": captured,
 #             }
+#             record = {
+#                 "batch_size": batch_size,
+#                 "num_query_heads": num_query_heads,
+#                 "num_kv_heads": num_kv_heads,
+#                 "seqlen": seqlen,
+#                 "head_size": head_size,
+#                 "block_size": block_size,
+#                 "num_blocks": num_blocks,
+#                 "dtype": dtype,
+#                 "max_value": max_value,
+#                 "realistic_prompt_mode": realistic_prompt_mode,
+#                 "gqa_mode": gqa_mode,
+#                 "prompt_pattern": prompt_pattern,
+#                 "implementation": implementation,
+#                 "ms": ms,
+#                 "min_ms": min_ms,
+#                 "max_ms": max_ms,
+#                 "benchmark_mode": benchmark_mode,
+#                 "allclose_pass": allclose_pass,
+#                 "ATOL": ATOL,
+#                 "RTOL": RTOL,
+#                 "proton_count": proton_count,
+#                 "proton_ns": proton_ns,
+#                 "proton_util_compute": proton_util_compute,
+#                 "proton_util_bw": proton_util_bw,
+#                 "captured": captured,
+#             }
 
+#             if add_triton_dejavu_envs:
+#                 dejavu_envs = {}
+#                 _skip_dejavu_envs = [
+#                     "_TRITON_DEJAVU_DETERMINED_CUDA_VERSION",
+#                     "DEBUG",
+#                     "STORAGE",
+#                 ]
+#                 for env in os.environ.keys():
+#                     if "TRITON_DEJAVU_" in env:
+#                         if any([skip_s in env for skip_s in _skip_dejavu_envs]):
+#                             continue
+#                         dejavu_envs[env] = os.environ[env]
+#                 record.update(dejavu_envs)
 #             if add_triton_dejavu_envs:
 #                 dejavu_envs = {}
 #                 _skip_dejavu_envs = [
@@ -613,7 +928,13 @@ for varlen_p in PROMPT_PATTERNS:
 
 #             if torch.version.hip and implementation == Implementation.FLASH_ATTN:
 #                 record["implementation"] = "Implementation.ROCM_FLASH_ATTN"
+#             if torch.version.hip and implementation == Implementation.FLASH_ATTN:
+#                 record["implementation"] = "Implementation.ROCM_FLASH_ATTN"
 
+#             if overwrite_df is None:
+#                 pytest.global_pds[my_name] = pd.concat(
+#                     [pytest.global_pds[my_name], pd.Series(record).to_frame().T]
+#                 ).reset_index(drop=True)
 #             if overwrite_df is None:
 #                 pytest.global_pds[my_name] = pd.concat(
 #                     [pytest.global_pds[my_name], pd.Series(record).to_frame().T]
@@ -628,10 +949,47 @@ for varlen_p in PROMPT_PATTERNS:
 #                 overwrite_df[my_name] = pd.concat(
 #                     [overwrite_df[my_name], pd.Series(record).to_frame().T]
 #                 ).reset_index(drop=True)
+#                 if pytest.global_pd_file_prefix is not None:
+#                     filename = os.path.abspath(
+#                         f"{pytest.global_pd_file_prefix}/{my_name}.csv"
+#                     )
+#                     write_df_and_chmod(pytest.global_pds[my_name], filename)
+#             else:
+#                 overwrite_df[my_name] = pd.concat(
+#                     [overwrite_df[my_name], pd.Series(record).to_frame().T]
+#                 ).reset_index(drop=True)
 
 #                 filename = os.path.abspath(f"{df_file_prefix}/{my_name}.csv")
 #                 write_df_and_chmod(overwrite_df[my_name], filename)
+#                 filename = os.path.abspath(f"{df_file_prefix}/{my_name}.csv")
+#                 write_df_and_chmod(overwrite_df[my_name], filename)
 
+#     except Exception as e:
+#         print("\ncaptured:")
+#         print(captured)
+#         print("\nexception:")
+#         print(e)
+#         inner_exception = e
+#     finally:
+#         # cleanup memory
+#         try:
+#             del query
+#             del seq_lens
+#             del block_tables_lst
+#             del key_caches
+#             del value_caches
+#             del key_cache
+#             del value_cache
+#             del ref_output
+#             del output
+#             torch.cuda.empty_cache()
+#             torch.cuda.ipc_collect()
+#         except Exception as e:
+#             print(e)
+#             # pass
+#         finally:
+#             if inner_exception is not None:
+#                 raise inner_exception
 #     except Exception as e:
 #         print("\ncaptured:")
 #         print(captured)
@@ -694,10 +1052,44 @@ for varlen_p in PROMPT_PATTERNS:
 #     dejavu_tag = os.environ["TRITON_DEJAVU_TAG"]
 #     fallback_mode = os.getenv("NGL_EXP_FALLBACK", "none")
 #     gqa_mode = num_heads[0] != num_heads[1]
+# @pytest.mark.parametrize("batch_size", BATCH_SIZES)
+# @pytest.mark.parametrize("num_heads", NUM_HEADS)
+# @pytest.mark.parametrize("seqlen", SEQUENCE_LENGTHS)
+# @pytest.mark.parametrize("head_size", HEAD_SIZES)
+# @pytest.mark.parametrize("causal", CAUSAL_FLASH)
+# @pytest.mark.parametrize("prompt_pattern", PROMPT_PATTERNS)
+# @pytest.mark.parametrize("dtype", DTYPES)
+# @pytest.mark.parametrize("seed", SEEDS)
+# @pytest.mark.parametrize("implementation", IMPLEMENTATION_UT)
+# @pytest.mark.parametrize("max_value", MAX_VALUES)
+# @pytest.mark.parametrize("benchmark_mode", BENCHMARK_MODES)
+# @torch.inference_mode()
+# def test_prefill_vllm_v0_attention(
+#     capsys,
+#     request,
+#     batch_size,
+#     num_heads,
+#     seqlen,
+#     head_size,
+#     causal,
+#     prompt_pattern,
+#     dtype,
+#     seed,
+#     implementation,
+#     max_value,
+#     benchmark_mode,
+# ):
+#     my_id = request.node.nodeid.split("::")[-1]
+#     my_name = my_id.split("[")[0]
+#     my_instance = my_id.split("[")[1][:-1]
+#     realistic_prompt_mode = len(prompt_pattern) > 1
+#     dejavu_tag = os.environ["TRITON_DEJAVU_TAG"]
+#     fallback_mode = os.getenv("NGL_EXP_FALLBACK", "none")
+#     gqa_mode = num_heads[0] != num_heads[1]
 
 #     if torch.cuda.get_device_capability()[0] < 8:
 #         # reduce operations are not supported (?)
-#         pytest.skip()
+#         pytest.skip("SDJAKDJKSJDK")
 
 #     # TODO
 #     if implementation not in [
@@ -708,15 +1100,15 @@ for varlen_p in PROMPT_PATTERNS:
 #         pytest.skip("unsupported configuration")
 #     elif implementation == Implementation.TRITON_3D:
 #         if (not math.log(head_size, 2).is_integer()) or (head_size > 256):
-#             pytest.skip()
+#             pytest.skip('skipping here')
 #         if seqlen > 4096 and batch_size > 64:
 #             # FIXME(ngl): causes RuntimeError: CUDA error: an illegal memory access was encountered
 #             #  (with triton 3.2.0)
 #             # for now, we support only batch size of 64 above prompt length of 4096
-#             pytest.skip()
+#             pytest.skip('skipping here2')
 #         if batch_size > 200:
 #             # FIXME(ngl): also causes illegal memory access
-#             pytest.skip()
+#             pytest.skip('skipping here 3')
 #     elif implementation == Implementation.PYTORCH_NATIVE and realistic_prompt_mode:
 #         pytest.skip("unsupported configuration")
 
@@ -726,8 +1118,10 @@ for varlen_p in PROMPT_PATTERNS:
 #         Implementation.UNF_TRITON_2D,
 #         Implementation.UNF_TRITON_AUTO,
 #     ]:
-#         pytest.skip()
+#         pytest.skip('unified 2d skip')
 
+#     ATOL = 1e-3 * max_value
+#     RTOL = 1e-5
 #     ATOL = 1e-3 * max_value
 #     RTOL = 1e-5
 
@@ -736,7 +1130,21 @@ for varlen_p in PROMPT_PATTERNS:
 #     tdev = torch.device(device)
 #     torch.cuda.set_device(tdev)
 #     torch.set_default_device(tdev)
+#     torch.manual_seed(seed)
+#     torch.cuda.manual_seed(seed)
+#     tdev = torch.device(device)
+#     torch.cuda.set_device(tdev)
+#     torch.set_default_device(tdev)
 
+#     seqlen_fraction = itertools.cycle(prompt_pattern)
+#     max_seqlen = seqlen
+#     seq_lens = [
+#         int(np.ceil(max_seqlen * next(seqlen_fraction))) for _ in range(batch_size)
+#     ]
+#     total_token_num = np.sum(seq_lens)
+#     kv_cache_dtype = "auto"
+#     scale = float(1.0 / (head_size**0.5))  # as done by vLLM
+#     num_query_heads, num_kv_heads = num_heads
 #     seqlen_fraction = itertools.cycle(prompt_pattern)
 #     max_seqlen = seqlen
 #     seq_lens = [
@@ -759,7 +1167,27 @@ for varlen_p in PROMPT_PATTERNS:
 #     seq_start_loc = None
 #     cu_seqlens_k = None
 #     captured = ""
+#     # to avoid 'local variable referenced before assignment' when trying to del them
+#     query = None
+#     key_cache = None
+#     value_cache = None
+#     M = None
+#     p = None
+#     output = None
+#     ref_output = None
+#     cu_seqlens_q = None
+#     seq_start_loc = None
+#     cu_seqlens_k = None
+#     captured = ""
 
+#     inner_exception = None
+#     try:
+#         query = torch.empty(total_token_num, num_query_heads, head_size, dtype=dtype)
+#         query.uniform_(-max_value, max_value)
+#         key_cache = torch.empty(total_token_num, num_kv_heads, head_size, dtype=dtype)
+#         key_cache.uniform_(-max_value, max_value)
+#         value_cache = torch.empty(total_token_num, num_kv_heads, head_size, dtype=dtype)
+#         value_cache.uniform_(-max_value, max_value)
 #     inner_exception = None
 #     try:
 #         query = torch.empty(total_token_num, num_query_heads, head_size, dtype=dtype)
@@ -774,7 +1202,23 @@ for varlen_p in PROMPT_PATTERNS:
 #         torch.cumsum(
 #             prompt_lens_tensor, dim=0, dtype=seq_start_loc.dtype, out=seq_start_loc[1:]
 #         )
+#         seq_start_loc = torch.zeros(batch_size + 1, dtype=torch.int32, device=tdev)
+#         prompt_lens_tensor = torch.tensor(seq_lens, dtype=torch.long, device=tdev)
+#         torch.cumsum(
+#             prompt_lens_tensor, dim=0, dtype=seq_start_loc.dtype, out=seq_start_loc[1:]
+#         )
 
+#         # reference implementation
+#         ref_output = ref_multi_query_kv_attention(
+#             seq_start_loc,
+#             query,
+#             key_cache,
+#             value_cache,
+#             scale,
+#             dtype,
+#             num_kv_heads,
+#             num_query_heads,
+#         )
 #         # reference implementation
 #         ref_output = ref_multi_query_kv_attention(
 #             seq_start_loc,
@@ -793,7 +1237,16 @@ for varlen_p in PROMPT_PATTERNS:
 #             from callers import Triton3dAttentionPrefillCaller as Caller
 #         elif implementation == Implementation.PYTORCH_NATIVE:
 #             from callers import PytorchNativeAttentionPrefillCaller as Caller
+#         if implementation == Implementation.FLASH_ATTN:
+#             from callers import FlashAttnPrefillCaller as Caller
+#         elif implementation == Implementation.TRITON_3D:
+#             from callers import Triton3dAttentionPrefillCaller as Caller
+#         elif implementation == Implementation.PYTORCH_NATIVE:
+#             from callers import PytorchNativeAttentionPrefillCaller as Caller
 
+#         if Caller.requires_allocated_output:
+#             output = torch.empty_like(query)
+#         # output is declared already above
 #         if Caller.requires_allocated_output:
 #             output = torch.empty_like(query)
 #         # output is declared already above
@@ -810,10 +1263,30 @@ for varlen_p in PROMPT_PATTERNS:
 #             scale,
 #             causal,
 #         )
+#         call_func_under_test = Caller.make_call_func(
+#             output,
+#             query,
+#             key_cache,
+#             value_cache,
+#             seq_start_loc,
+#             seq_start_loc,
+#             max_seqlen,
+#             max_seqlen,
+#             scale,
+#             causal,
+#         )
 
 #         output_ = call_func_under_test()
 #         output = Caller.select_output(output, output_)
+#         output_ = call_func_under_test()
+#         output = Caller.select_output(output, output_)
 
+#         if capsys is not None:
+#             captured_raw = capsys.readouterr()  # returns stdout, stderr
+#             for l in captured_raw:
+#                 if len(l) > 0:
+#                     # captured += l  # + '|'
+#                     captured += l + " "
 #         if capsys is not None:
 #             captured_raw = capsys.readouterr()  # returns stdout, stderr
 #             for l in captured_raw:
@@ -829,12 +1302,40 @@ for varlen_p in PROMPT_PATTERNS:
 #             allclose_pass = True
 #         else:
 #             allclose_pass = torch.allclose(ref_output, output, atol=ATOL, rtol=RTOL)
+#         # compare
+#         if enforce_numerical_correctness:
+#             # assert torch.allclose(ref_out, tri_out, atol=1e-2, rtol=0)
+#             # for better reports
+#             triton.testing.assert_close(ref_output, output, atol=ATOL, rtol=RTOL)
+#             allclose_pass = True
+#         else:
+#             allclose_pass = torch.allclose(ref_output, output, atol=ATOL, rtol=RTOL)
 
 #         # benchmark only correct results
 #         if do_benchmarks:
 #             if my_name not in pytest.global_pds:
 #                 pytest.global_pds[my_name] = pd.DataFrame()
+#         # benchmark only correct results
+#         if do_benchmarks:
+#             if my_name not in pytest.global_pds:
+#                 pytest.global_pds[my_name] = pd.DataFrame()
 
+#             profiling_started = False
+#             if (
+#                 do_profiling
+#                 and implementation in [Implementation.TRITON_2D]  # TODO
+#                 and benchmark_mode == BenchmarkMode.CUDA_EVENTS
+#             ):
+#                 if store_hatchet:
+#                     hatchet_name = os.path.abspath(
+#                         f"{pytest.global_pd_file_prefix}/{my_name}_profile_{my_instance}"
+#                     )
+#                 else:
+#                     hatchet_name = os.path.abspath(
+#                         f"/tmp/{my_name}_profile_{my_instance}"
+#                     )
+#                 proton.start(hatchet_name, hook="triton")
+#                 profiling_started = True
 #             profiling_started = False
 #             if (
 #                 do_profiling
@@ -858,7 +1359,36 @@ for varlen_p in PROMPT_PATTERNS:
 #             ms, min_ms, max_ms = measure_benchmarks(
 #                 benchmark_mode, call_func_under_test, warmup_rep, bench_rep
 #             )
+#             # equals to defaults
+#             warmup_rep = 25
+#             bench_rep = 100
+#             ms, min_ms, max_ms = measure_benchmarks(
+#                 benchmark_mode, call_func_under_test, warmup_rep, bench_rep
+#             )
 
+#             proton_count = None
+#             proton_ns = None
+#             proton_util_compute = None
+#             proton_util_bw = None
+#             if profiling_started:
+#                 proton.finalize()
+#                 # readout
+#                 metrics = ["util_flops", "util_bytes"]
+#                 filter_for = ".*triton.*"
+#                 proton_graph = parse(
+#                     metrics,
+#                     f"{hatchet_name}.hatchet",
+#                     include=filter_for,
+#                     return_only_df=True,
+#                 )
+#                 proton_df = proton_graph.dataframe
+#                 assert (
+#                     len(proton_df) == 2
+#                 )  # TODO: update if multiple kernels are called
+#                 proton_count = proton_df.iloc[-1]["count"]
+#                 proton_ns = proton_df.iloc[-1]["time (ns)"]
+#                 proton_util_compute = proton_df.iloc[-1]["util_flops (inc)"]
+#                 proton_util_bw = proton_df.iloc[-1]["util_bytes (inc)"]
 #             proton_count = None
 #             proton_ns = None
 #             proton_util_compute = None
@@ -911,7 +1441,48 @@ for varlen_p in PROMPT_PATTERNS:
 #                 "proton_util_bw": proton_util_bw,
 #                 "captured": captured,
 #             }
+#             record = {
+#                 "batch_size": batch_size,
+#                 "num_query_heads": num_query_heads,
+#                 "num_kv_heads": num_kv_heads,
+#                 "seqlen": max_seqlen,
+#                 "head_size": head_size,
+#                 "dtype": dtype,
+#                 "causal": causal,
+#                 "max_value": max_value,
+#                 "realistic_prompt_mode": realistic_prompt_mode,
+#                 "gqa_mode": gqa_mode,
+#                 "prompt_pattern": prompt_pattern,
+#                 "implementation": implementation,
+#                 "dejavu_tag": dejavu_tag,
+#                 "dejavu_fallback_mode": fallback_mode,
+#                 "ms": ms,
+#                 "min_ms": min_ms,
+#                 "max_ms": max_ms,
+#                 "benchmark_mode": benchmark_mode,
+#                 "allclose_pass": allclose_pass,
+#                 "ATOL": ATOL,
+#                 "RTOL": RTOL,
+#                 "proton_count": proton_count,
+#                 "proton_ns": proton_ns,
+#                 "proton_util_compute": proton_util_compute,
+#                 "proton_util_bw": proton_util_bw,
+#                 "captured": captured,
+#             }
 
+#             if add_triton_dejavu_envs:
+#                 dejavu_envs = {}
+#                 _skip_dejavu_envs = [
+#                     "_TRITON_DEJAVU_DETERMINED_CUDA_VERSION",
+#                     "DEBUG",
+#                     "STORAGE",
+#                 ]
+#                 for env in os.environ.keys():
+#                     if "TRITON_DEJAVU_" in env:
+#                         if any([skip_s in env for skip_s in _skip_dejavu_envs]):
+#                             continue
+#                         dejavu_envs[env] = os.environ[env]
+#                 record.update(dejavu_envs)
 #             if add_triton_dejavu_envs:
 #                 dejavu_envs = {}
 #                 _skip_dejavu_envs = [
@@ -928,7 +1499,12 @@ for varlen_p in PROMPT_PATTERNS:
 
 #             if torch.version.hip and implementation == Implementation.FLASH_ATTN:
 #                 record["implementation"] = "Implementation.ROCM_FLASH_ATTN"
+#             if torch.version.hip and implementation == Implementation.FLASH_ATTN:
+#                 record["implementation"] = "Implementation.ROCM_FLASH_ATTN"
 
+#             pytest.global_pds[my_name] = pd.concat(
+#                 [pytest.global_pds[my_name], pd.Series(record).to_frame().T]
+#             ).reset_index(drop=True)
 #             pytest.global_pds[my_name] = pd.concat(
 #                 [pytest.global_pds[my_name], pd.Series(record).to_frame().T]
 #             ).reset_index(drop=True)
@@ -938,7 +1514,41 @@ for varlen_p in PROMPT_PATTERNS:
 #                     f"{pytest.global_pd_file_prefix}/{my_name}.csv"
 #                 )
 #                 write_df_and_chmod(pytest.global_pds[my_name], filename)
+#             if pytest.global_pd_file_prefix is not None:
+#                 filename = os.path.abspath(
+#                     f"{pytest.global_pd_file_prefix}/{my_name}.csv"
+#                 )
+#                 write_df_and_chmod(pytest.global_pds[my_name], filename)
 
+#     except Exception as e:
+#         print("\ncaptured:")
+#         print(captured)
+#         print("\nexception:")
+#         print(e)
+#         inner_exception = e
+#     finally:
+#         # cleanup memory
+#         try:
+#             del query
+#             del key_cache
+#             del value_cache
+#             del p
+#             del M
+#             del output
+#             del ref_output
+#             del seq_lens
+#             del prompt_lens_tensor
+#             del cu_seqlens_q
+#             del seq_start_loc
+#             del cu_seqlens_k
+#             torch.cuda.empty_cache()
+#             torch.cuda.ipc_collect()
+#         except Exception as e:
+#             print(e)
+#             # pass
+#         finally:
+#             if inner_exception is not None:
+#                 raise inner_exception
 #     except Exception as e:
 #         print("\ncaptured:")
 #         print(captured)
@@ -1017,9 +1627,10 @@ def test_prefix_vllm_v1_attention(
     realistic_prompt_mode = len(prompt_pattern) > 1
     gqa_mode = num_heads[0] != num_heads[1]
 
-    if torch.cuda.get_device_capability()[0] < 8:
-        # reduce operations are not supported (?)
-        pytest.skip()
+    # if torch.cuda.get_device_capability()[0] < 8:
+    #     # reduce operations are not supported (?)
+    #     pytest.skip("device is not capable")
+    #     print("HAHHAHA")
 
     if implementation not in [
         Implementation.BASELINE_TRITON,
@@ -1030,7 +1641,7 @@ def test_prefix_vllm_v1_attention(
         Implementation.UNF_TRITON_2D,
         Implementation.UNF_TRITON_AUTO,
     ]:
-        pytest.skip()
+        pytest.skip('unknown implementation')
 
     # TODO: Error: "Offset increment outside graph capture"
     #  for triton and flash_attn
@@ -1527,7 +2138,38 @@ def test_prefix_vllm_v1_attention(
 #     my_id = request.node.nodeid.split("::")[-1]
 #     my_name = my_id.split("[")[0]
 #     my_instance = my_id.split("[")[1][:-1]
+# @pytest.mark.parametrize("batch_size", BATCH_SIZES)
+# @pytest.mark.parametrize("num_heads", NUM_HEADS)
+# @pytest.mark.parametrize("head_size", HEAD_SIZES)
+# @pytest.mark.parametrize("dstate", STATE_DIM)
+# @pytest.mark.parametrize("n_groups", STATE_N_GROUPS)
+# @pytest.mark.parametrize("has_initial_state", HAS_INITIAL_STATE)
+# @pytest.mark.parametrize("dtype", DTYPES)
+# @pytest.mark.parametrize("seed", SEEDS)
+# # @pytest.mark.parametrize("implementation", IMPLEMENTATION_UT)
+# @pytest.mark.parametrize("benchmark_mode", BENCHMARK_MODES)
+# @torch.inference_mode()
+# def test_mamba_ssm(
+#     capsys,
+#     request,
+#     batch_size,
+#     num_heads,
+#     head_size,
+#     dstate,
+#     n_groups,
+#     has_initial_state,
+#     dtype,
+#     seed,
+#     # implementation,
+#     benchmark_mode,
+# ):
+#     my_id = request.node.nodeid.split("::")[-1]
+#     my_name = my_id.split("[")[0]
+#     my_instance = my_id.split("[")[1][:-1]
 
+#     # if torch.cuda.get_device_capability()[0] < 8:
+#     #     # reduce operations are not supported (?)
+#     #     pytest.skip()
 #     # if torch.cuda.get_device_capability()[0] < 8:
 #     #     # reduce operations are not supported (?)
 #     #     pytest.skip()
@@ -1536,9 +2178,22 @@ def test_prefix_vllm_v1_attention(
 #     assert num_heads[0] == num_heads[1]
 #     nheads = num_heads[0]
 #     headdim = head_size
+#     # TODO 
+#     assert num_heads[0] == num_heads[1]
+#     nheads = num_heads[0]
+#     headdim = head_size
     
 #     def generate_dummy_data(batch_size):
+#     def generate_dummy_data(batch_size):
 
+#         hidden_states = torch.randn(batch_size, nheads, headdim, dtype=dtype, device=device)
+#         A = torch.rand(nheads, dtype=dtype, device=device)
+#         B = torch.randn(batch_size, dstate, dtype=dtype, device=device)
+#         C = torch.randn(batch_size, dstate, dtype=dtype, device=device)
+#         D = torch.randn(nheads, dtype=dtype, device=device)
+#         dt = torch.randn(batch_size, nheads, dtype=dtype, device=device)
+#         dt_bias = torch.randn(nheads, dtype=dtype, device=device)
+#         state_indices_tensor = torch.arange(batch_size, dtype=torch.int32, device=device)
 #         hidden_states = torch.randn(batch_size, nheads, headdim, dtype=dtype, device=device)
 #         A = torch.rand(nheads, dtype=dtype, device=device)
 #         B = torch.randn(batch_size, dstate, dtype=dtype, device=device)
@@ -1555,12 +2210,28 @@ def test_prefix_vllm_v1_attention(
 #         D = D[:, None, ...].expand(-1, headdim)
 #         B = B.view(-1, n_groups, B.shape[1] // n_groups)
 #         C = C.view(-1, n_groups, C.shape[1] // n_groups)
+#         A = A[:, None, ...][:, :, None].expand(
+#             -1, headdim, dstate).to(dtype=torch.float32)
+#         dt = dt[:, :, None].expand(-1, -1, headdim)
+#         dt_bias = dt_bias[:, None, ...].expand(-1, headdim)
+#         D = D[:, None, ...].expand(-1, headdim)
+#         B = B.view(-1, n_groups, B.shape[1] // n_groups)
+#         C = C.view(-1, n_groups, C.shape[1] // n_groups)
 
 #         initial_states = (
 #             torch.randn(batch_size, nheads, headdim, dstate, dtype=dtype, device=device)
 #             if has_initial_state else None
 #         )
+#         initial_states = (
+#             torch.randn(batch_size, nheads, headdim, dstate, dtype=dtype, device=device)
+#             if has_initial_state else None
+#         )
 
+#         return (
+#             hidden_states, initial_states, 
+#             A, B, C, D, dt, dt_bias,
+#             state_indices_tensor,
+#         )
 #         return (
 #             hidden_states, initial_states, 
 #             A, B, C, D, dt, dt_bias,
@@ -1574,9 +2245,35 @@ def test_prefix_vllm_v1_attention(
 #             A, B, C, D, dt, dt_bias, 
 #             state_indices_tensor,
 #         ) = generate_dummy_data(batch_size)
+#     captured = ""
+#     try:
+#         (
+#             hidden_states, initial_states, 
+#             A, B, C, D, dt, dt_bias, 
+#             state_indices_tensor,
+#         ) = generate_dummy_data(batch_size)
 
 #         from ibm_triton_lib.kernels import selective_state_update
+#         from ibm_triton_lib.kernels import selective_state_update
     
+#         # TODO?
+#         # warm up
+#         warmup_start = datetime.now()
+#         for _ in range(3):
+#                 _ = selective_state_update(
+#                     initial_states,
+#                     hidden_states,
+#                     dt,
+#                     A,
+#                     B,
+#                     C,
+#                     D,
+#                     z=None,
+#                     dt_bias=dt_bias,
+#                     dt_softplus=True,
+#                     state_batch_indices=state_indices_tensor,
+#                 )
+#         print (f"warmup time {datetime.now()-warmup_start}")
 #         # TODO?
 #         # warm up
 #         warmup_start = datetime.now()
@@ -1609,7 +2306,33 @@ def test_prefix_vllm_v1_attention(
 #         #     allclose_pass = True
 #         # else:
 #         #     allclose_pass = torch.allclose(ref_output, output, atol=ATOL, rtol=RTOL)
+#         if capsys is not None:
+#             captured_raw = capsys.readouterr()  # returns stdout, stderr
+#             for l in captured_raw:
+#                 if len(l) > 0:
+#                     # captured += l  # + '|'
+#                     captured += l + " "
+#         # # compare
+#         # if enforce_numerical_correctness:
+#         #     # for better reports
+#         #     triton.testing.assert_close(ref_output, output, atol=ATOL, rtol=RTOL)
+#         #     allclose_pass = True
+#         # else:
+#         #     allclose_pass = torch.allclose(ref_output, output, atol=ATOL, rtol=RTOL)
         
+#         call_func_under_test = lambda : selective_state_update(
+#                 initial_states,
+#                 hidden_states,
+#                 dt,
+#                 A,
+#                 B,
+#                 C,
+#                 D,
+#                 z=None,
+#                 dt_bias=dt_bias,
+#                 dt_softplus=True,
+#                 state_batch_indices=state_indices_tensor,
+#             )
 #         call_func_under_test = lambda : selective_state_update(
 #                 initial_states,
 #                 hidden_states,
@@ -1628,6 +2351,10 @@ def test_prefix_vllm_v1_attention(
 #         if do_benchmarks:
 #             if my_name not in pytest.global_pds:
 #                 pytest.global_pds[my_name] = pd.DataFrame()
+#         # benchmark only correct results
+#         if do_benchmarks:
+#             if my_name not in pytest.global_pds:
+#                 pytest.global_pds[my_name] = pd.DataFrame()
 
 #             # equals to defaults
 #             warmup_rep = 25
@@ -1635,7 +2362,35 @@ def test_prefix_vllm_v1_attention(
 #             ms, min_ms, max_ms = measure_benchmarks(
 #                 benchmark_mode, call_func_under_test, warmup_rep, bench_rep
 #             )
+#             # equals to defaults
+#             warmup_rep = 25
+#             bench_rep = 100
+#             ms, min_ms, max_ms = measure_benchmarks(
+#                 benchmark_mode, call_func_under_test, warmup_rep, bench_rep
+#             )
 
+#             record = {
+#                 "batch_size": batch_size,
+#                 "num_heads": nheads,
+#                 "head_size": head_size,
+#                 "dstate": dstate,
+#                 "n_groups": n_groups,
+#                 "has_initial_state": has_initial_state,
+#                 "dtype": dtype,
+#                 # "implementation": implementation,
+#                 "ms": ms,
+#                 "min_ms": min_ms,
+#                 "max_ms": max_ms,
+#                 "benchmark_mode": benchmark_mode,
+#                 # "allclose_pass": allclose_pass,
+#                 # "ATOL": ATOL,
+#                 # "RTOL": RTOL,
+#                 # "proton_count": proton_count,
+#                 # "proton_ns": proton_ns,
+#                 # "proton_util_compute": proton_util_compute,
+#                 # "proton_util_bw": proton_util_bw,
+#                 "captured": captured,
+#             }
 #             record = {
 #                 "batch_size": batch_size,
 #                 "num_heads": nheads,
@@ -1672,7 +2427,23 @@ def test_prefix_vllm_v1_attention(
 #                             continue
 #                         dejavu_envs[env] = os.environ[env]
 #                 record.update(dejavu_envs)
+#             if add_triton_dejavu_envs:
+#                 dejavu_envs = {}
+#                 _skip_dejavu_envs = [
+#                     "_TRITON_DEJAVU_DETERMINED_CUDA_VERSION",
+#                     "DEBUG",
+#                     "STORAGE",
+#                 ]
+#                 for env in os.environ.keys():
+#                     if "TRITON_DEJAVU_" in env:
+#                         if any([skip_s in env for skip_s in _skip_dejavu_envs]):
+#                             continue
+#                         dejavu_envs[env] = os.environ[env]
+#                 record.update(dejavu_envs)
 
+#             pytest.global_pds[my_name] = pd.concat(
+#                 [pytest.global_pds[my_name], pd.Series(record).to_frame().T]
+#             ).reset_index(drop=True)
 #             pytest.global_pds[my_name] = pd.concat(
 #                 [pytest.global_pds[my_name], pd.Series(record).to_frame().T]
 #             ).reset_index(drop=True)
@@ -1682,7 +2453,18 @@ def test_prefix_vllm_v1_attention(
 #                     f"{pytest.global_pd_file_prefix}/{my_name}.csv"
 #                 )
 #                 write_df_and_chmod(pytest.global_pds[my_name], filename)
+#             if pytest.global_pd_file_prefix is not None:
+#                 filename = os.path.abspath(
+#                     f"{pytest.global_pd_file_prefix}/{my_name}.csv"
+#                 )
+#                 write_df_and_chmod(pytest.global_pds[my_name], filename)
 
+#     except Exception as e:
+#         print("\ncaptured:")
+#         print(captured)
+#         print("\nexception:")
+#         print(e)
+#         raise e
 #     except Exception as e:
 #         print("\ncaptured:")
 #         print(captured)
@@ -1843,6 +2625,7 @@ if __name__ == "__main__":
                 print(f"(stored in {filename})")
 
     print(
+        f'{torch.cuda.get_device_capability()[0]}'
         f"\nThis test used triton version: {triton.__version__}\n"
         f"This test was executed on: {gpu_name}\n"
         f"This test used: {cuda_version}\n"
