@@ -120,12 +120,12 @@ def find_all_json_files(root_dir, is_gemm):
     result = []
     for dirpath, dirnames, filenames in os.walk(root_dir):
         base = os.path.basename(dirpath)
-        if base.startswith("swiglu_data_lhs_25_10_percent"):
+        if base.startswith("swiglu_data"):
             print("JDAKSJ")
             print(base)
             # base_path = Path(base)
             # for subdir in base_path.rglob("*"):
-            #     if "A100" in str(subdir):
+            #     if "L40S" in str(subdir):
             #         all_json_files = subdir.rglob('all*.json')
             #         for json_file in all_json_files:
             #             # print(json_file)
@@ -193,7 +193,7 @@ if __name__ == "__main__":
     # data = data.iloc[500:1001]
     print(f'The data shape after dropping the non power of two warps {data.shape}')
     csv_name = 'all_gemm.csv' if is_gemm else 'all_swiglu.csv'
-    csv_name = 'swiglu_data_v100_lhs_25_10_percent.csv'
+    csv_name = 'all_swiglu_data.csv'
     # print(data[data['GPU'] == 'AMD'].shape)
     data.to_csv(csv_name)
 

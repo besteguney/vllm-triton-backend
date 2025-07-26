@@ -1,0 +1,706 @@
+{
+    "signature": "JITFunction(triton_swiglu:fused_silu_and_mul_kernel_other)",
+    "total_bench_time_s": 0.0,
+    "total_configs": 27,
+    "current_eval": {
+        "('16', '256', '8192', 'torch.float16', 'torch.float16')": 27,
+        "('64', '262144', '33554432', 'torch.float16', 'torch.float16')": 27,
+        "('2048', '16', '65536', 'torch.float16', 'torch.float16')": 27,
+        "('16384', '2048', '67108864', 'torch.float16', 'torch.float16')": 27,
+        "('512', '8192', '8388608', 'torch.float16', 'torch.float16')": 27
+    },
+    "keys": [
+        "D",
+        "num_tokens",
+        "n_elements"
+    ],
+    "cache": {},
+    "timings": {
+        "('16', '256', '8192', 'torch.float16', 'torch.float16')": [
+            {
+                "config": "BLOCK_SIZE: 8192, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0022341818548738956,
+                "compile_time": 0.6265730857849121
+            },
+            {
+                "config": "BLOCK_SIZE: 128, num_warps: 4, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0012039518915116787,
+                "compile_time": 0.08038949966430664
+            },
+            {
+                "config": "BLOCK_SIZE: 32, num_warps: 32, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.001503911567851901,
+                "compile_time": 0.07972192764282227
+            },
+            {
+                "config": "BLOCK_SIZE: 64, num_warps: 16, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0012058188440278172,
+                "compile_time": 0.07901954650878906
+            },
+            {
+                "config": "BLOCK_SIZE: 16, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0012047337368130684,
+                "compile_time": 0.0789334774017334
+            },
+            {
+                "config": "BLOCK_SIZE: 512, num_warps: 2, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.001343006151728332,
+                "compile_time": 0.08902931213378906
+            },
+            {
+                "config": "BLOCK_SIZE: 512, num_warps: 2, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0013423373457044363,
+                "compile_time": 0.08311748504638672
+            },
+            {
+                "config": "BLOCK_SIZE: 2048, num_warps: 4, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0013143813703209162,
+                "compile_time": 0.100677490234375
+            },
+            {
+                "config": "BLOCK_SIZE: 1024, num_warps: 2, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0014005588600412011,
+                "compile_time": 0.09969091415405273
+            },
+            {
+                "config": "BLOCK_SIZE: 8192, num_warps: 16, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.001989759271964431,
+                "compile_time": 0.10488009452819824
+            },
+            {
+                "config": "BLOCK_SIZE: 2048, num_warps: 1, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0022724326699972153,
+                "compile_time": 0.20128750801086426
+            },
+            {
+                "config": "BLOCK_SIZE: 16, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0012055037077516317,
+                "compile_time": 0.07257223129272461
+            },
+            {
+                "config": "BLOCK_SIZE: 32, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0012106510112062097,
+                "compile_time": 0.08332014083862305
+            },
+            {
+                "config": "BLOCK_SIZE: 1024, num_warps: 16, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0012361110420897603,
+                "compile_time": 0.07852983474731445
+            },
+            {
+                "config": "BLOCK_SIZE: 64, num_warps: 32, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.001483245985582471,
+                "compile_time": 0.07667660713195801
+            },
+            {
+                "config": "BLOCK_SIZE: 4096, num_warps: 16, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0014751448761671782,
+                "compile_time": 0.08850550651550293
+            },
+            {
+                "config": "BLOCK_SIZE: 256, num_warps: 2, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0013258019462227821,
+                "compile_time": 0.08206486701965332
+            },
+            {
+                "config": "BLOCK_SIZE: 4096, num_warps: 16, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.001474885968491435,
+                "compile_time": 8.249282836914062e-05
+            },
+            {
+                "config": "BLOCK_SIZE: 256, num_warps: 4, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0012055719271302223,
+                "compile_time": 0.07838678359985352
+            },
+            {
+                "config": "BLOCK_SIZE: 512, num_warps: 32, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0014697507722303271,
+                "compile_time": 0.07816743850708008
+            },
+            {
+                "config": "BLOCK_SIZE: 16, num_warps: 32, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0014983599539846182,
+                "compile_time": 0.07572698593139648
+            },
+            {
+                "config": "BLOCK_SIZE: 128, num_warps: 4, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0012032679514959455,
+                "compile_time": 8.082389831542969e-05
+            },
+            {
+                "config": "BLOCK_SIZE: 128, num_warps: 2, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.001313265529461205,
+                "compile_time": 0.08018231391906738
+            },
+            {
+                "config": "BLOCK_SIZE: 1024, num_warps: 1, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.001602071220986545,
+                "compile_time": 0.13358044624328613
+            },
+            {
+                "config": "BLOCK_SIZE: 8192, num_warps: 1, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.00850033201277256,
+                "compile_time": 1.2267124652862549
+            },
+            {
+                "config": "BLOCK_SIZE: 64, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0012094525154680014,
+                "compile_time": 0.07806396484375
+            },
+            {
+                "config": "BLOCK_SIZE: 2048, num_warps: 1, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.00227201241068542,
+                "compile_time": 0.20372319221496582
+            }
+        ],
+        "('64', '262144', '33554432', 'torch.float16', 'torch.float16')": [
+            {
+                "config": "BLOCK_SIZE: 8192, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.948896586894989,
+                "compile_time": 0.13100910186767578
+            },
+            {
+                "config": "BLOCK_SIZE: 128, num_warps: 4, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.13993419706821442,
+                "compile_time": 0.07755160331726074
+            },
+            {
+                "config": "BLOCK_SIZE: 32, num_warps: 32, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 1.390964388847351,
+                "compile_time": 0.07761931419372559
+            },
+            {
+                "config": "BLOCK_SIZE: 64, num_warps: 16, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.28422650694847107,
+                "compile_time": 0.08055639266967773
+            },
+            {
+                "config": "BLOCK_SIZE: 16, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.5560978651046753,
+                "compile_time": 0.08058714866638184
+            },
+            {
+                "config": "BLOCK_SIZE: 512, num_warps: 2, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.13996747136116028,
+                "compile_time": 0.08874917030334473
+            },
+            {
+                "config": "BLOCK_SIZE: 512, num_warps: 2, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.1399657279253006,
+                "compile_time": 0.09005951881408691
+            },
+            {
+                "config": "BLOCK_SIZE: 2048, num_warps: 4, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.24670609831809998,
+                "compile_time": 0.10421037673950195
+            },
+            {
+                "config": "BLOCK_SIZE: 1024, num_warps: 2, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.14141492545604706,
+                "compile_time": 0.10519933700561523
+            },
+            {
+                "config": "BLOCK_SIZE: 8192, num_warps: 16, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.9543375968933105,
+                "compile_time": 0.10873579978942871
+            },
+            {
+                "config": "BLOCK_SIZE: 2048, num_warps: 1, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.2530726492404938,
+                "compile_time": 0.2099900245666504
+            },
+            {
+                "config": "BLOCK_SIZE: 16, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.5578538179397583,
+                "compile_time": 0.07989668846130371
+            },
+            {
+                "config": "BLOCK_SIZE: 32, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.28367501497268677,
+                "compile_time": 0.08084797859191895
+            },
+            {
+                "config": "BLOCK_SIZE: 1024, num_warps: 16, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.3035484552383423,
+                "compile_time": 0.08539581298828125
+            },
+            {
+                "config": "BLOCK_SIZE: 64, num_warps: 32, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.6985154151916504,
+                "compile_time": 0.08283829689025879
+            },
+            {
+                "config": "BLOCK_SIZE: 4096, num_warps: 16, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.5100991129875183,
+                "compile_time": 0.09584403038024902
+            },
+            {
+                "config": "BLOCK_SIZE: 256, num_warps: 2, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.13994483649730682,
+                "compile_time": 0.08820652961730957
+            },
+            {
+                "config": "BLOCK_SIZE: 4096, num_warps: 16, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.5100967288017273,
+                "compile_time": 0.00010180473327636719
+            },
+            {
+                "config": "BLOCK_SIZE: 256, num_warps: 4, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.13991880416870117,
+                "compile_time": 0.08397626876831055
+            },
+            {
+                "config": "BLOCK_SIZE: 512, num_warps: 32, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.6727755069732666,
+                "compile_time": 0.08243942260742188
+            },
+            {
+                "config": "BLOCK_SIZE: 16, num_warps: 32, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 2.8132293224334717,
+                "compile_time": 0.08118081092834473
+            },
+            {
+                "config": "BLOCK_SIZE: 128, num_warps: 4, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.13993453979492188,
+                "compile_time": 0.00010442733764648438
+            },
+            {
+                "config": "BLOCK_SIZE: 128, num_warps: 2, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.13993021845817566,
+                "compile_time": 0.08332991600036621
+            },
+            {
+                "config": "BLOCK_SIZE: 1024, num_warps: 1, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.14371958374977112,
+                "compile_time": 0.13792181015014648
+            },
+            {
+                "config": "BLOCK_SIZE: 8192, num_warps: 1, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 4.706206321716309,
+                "compile_time": 1.2649257183074951
+            },
+            {
+                "config": "BLOCK_SIZE: 64, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.14418752491474152,
+                "compile_time": 0.08425354957580566
+            },
+            {
+                "config": "BLOCK_SIZE: 2048, num_warps: 1, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.2546059787273407,
+                "compile_time": 0.20914006233215332
+            }
+        ],
+        "('2048', '16', '65536', 'torch.float16', 'torch.float16')": [
+            {
+                "config": "BLOCK_SIZE: 8192, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0018980224849656224,
+                "compile_time": 0.14569926261901855
+            },
+            {
+                "config": "BLOCK_SIZE: 128, num_warps: 4, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0012208514381200075,
+                "compile_time": 0.08489370346069336
+            },
+            {
+                "config": "BLOCK_SIZE: 32, num_warps: 32, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.003633280051872134,
+                "compile_time": 0.08445405960083008
+            },
+            {
+                "config": "BLOCK_SIZE: 64, num_warps: 16, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0014375637983903289,
+                "compile_time": 0.08512353897094727
+            },
+            {
+                "config": "BLOCK_SIZE: 16, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0022527098190039396,
+                "compile_time": 0.08710217475891113
+            },
+            {
+                "config": "BLOCK_SIZE: 512, num_warps: 2, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0010570322629064322,
+                "compile_time": 0.09669089317321777
+            },
+            {
+                "config": "BLOCK_SIZE: 512, num_warps: 2, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0010574726620689034,
+                "compile_time": 0.09647274017333984
+            },
+            {
+                "config": "BLOCK_SIZE: 2048, num_warps: 4, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0011269167298451066,
+                "compile_time": 0.11061501502990723
+            },
+            {
+                "config": "BLOCK_SIZE: 1024, num_warps: 2, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0010816754074767232,
+                "compile_time": 0.10981464385986328
+            },
+            {
+                "config": "BLOCK_SIZE: 8192, num_warps: 16, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.001331440987996757,
+                "compile_time": 0.10729098320007324
+            },
+            {
+                "config": "BLOCK_SIZE: 2048, num_warps: 1, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.002462039701640606,
+                "compile_time": 0.21578240394592285
+            },
+            {
+                "config": "BLOCK_SIZE: 16, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0023271734826266766,
+                "compile_time": 0.08640050888061523
+            },
+            {
+                "config": "BLOCK_SIZE: 32, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0016927610849961638,
+                "compile_time": 0.08529973030090332
+            },
+            {
+                "config": "BLOCK_SIZE: 1024, num_warps: 16, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.001004652469418943,
+                "compile_time": 0.08832097053527832
+            },
+            {
+                "config": "BLOCK_SIZE: 64, num_warps: 32, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.002241263398900628,
+                "compile_time": 0.08493161201477051
+            },
+            {
+                "config": "BLOCK_SIZE: 4096, num_warps: 16, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0011364372912794352,
+                "compile_time": 0.09565925598144531
+            },
+            {
+                "config": "BLOCK_SIZE: 256, num_warps: 2, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0011246001813560724,
+                "compile_time": 0.0900874137878418
+            },
+            {
+                "config": "BLOCK_SIZE: 4096, num_warps: 16, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0011368861887603998,
+                "compile_time": 0.00011992454528808594
+            },
+            {
+                "config": "BLOCK_SIZE: 256, num_warps: 4, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.001101047731935978,
+                "compile_time": 0.08591938018798828
+            },
+            {
+                "config": "BLOCK_SIZE: 512, num_warps: 32, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.001046612043865025,
+                "compile_time": 0.08753538131713867
+            },
+            {
+                "config": "BLOCK_SIZE: 16, num_warps: 32, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.006342397071421146,
+                "compile_time": 0.08433103561401367
+            },
+            {
+                "config": "BLOCK_SIZE: 128, num_warps: 4, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0012209727428853512,
+                "compile_time": 0.0001270771026611328
+            },
+            {
+                "config": "BLOCK_SIZE: 128, num_warps: 2, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0013300989521667361,
+                "compile_time": 0.08677458763122559
+            },
+            {
+                "config": "BLOCK_SIZE: 1024, num_warps: 1, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0012616566382348537,
+                "compile_time": 0.14190888404846191
+            },
+            {
+                "config": "BLOCK_SIZE: 8192, num_warps: 1, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.00661423709243536,
+                "compile_time": 1.27278470993042
+            },
+            {
+                "config": "BLOCK_SIZE: 64, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0014168636407703161,
+                "compile_time": 0.0848383903503418
+            },
+            {
+                "config": "BLOCK_SIZE: 2048, num_warps: 1, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.002462318865582347,
+                "compile_time": 0.21747612953186035
+            }
+        ],
+        "('16384', '2048', '67108864', 'torch.float16', 'torch.float16')": [
+            {
+                "config": "BLOCK_SIZE: 8192, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.32223355770111084,
+                "compile_time": 0.1447148323059082
+            },
+            {
+                "config": "BLOCK_SIZE: 128, num_warps: 4, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.32023823261260986,
+                "compile_time": 0.08646059036254883
+            },
+            {
+                "config": "BLOCK_SIZE: 32, num_warps: 32, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 3.9651737213134766,
+                "compile_time": 0.08662796020507812
+            },
+            {
+                "config": "BLOCK_SIZE: 64, num_warps: 16, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.7406615614891052,
+                "compile_time": 0.08756041526794434
+            },
+            {
+                "config": "BLOCK_SIZE: 16, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 1.1126878261566162,
+                "compile_time": 0.08677172660827637
+            },
+            {
+                "config": "BLOCK_SIZE: 512, num_warps: 2, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.3016599118709564,
+                "compile_time": 0.09945011138916016
+            },
+            {
+                "config": "BLOCK_SIZE: 512, num_warps: 2, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.301089346408844,
+                "compile_time": 0.09874868392944336
+            },
+            {
+                "config": "BLOCK_SIZE: 2048, num_warps: 4, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.3200465440750122,
+                "compile_time": 0.11450505256652832
+            },
+            {
+                "config": "BLOCK_SIZE: 1024, num_warps: 2, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.3217199742794037,
+                "compile_time": 0.1183474063873291
+            },
+            {
+                "config": "BLOCK_SIZE: 8192, num_warps: 16, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.3313201367855072,
+                "compile_time": 0.1133720874786377
+            },
+            {
+                "config": "BLOCK_SIZE: 2048, num_warps: 1, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.30428367853164673,
+                "compile_time": 0.21280813217163086
+            },
+            {
+                "config": "BLOCK_SIZE: 16, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 1.5253440141677856,
+                "compile_time": 0.08719182014465332
+            },
+            {
+                "config": "BLOCK_SIZE: 32, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.7997353672981262,
+                "compile_time": 0.08522629737854004
+            },
+            {
+                "config": "BLOCK_SIZE: 1024, num_warps: 16, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.289993554353714,
+                "compile_time": 0.08829760551452637
+            },
+            {
+                "config": "BLOCK_SIZE: 64, num_warps: 32, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 2.069852590560913,
+                "compile_time": 0.08486533164978027
+            },
+            {
+                "config": "BLOCK_SIZE: 4096, num_warps: 16, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.30093708634376526,
+                "compile_time": 0.09774494171142578
+            },
+            {
+                "config": "BLOCK_SIZE: 256, num_warps: 2, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.3131565749645233,
+                "compile_time": 0.08886313438415527
+            },
+            {
+                "config": "BLOCK_SIZE: 4096, num_warps: 16, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.30153486132621765,
+                "compile_time": 0.00010776519775390625
+            },
+            {
+                "config": "BLOCK_SIZE: 256, num_warps: 4, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.3124067783355713,
+                "compile_time": 0.08706164360046387
+            },
+            {
+                "config": "BLOCK_SIZE: 512, num_warps: 32, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.34084242582321167,
+                "compile_time": 0.08655643463134766
+            },
+            {
+                "config": "BLOCK_SIZE: 16, num_warps: 32, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 7.8469977378845215,
+                "compile_time": 0.0846092700958252
+            },
+            {
+                "config": "BLOCK_SIZE: 128, num_warps: 4, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.32183969020843506,
+                "compile_time": 0.00011372566223144531
+            },
+            {
+                "config": "BLOCK_SIZE: 128, num_warps: 2, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.31243494153022766,
+                "compile_time": 0.08694887161254883
+            },
+            {
+                "config": "BLOCK_SIZE: 1024, num_warps: 1, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.31334730982780457,
+                "compile_time": 0.14557528495788574
+            },
+            {
+                "config": "BLOCK_SIZE: 8192, num_warps: 1, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.34898632764816284,
+                "compile_time": 1.2046518325805664
+            },
+            {
+                "config": "BLOCK_SIZE: 64, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.4476947784423828,
+                "compile_time": 0.08568525314331055
+            },
+            {
+                "config": "BLOCK_SIZE: 2048, num_warps: 1, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.30465662479400635,
+                "compile_time": 0.21848773956298828
+            }
+        ],
+        "('512', '8192', '8388608', 'torch.float16', 'torch.float16')": [
+            {
+                "config": "BLOCK_SIZE: 8192, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0313834585249424,
+                "compile_time": 0.1496412754058838
+            },
+            {
+                "config": "BLOCK_SIZE: 128, num_warps: 4, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.01853151060640812,
+                "compile_time": 0.08687472343444824
+            },
+            {
+                "config": "BLOCK_SIZE: 32, num_warps: 32, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.3461158871650696,
+                "compile_time": 0.0889585018157959
+            },
+            {
+                "config": "BLOCK_SIZE: 64, num_warps: 16, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.07156766206026077,
+                "compile_time": 0.0876302719116211
+            },
+            {
+                "config": "BLOCK_SIZE: 16, num_warps: 4, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.13991259038448334,
+                "compile_time": 0.08511567115783691
+            },
+            {
+                "config": "BLOCK_SIZE: 512, num_warps: 2, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.00566529668867588,
+                "compile_time": 0.09841799736022949
+            },
+            {
+                "config": "BLOCK_SIZE: 512, num_warps: 2, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.005629910621792078,
+                "compile_time": 0.09747004508972168
+            },
+            {
+                "config": "BLOCK_SIZE: 2048, num_warps: 4, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.009333718568086624,
+                "compile_time": 0.11270856857299805
+            },
+            {
+                "config": "BLOCK_SIZE: 1024, num_warps: 2, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0060475068166852,
+                "compile_time": 0.11125421524047852
+            },
+            {
+                "config": "BLOCK_SIZE: 8192, num_warps: 16, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.030906325206160545,
+                "compile_time": 0.11626696586608887
+            },
+            {
+                "config": "BLOCK_SIZE: 2048, num_warps: 1, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.010266129858791828,
+                "compile_time": 0.21570181846618652
+            },
+            {
+                "config": "BLOCK_SIZE: 16, num_warps: 8, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.14006438851356506,
+                "compile_time": 0.0865020751953125
+            },
+            {
+                "config": "BLOCK_SIZE: 32, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.07064957916736603,
+                "compile_time": 0.08500432968139648
+            },
+            {
+                "config": "BLOCK_SIZE: 1024, num_warps: 16, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.010855031199753284,
+                "compile_time": 0.0885610580444336
+            },
+            {
+                "config": "BLOCK_SIZE: 64, num_warps: 32, num_ctas: 1, num_stages: 1, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.17477957904338837,
+                "compile_time": 0.08619451522827148
+            },
+            {
+                "config": "BLOCK_SIZE: 4096, num_warps: 16, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.017266659066081047,
+                "compile_time": 0.09881806373596191
+            },
+            {
+                "config": "BLOCK_SIZE: 256, num_warps: 2, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.009897449985146523,
+                "compile_time": 0.09041261672973633
+            },
+            {
+                "config": "BLOCK_SIZE: 4096, num_warps: 16, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.017263511195778847,
+                "compile_time": 0.00010538101196289062
+            },
+            {
+                "config": "BLOCK_SIZE: 256, num_warps: 4, num_ctas: 1, num_stages: 4, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.009870655834674835,
+                "compile_time": 0.08808302879333496
+            },
+            {
+                "config": "BLOCK_SIZE: 512, num_warps: 32, num_ctas: 1, num_stages: 5, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.023869168013334274,
+                "compile_time": 0.08427596092224121
+            },
+            {
+                "config": "BLOCK_SIZE: 16, num_warps: 32, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.6954081058502197,
+                "compile_time": 0.08591699600219727
+            },
+            {
+                "config": "BLOCK_SIZE: 128, num_warps: 4, num_ctas: 1, num_stages: 3, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.018531179055571556,
+                "compile_time": 0.00010180473327636719
+            },
+            {
+                "config": "BLOCK_SIZE: 128, num_warps: 2, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.018541140481829643,
+                "compile_time": 0.08578777313232422
+            },
+            {
+                "config": "BLOCK_SIZE: 1024, num_warps: 1, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.0063535068184137344,
+                "compile_time": 0.14412975311279297
+            },
+            {
+                "config": "BLOCK_SIZE: 8192, num_warps: 1, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.28195345401763916,
+                "compile_time": 1.340764045715332
+            },
+            {
+                "config": "BLOCK_SIZE: 64, num_warps: 8, num_ctas: 1, num_stages: 0, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.035961851477622986,
+                "compile_time": 0.08611202239990234
+            },
+            {
+                "config": "BLOCK_SIZE: 2048, num_warps: 1, num_ctas: 1, num_stages: 2, num_buffers_warp_spec: 0, num_consumer_groups: 0, reg_dec_producer: 0, reg_inc_consumer: 0, maxnreg: None",
+                "runtime": 0.01026217918843031,
+                "compile_time": 0.21247649192810059
+            }
+        ]
+    },
+    "cuda_graphs": true
+}
