@@ -73,7 +73,7 @@ def swiglu_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_com
             samples.append(sample)
         return samples
 
-final_samples = swiglu_lhs_sampler(25, 54)
+final_samples = swiglu_lhs_sampler(5, 54)
 # print(final_samples)
 for ex in final_samples:
     num_tokens = ex['tokens']
