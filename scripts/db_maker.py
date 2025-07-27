@@ -7,7 +7,8 @@ from pathlib import Path
 
 import json
 
-gpus = ['V100', 'A100', 'L40S', 'H100'] 
+gpus = ['V100', 'A100', 'L40S', 'H100', 'AMD'] 
+# gpus = [ 'A100', 'L40S', 'H100', 'AMD'] 
 
 # Helper functions
 def read_json(file_path):
@@ -73,6 +74,44 @@ def create_data_frame_swiglu(file_path):
         new_df = pd.concat([new_df, cur_df])
     return new_df
 
+
+## Creating the data frame from the json results
+def create_data_frame_attention(file_path):
+    df = read_json(file_path)
+    df = df['timings']
+
+    new_df = pd.DataFrame()
+    for key, value in df.items():
+        values = [parse_config(val['config'], val['runtime'], val['compile_time']) for val in value]
+        key_config = ast.literal_eval(key)
+        max_seq_q = int(key_config[0])
+        max_seq_k = int(key_config[1])
+        avg_seq_q = int(key_config[2])
+        avg_seq_k = int(key_config[3])
+        num_query_heads = int(key_config[4])
+        num_queries_per_kv = int(key_config[5])
+        block_size = int(key_config[6])
+        head_size = int(key_config[7])
+        head_size_padded = int(key_config[8])
+        sliding_window = int(key_config[9])
+        stride_k_cache_3 = int(key_config[10])
+        stride_v_cache_3 = int(key_config[11])
+        cur_df = pd.DataFrame(values)
+        cur_df['max_seq_q'] = max_seq_q
+        cur_df['max_seq_k'] = max_seq_k
+        cur_df['avg_seq_q'] = avg_seq_q
+        cur_df['avg_seq_k'] = avg_seq_k
+        cur_df['num_query_heads'] = num_query_heads
+        cur_df['num_queries_per_kv'] = num_queries_per_kv
+        cur_df['block_size'] = block_size
+        cur_df['head_size'] = head_size
+        cur_df['head_size_padded'] = head_size_padded
+        cur_df['sliding_window'] = sliding_window
+        cur_df['stride_k_cache_3'] = stride_k_cache_3
+        cur_df['stride_v_cache_3'] = stride_v_cache_3
+        new_df = pd.concat([new_df, cur_df])
+    return new_df
+
 def is_power_of_two(n):
     n = int(n)
     return n > 0 and (n & (n - 1)) == 0
@@ -81,9 +120,9 @@ def find_all_json_files(root_dir, is_gemm):
     result = []
     for dirpath, dirnames, filenames in os.walk(root_dir):
         base = os.path.basename(dirpath)
-        if base.startswith("gemm_data"):
-            # print("JDAKSJ")
-            # print(base)
+        if base.startswith("swiglu_data_lhs_25_10_percent"):
+            print("JDAKSJ")
+            print(base)
             # base_path = Path(base)
             # for subdir in base_path.rglob("*"):
             #     if "A100" in str(subdir):
@@ -103,6 +142,7 @@ def find_all_json_files(root_dir, is_gemm):
             all_json_files = base_path.rglob('all*.json')
             for json_file in all_json_files:
                 caller = create_data_frame_gemm if is_gemm else create_data_frame_swiglu
+                # caller = create_data_frame_attention
                 df_new = caller(json_file)
                 if df_new is None:
                     continue
@@ -116,7 +156,7 @@ def find_all_json_files(root_dir, is_gemm):
 if __name__ == "__main__":
     # Set this to the root directory where the search should begin
     search_root = "."
-    is_gemm = True
+    is_gemm = False
     all_data_frames= find_all_json_files(search_root, is_gemm)
 
     data = pd.concat(all_data_frames, axis=0)
@@ -139,6 +179,9 @@ if __name__ == "__main__":
                                     'num_warps',
                                     'num_stages',
                                     'GPU'], inplace=True)
+    # categorical_features = ['BLOCK_N', 'BLOCK_M', 'num_warps', 'num_stages', 'GPU']
+    # numerical_features = ['max_seq_q', 'max_seq_k', 'avg_seq_q', 'avg_seq_k', 'num_query_heads', 'num_queries_per_kv']
+    # data.drop_duplicates(subset=categorical_features+numerical_features )
     print(f'The data shape after dropping the duplicates {data.shape}')
 
     ## When the runtime is nan, replace with np.inf
@@ -150,6 +193,7 @@ if __name__ == "__main__":
     # data = data.iloc[500:1001]
     print(f'The data shape after dropping the non power of two warps {data.shape}')
     csv_name = 'all_gemm.csv' if is_gemm else 'all_swiglu.csv'
-    csv_name = 'all_gemm_data.csv'
+    csv_name = 'swiglu_data_v100_lhs_25_10_percent.csv'
+    # print(data[data['GPU'] == 'AMD'].shape)
     data.to_csv(csv_name)
 

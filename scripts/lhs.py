@@ -3,7 +3,7 @@ from scipy.stats import qmc
 
 class LatinHypercubeSampler:
 
-    def __init__(self, dict_space):
+    def __init__(self, dict_space, seed):
         self.dict_space = dict_space
         space_int_repr = []
         ts_orig_to_int = {}
@@ -40,7 +40,7 @@ class LatinHypercubeSampler:
         self.index_to_label = index_to_label
 
         self.d = len(space_int_repr)
-        self.sampler = qmc.LatinHypercube(d=self.d)
+        self.sampler = qmc.LatinHypercube(d=self.d, seed=seed)
         # sample = sampler.random(2*self.d)
         # sample_scaled = qmc.scale(sample, l_bounds, u_bounds)
         print(

@@ -47,7 +47,7 @@ def make_swiglu_kernel(configurations):
     key=['D', 'num_tokens', 'n_elements'], 
     use_cuda_graph=True,
     custom_data_storage=os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "swiglu_data")
+        os.path.join(os.path.dirname(__file__), "swiglu_data_lhs_25_10_percent")
     ),)
     @triton.jit
     def fused_silu_and_mul_kernel_other(
@@ -254,6 +254,8 @@ def fused_silu_and_mul_cfg(xy: torch.Tensor, configurations):
     grid = lambda meta: (int(num_tokens), triton.cdiv(d, meta['BLOCK_SIZE'])) 
     # print(f'expected grid: {num_tokens}, {np.ceil(d/1024)}')
     # print(f'd % block_size: {d%2048}')
+    print(len(configurations))
+    print("JDASKJD")
     swiglu_kernel = make_swiglu_kernel(configurations)
     try:
         swiglu_kernel[grid](xy, out, n_elements, d, num_tokens)
