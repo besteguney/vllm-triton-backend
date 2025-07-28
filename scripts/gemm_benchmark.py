@@ -18,8 +18,8 @@ dimensions = [2**i for i in range(8,14)]
 all_dim_combinations = list(itertools.product(dimensions, repeat=3))
 
 # Randomly sample 100 unique combinations
-random.seed(161)  # for reproducibility
-sampled_dim_combinations = random.sample(all_dim_combinations, 50)
+random.seed(42)  # for reproducibility
+sampled_dim_combinations = random.sample(all_dim_combinations, 60)
 
 group_size = [1,2,4,8,16]
 block_size_m = [16, 32, 64, 128, 256]
