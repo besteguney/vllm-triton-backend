@@ -8,7 +8,7 @@ from triton_gemm import matmul, matmul_kernel2
 
 def get_configs():
     configs = []
-    configs.append(triton.Config({'BLOCK_SIZE_M': 128, 'BLOCK_SIZE_N': 16, 'BLOCK_SIZE_K': 256, 'GROUP_SIZE_M': 4}, num_warps=4, num_stages=0))
+    configs.append(triton.Config({'BLOCK_SIZE_M': 16, 'BLOCK_SIZE_N': 16, 'BLOCK_SIZE_K': 128, 'GROUP_SIZE_M': 4}, num_warps=4, num_stages=0))
     return configs
 
 @triton.autotune(

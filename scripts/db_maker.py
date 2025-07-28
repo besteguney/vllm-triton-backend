@@ -125,7 +125,7 @@ def find_all_json_files(root_dir, is_gemm):
             print(base)
             # base_path = Path(base)
             # for subdir in base_path.rglob("*"):
-            #     if "A100" in str(subdir):
+            #     if "L40S" in str(subdir):
             #         all_json_files = subdir.rglob('all*.json')
             #         for json_file in all_json_files:
             #             # print(json_file)
@@ -139,18 +139,33 @@ def find_all_json_files(root_dir, is_gemm):
             #                     break
             #             result.append(df_new)
             base_path = Path(base)
-            all_json_files = base_path.rglob('all*.json')
-            for json_file in all_json_files:
-                caller = create_data_frame_gemm if is_gemm else create_data_frame_swiglu
-                # caller = create_data_frame_attention
-                df_new = caller(json_file)
-                if df_new is None:
-                    continue
-                for gpu in gpus:
-                    if gpu in str(json_file):
-                        df_new['GPU'] = gpu
-                        break
-                result.append(df_new)
+            for subdir in base_path.rglob("*"):
+                if "A100" in str(subdir):
+                    all_json_files = subdir.rglob('all*.json')
+                    for json_file in all_json_files:
+                        # print(json_file)
+                        caller = create_data_frame_gemm if is_gemm else create_data_frame_swiglu
+                        df_new = caller(json_file)
+                        if df_new is None:
+                            continue
+                        for gpu in gpus:
+                            if gpu in str(json_file):
+                                df_new['GPU'] = gpu
+                                break
+                        result.append(df_new)
+            # base_path = Path(base)
+            # all_json_files = base_path.rglob('all*.json')
+            # for json_file in all_json_files:
+            #     caller = create_data_frame_gemm if is_gemm else create_data_frame_swiglu
+            #     # caller = create_data_frame_attention
+            #     df_new = caller(json_file)
+            #     if df_new is None:
+            #         continue
+            #     for gpu in gpus:
+            #         if gpu in str(json_file):
+            #             df_new['GPU'] = gpu
+            #             break
+            #     result.append(df_new)
     return result
 
 if __name__ == "__main__":
