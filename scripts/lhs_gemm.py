@@ -95,6 +95,7 @@ for ex in final_samples:
         continue
     quantiles = [0.5, 0.2, 0.8]
     matmul(a, b, ex['cfgs'])
+    del a, b
     # try: 
     #     ms, min_ms, max_ms = triton.testing.do_bench(lambda: matmul(a, b, ex['cfgs']), quantiles=quantiles)
     # except RuntimeError as e:
