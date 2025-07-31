@@ -103,28 +103,28 @@ def make_swiglu_kernel(configurations):
     return fused_silu_and_mul_kernel_other
 
 
-# @triton_dejavu.autotune(
-#     config_space=triton_dejavu.ConfigSpace(
-#         {'BLOCK_SIZE': [16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192]},
-#         num_warps=[2**i for i in range(6)],
-#         num_stages=[i for i in range(1, 9)],
-#         num_ctas=[1],
-#     ),
-#     key=['D', 'num_tokens', 'n_elements'], 
-#     use_cuda_graph=True,
-#     custom_data_storage=os.path.abspath(
-#         os.path.join(os.path.dirname(__file__), "swiglu_data_autotuned")
-#     ),
-# )
-# @triton.jit
-# def fused_silu_and_mul_kernel(
-#     x_ptr, 
-#     out_ptr,
-#     n_elements: tl.constexpr, 
-#     D: tl.constexpr,
-#     num_tokens: tl.constexpr,  # only for the autotuner
-#     BLOCK_SIZE: tl.constexpr):
-#     """An activation function for SwiGLU.
+@triton_dejavu.autotune(
+    config_space=triton_dejavu.ConfigSpace(
+        {'BLOCK_SIZE': [16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192]},
+        num_warps=[2**i for i in range(6)],
+        num_stages=[i for i in range(9)],
+        num_ctas=[1],
+    ),
+    key=['D', 'num_tokens', 'n_elements'], 
+    use_cuda_graph=True,
+    custom_data_storage=os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "swiglu_data_autotuned")
+    ),
+)
+@triton.jit
+def fused_silu_and_mul_kernel(
+    x_ptr, 
+    out_ptr,
+    n_elements: tl.constexpr, 
+    D: tl.constexpr,
+    num_tokens: tl.constexpr,  # only for the autotuner
+    BLOCK_SIZE: tl.constexpr):
+    """An activation function for SwiGLU.
 
 #     The function computes x,y -> x * sigmoid(x) * y 
 
