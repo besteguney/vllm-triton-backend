@@ -6,7 +6,7 @@ SEQUENCE_LENGTH = [16, 32, 44, 54, 64, 511, 512, 513, 648, 912, 1024]
 BATCH_SIZES = [1, 2, 3, 4, 6, 8, 9, 12, 16, 22, 25, 28, 32, 54, 58, 64, 72, 84, 96, 128]
 HEAD_SIZES = [32, 64, 128]
 NUM_HEADS = [32]
-heads = [2**i for i in range(4, 14)]
+heads = [2**i for i in range(11, 14)]
 MAX_VALUES = [0.01, 0.1, 1.0]
 
 for seqlen in SEQUENCE_LENGTH:
