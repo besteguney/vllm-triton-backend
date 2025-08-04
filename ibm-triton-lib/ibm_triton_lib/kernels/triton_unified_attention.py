@@ -284,15 +284,44 @@ def prefill_heuristics_2d(MAX_SEQ_Q, MAX_SEQ_K):
 #     ],
 #     autotuner_args=["BLOCK_N", "BLOCK_M"],
 # )
+
+def get_17_configs():
+    configs = [{'BLOCK_M': 16, 'BLOCK_N': 64, 
+                'num_warps': 8, 'num_stages': 6},
+                  {'BLOCK_M': 128, 'BLOCK_N': 512, 'num_warps': 4, 'num_stages': 8}, 
+                  {'BLOCK_M': 32, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 2}, 
+                  {'BLOCK_M': 256, 'BLOCK_N': 128, 'num_warps': 2, 'num_stages': 4}, 
+                  {'BLOCK_M': 512, 'BLOCK_N': 128, 'num_warps': 2, 'num_stages': 8}, 
+                  {'BLOCK_M': 128, 'BLOCK_N': 32, 'num_warps': 8, 'num_stages': 6}, 
+                  {'BLOCK_M': 32, 'BLOCK_N': 64, 'num_warps': 8, 'num_stages': 2}, 
+                  {'BLOCK_M': 32, 'BLOCK_N': 128, 'num_warps': 2, 'num_stages': 6}, 
+                  {'BLOCK_M': 16, 'BLOCK_N': 16, 'num_warps': 8, 'num_stages': 8}, 
+                  {'BLOCK_M': 128, 'BLOCK_N': 16, 'num_warps': 4, 'num_stages': 2}, 
+                  {'BLOCK_M': 16, 'BLOCK_N': 128, 'num_warps': 4, 'num_stages': 6}, 
+                  {'BLOCK_M': 64, 'BLOCK_N': 64, 'num_warps': 2, 'num_stages': 4},
+                    {'BLOCK_M': 512, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 1},
+                      {'BLOCK_M': 64, 'BLOCK_N': 16, 'num_warps': 4, 'num_stages': 4}, 
+                      {'BLOCK_M': 256, 'BLOCK_N': 256, 'num_warps': 4, 'num_stages': 2}, 
+                      {'BLOCK_M': 64, 'BLOCK_N': 32, 'num_warps': 8, 'num_stages': 1}, 
+                      {'BLOCK_M': 512, 'BLOCK_N': 256, 'num_warps': 8, 'num_stages': 1}]
+    return [
+    triton.Config(
+        {'BLOCK_M': cfg['BLOCK_M'], 'BLOCK_N': cfg['BLOCK_N']},
+        num_warps=cfg['num_warps'],
+        num_stages=cfg['num_stages']
+    )
+    for cfg in configs
+]
 @triton_dejavu.autotune(
-    config_space=triton_dejavu.ConfigSpace(
-        {
-            'BLOCK_N': [16, 32, 64, 128, 256, 512],
-            'BLOCK_M': [16, 32, 64, 128, 256, 512]
-        },
-    num_warps=[2, 4, 8],
-    num_stages=[1, 2, 4, 6, 8],
-    ),
+        configs=get_17_configs(),
+    # config_space=triton_dejavu.ConfigSpace(
+    #     {
+    #         'BLOCK_N': [16, 32, 64, 128, 256, 512],
+    #         'BLOCK_M': [16, 32, 64, 128, 256, 512]
+    #     },
+    # num_warps=[2, 4, 8],
+    # num_stages=[1, 2, 4, 6, 8],
+    # ),
     # this list is longer, since it would be used for multiple models
     key = ["MAX_SEQ_Q", "MAX_SEQ_K", "AVG_SEQ_Q", "AVG_SEQ_K",
            "num_query_heads", "num_queries_per_kv", 
@@ -301,7 +330,7 @@ def prefill_heuristics_2d(MAX_SEQ_Q, MAX_SEQ_K):
            "stride_k_cache_3", "stride_v_cache_3"
            ],
     custom_data_storage=os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "unified_attention")),
+        os.path.join(os.path.dirname(__file__), "unified_attention_lhs_4")),
     use_cuda_graph=True,
     # use_bo=True,
     # search_max_search_t=360,
