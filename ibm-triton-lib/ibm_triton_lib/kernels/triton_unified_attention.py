@@ -286,26 +286,27 @@ def prefill_heuristics_2d(MAX_SEQ_Q, MAX_SEQ_K):
 # )
 
 def get_17_configs():
-    # configs = [{'BLOCK_M': 16, 'BLOCK_N': 64, 
-                # 'num_warps': 8, 'num_stages': 6},
-                #   {'BLOCK_M': 128, 'BLOCK_N': 512, 'num_warps': 4, 'num_stages': 8}, 
-                #   {'BLOCK_M': 32, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 2}, 
-                #   {'BLOCK_M': 256, 'BLOCK_N': 128, 'num_warps': 2, 'num_stages': 4}, 
-                #   {'BLOCK_M': 512, 'BLOCK_N': 128, 'num_warps': 2, 'num_stages': 8}, 
-                #   {'BLOCK_M': 128, 'BLOCK_N': 32, 'num_warps': 8, 'num_stages': 6}, 
-                #   {'BLOCK_M': 32, 'BLOCK_N': 64, 'num_warps': 8, 'num_stages': 2}, 
-                #   {'BLOCK_M': 32, 'BLOCK_N': 128, 'num_warps': 2, 'num_stages': 6}, 
-                #   {'BLOCK_M': 16, 'BLOCK_N': 16, 'num_warps': 8, 'num_stages': 8}, 
-                #   {'BLOCK_M': 128, 'BLOCK_N': 16, 'num_warps': 4, 'num_stages': 2}, 
-                #   {'BLOCK_M': 16, 'BLOCK_N': 128, 'num_warps': 4, 'num_stages': 6}, 
-                #   {'BLOCK_M': 64, 'BLOCK_N': 64, 'num_warps': 2, 'num_stages': 4},
-                #     {'BLOCK_M': 512, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 1},
-                #       {'BLOCK_M': 64, 'BLOCK_N': 16, 'num_warps': 4, 'num_stages': 4}, 
-                #       {'BLOCK_M': 256, 'BLOCK_N': 256, 'num_warps': 4, 'num_stages': 2}, 
-                #       {'BLOCK_M': 64, 'BLOCK_N': 32, 'num_warps': 8, 'num_stages': 1}, 
-                #       {'BLOCK_M': 512, 'BLOCK_N': 256, 'num_warps': 8, 'num_stages': 1}]
-    # configs = [{'BLOCK_M': 16, 'BLOCK_N': 64, 'num_warps': 2, 'num_stages': 2}, {'BLOCK_M': 64, 'BLOCK_N': 32, 'num_warps': 4, 'num_stages': 8}, {'BLOCK_M': 64, 'BLOCK_N': 16, 'num_warps': 8, 'num_stages': 1}, {'BLOCK_M': 32, 'BLOCK_N': 512, 'num_warps': 8, 'num_stages': 2}, {'BLOCK_M': 256, 'BLOCK_N': 256, 'num_warps': 2, 'num_stages': 2}, {'BLOCK_M': 128, 'BLOCK_N': 32, 'num_warps': 8, 'num_stages': 6}, {'BLOCK_M': 128, 'BLOCK_N': 64, 'num_warps': 4, 'num_stages': 2}, {'BLOCK_M': 32, 'BLOCK_N': 32, 'num_warps': 4, 'num_stages': 8}, {'BLOCK_M': 512, 'BLOCK_N': 128, 'num_warps': 4, 'num_stages': 1}, {'BLOCK_M': 16, 'BLOCK_N': 64, 'num_warps': 8, 'num_stages': 4}, {'BLOCK_M': 64, 'BLOCK_N': 16, 'num_warps': 2, 'num_stages': 8}, {'BLOCK_M': 512, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 6}, {'BLOCK_M': 32, 'BLOCK_N': 128, 'num_warps': 2, 'num_stages': 1}, {'BLOCK_M': 256, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 4}, {'BLOCK_M': 512, 'BLOCK_N': 16, 'num_warps': 8, 'num_stages': 4}, {'BLOCK_M': 128, 'BLOCK_N': 256, 'num_warps': 4, 'num_stages': 8}, {'BLOCK_M': 16, 'BLOCK_N': 256, 'num_warps': 8, 'num_stages': 4}]
-    configs = [{'BLOCK_M': 16, 'BLOCK_N': 512, 'num_warps': 4, 'num_stages': 6}, {'BLOCK_M': 128, 'BLOCK_N': 64, 'num_warps': 8, 'num_stages': 8}, {'BLOCK_M': 128, 'BLOCK_N': 32, 'num_warps': 2, 'num_stages': 4}, {'BLOCK_M': 16, 'BLOCK_N': 256, 'num_warps': 8, 'num_stages': 1}, {'BLOCK_M': 512, 'BLOCK_N': 16, 'num_warps': 2, 'num_stages': 6}, {'BLOCK_M': 64, 'BLOCK_N': 64, 'num_warps': 4, 'num_stages': 6}, {'BLOCK_M': 256, 'BLOCK_N': 64, 'num_warps': 8, 'num_stages': 6}, {'BLOCK_M': 256, 'BLOCK_N': 128, 'num_warps': 8, 'num_stages': 4}, {'BLOCK_M': 16, 'BLOCK_N': 128, 'num_warps': 4, 'num_stages': 8}, {'BLOCK_M': 32, 'BLOCK_N': 128, 'num_warps': 2, 'num_stages': 2}, {'BLOCK_M': 32, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 2}, {'BLOCK_M': 32, 'BLOCK_N': 256, 'num_warps': 4, 'num_stages': 2}, {'BLOCK_M': 512, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 1}, {'BLOCK_M': 256, 'BLOCK_N': 16, 'num_warps': 8, 'num_stages': 8}, {'BLOCK_M': 64, 'BLOCK_N': 32, 'num_warps': 2, 'num_stages': 4}, {'BLOCK_M': 256, 'BLOCK_N': 16, 'num_warps': 4, 'num_stages': 1}, {'BLOCK_M': 128, 'BLOCK_N': 64, 'num_warps': 8, 'num_stages': 1}]
+    configs = [{'BLOCK_M': 16, 'BLOCK_N': 64, 
+                'num_warps': 8, 'num_stages': 6},
+                  {'BLOCK_M': 128, 'BLOCK_N': 512, 'num_warps': 4, 'num_stages': 8}, 
+                  {'BLOCK_M': 32, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 2}, 
+                  {'BLOCK_M': 256, 'BLOCK_N': 128, 'num_warps': 2, 'num_stages': 4}, 
+                  {'BLOCK_M': 512, 'BLOCK_N': 128, 'num_warps': 2, 'num_stages': 8}, 
+                  {'BLOCK_M': 128, 'BLOCK_N': 32, 'num_warps': 8, 'num_stages': 6}, 
+                  {'BLOCK_M': 32, 'BLOCK_N': 64, 'num_warps': 8, 'num_stages': 2}, 
+                  {'BLOCK_M': 32, 'BLOCK_N': 128, 'num_warps': 2, 'num_stages': 6}, 
+                  {'BLOCK_M': 16, 'BLOCK_N': 16, 'num_warps': 8, 'num_stages': 8}, 
+                  {'BLOCK_M': 128, 'BLOCK_N': 16, 'num_warps': 4, 'num_stages': 2}, 
+                  {'BLOCK_M': 16, 'BLOCK_N': 128, 'num_warps': 4, 'num_stages': 6}, 
+                  {'BLOCK_M': 64, 'BLOCK_N': 64, 'num_warps': 2, 'num_stages': 4},
+                    {'BLOCK_M': 512, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 1},
+                      {'BLOCK_M': 64, 'BLOCK_N': 16, 'num_warps': 4, 'num_stages': 4}, 
+                      {'BLOCK_M': 256, 'BLOCK_N': 256, 'num_warps': 4, 'num_stages': 2}, 
+                      {'BLOCK_M': 64, 'BLOCK_N': 32, 'num_warps': 8, 'num_stages': 1}, 
+                      {'BLOCK_M': 512, 'BLOCK_N': 256, 'num_warps': 8, 'num_stages': 1}]
+    configs = [{'BLOCK_M': 16, 'BLOCK_N': 64, 'num_warps': 2, 'num_stages': 2}, {'BLOCK_M': 64, 'BLOCK_N': 32, 'num_warps': 4, 'num_stages': 8}, {'BLOCK_M': 64, 'BLOCK_N': 16, 'num_warps': 8, 'num_stages': 1}, {'BLOCK_M': 32, 'BLOCK_N': 512, 'num_warps': 8, 'num_stages': 2}, {'BLOCK_M': 256, 'BLOCK_N': 256, 'num_warps': 2, 'num_stages': 2}, {'BLOCK_M': 128, 'BLOCK_N': 32, 'num_warps': 8, 'num_stages': 6}, {'BLOCK_M': 128, 'BLOCK_N': 64, 'num_warps': 4, 'num_stages': 2}, {'BLOCK_M': 32, 'BLOCK_N': 32, 'num_warps': 4, 'num_stages': 8}, {'BLOCK_M': 512, 'BLOCK_N': 128, 'num_warps': 4, 'num_stages': 1}, {'BLOCK_M': 16, 'BLOCK_N': 64, 'num_warps': 8, 'num_stages': 4}, {'BLOCK_M': 64, 'BLOCK_N': 16, 'num_warps': 2, 'num_stages': 8}, {'BLOCK_M': 512, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 6}, {'BLOCK_M': 32, 'BLOCK_N': 128, 'num_warps': 2, 'num_stages': 1}, {'BLOCK_M': 256, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 4}, {'BLOCK_M': 512, 'BLOCK_N': 16, 'num_warps': 8, 'num_stages': 4}, {'BLOCK_M': 128, 'BLOCK_N': 256, 'num_warps': 4, 'num_stages': 8}, {'BLOCK_M': 16, 'BLOCK_N': 256, 'num_warps': 8, 'num_stages': 4}]
+    # configs = [{'BLOCK_M': 16, 'BLOCK_N': 512, 'num_warps': 4, 'num_stages': 6}, {'BLOCK_M': 128, 'BLOCK_N': 64, 'num_warps': 8, 'num_stages': 8}, {'BLOCK_M': 128, 'BLOCK_N': 32, 'num_warps': 2, 'num_stages': 4}, {'BLOCK_M': 16, 'BLOCK_N': 256, 'num_warps': 8, 'num_stages': 1}, {'BLOCK_M': 512, 'BLOCK_N': 16, 'num_warps': 2, 'num_stages': 6}, {'BLOCK_M': 64, 'BLOCK_N': 64, 'num_warps': 4, 'num_stages': 6}, {'BLOCK_M': 256, 'BLOCK_N': 64, 'num_warps': 8, 'num_stages': 6}, {'BLOCK_M': 256, 'BLOCK_N': 128, 'num_warps': 8, 'num_stages': 4}, {'BLOCK_M': 16, 'BLOCK_N': 128, 'num_warps': 4, 'num_stages': 8}, {'BLOCK_M': 32, 'BLOCK_N': 128, 'num_warps': 2, 'num_stages': 2}, {'BLOCK_M': 32, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 2}, {'BLOCK_M': 32, 'BLOCK_N': 256, 'num_warps': 4, 'num_stages': 2}, {'BLOCK_M': 512, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 1}, {'BLOCK_M': 256, 'BLOCK_N': 16, 'num_warps': 8, 'num_stages': 8}, {'BLOCK_M': 64, 'BLOCK_N': 32, 'num_warps': 2, 'num_stages': 4}, {'BLOCK_M': 256, 'BLOCK_N': 16, 'num_warps': 4, 'num_stages': 1}, {'BLOCK_M': 128, 'BLOCK_N': 64, 'num_warps': 8, 'num_stages': 1}]
+    
     return [
     triton.Config(
         {'BLOCK_M': cfg['BLOCK_M'], 'BLOCK_N': cfg['BLOCK_N']},
@@ -314,8 +315,22 @@ def get_17_configs():
     )
     for cfg in configs
 ]
+
+def get_27_configs():
+    # configs = [{'BLOCK_M': 128, 'BLOCK_N': 16, 'num_warps': 2, 'num_stages': 1}, {'BLOCK_M': 32, 'BLOCK_N': 16, 'num_warps': 8, 'num_stages': 2}, {'BLOCK_M': 16, 'BLOCK_N': 16, 'num_warps': 4, 'num_stages': 6}, {'BLOCK_M': 64, 'BLOCK_N': 32, 'num_warps': 2, 'num_stages': 8}, {'BLOCK_M': 512, 'BLOCK_N': 64, 'num_warps': 8, 'num_stages': 1}, {'BLOCK_M': 16, 'BLOCK_N': 32, 'num_warps': 4, 'num_stages': 6}, {'BLOCK_M': 64, 'BLOCK_N': 16, 'num_warps': 2, 'num_stages': 6}, {'BLOCK_M': 256, 'BLOCK_N': 256, 'num_warps': 2, 'num_stages': 6}, {'BLOCK_M': 128, 'BLOCK_N': 16, 'num_warps': 4, 'num_stages': 1}, {'BLOCK_M': 256, 'BLOCK_N': 32, 'num_warps': 4, 'num_stages': 4}, {'BLOCK_M': 128, 'BLOCK_N': 128, 'num_warps': 8, 'num_stages': 6}, {'BLOCK_M': 16, 'BLOCK_N': 128, 'num_warps': 4, 'num_stages': 2}, {'BLOCK_M': 64, 'BLOCK_N': 64, 'num_warps': 4, 'num_stages': 4}, {'BLOCK_M': 512, 'BLOCK_N': 256, 'num_warps': 8, 'num_stages': 4}, {'BLOCK_M': 128, 'BLOCK_N': 32, 'num_warps': 8, 'num_stages': 1}, {'BLOCK_M': 32, 'BLOCK_N': 128, 'num_warps': 8, 'num_stages': 8}, {'BLOCK_M': 512, 'BLOCK_N': 256, 'num_warps': 8, 'num_stages': 1}, {'BLOCK_M': 16, 'BLOCK_N': 64, 'num_warps': 2, 'num_stages': 4}, {'BLOCK_M': 256, 'BLOCK_N': 256, 'num_warps': 2, 'num_stages': 2}, {'BLOCK_M': 128, 'BLOCK_N': 128, 'num_warps': 4, 'num_stages': 4}, {'BLOCK_M': 32, 'BLOCK_N': 64, 'num_warps': 8, 'num_stages': 8}, {'BLOCK_M': 64, 'BLOCK_N': 512, 'num_warps': 4, 'num_stages': 8}, {'BLOCK_M': 512, 'BLOCK_N': 64, 'num_warps': 2, 'num_stages': 1}, {'BLOCK_M': 16, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 8}, {'BLOCK_M': 256, 'BLOCK_N': 512, 'num_warps': 8, 'num_stages': 2}, {'BLOCK_M': 32, 'BLOCK_N': 256, 'num_warps': 4, 'num_stages': 2}, {'BLOCK_M': 256, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 4}]
+    configs = [{'BLOCK_M': 128, 'BLOCK_N': 256, 'num_warps': 2, 'num_stages': 8}, {'BLOCK_M': 256, 'BLOCK_N': 32, 'num_warps': 4, 'num_stages': 1}, {'BLOCK_M': 16, 'BLOCK_N': 64, 'num_warps': 4, 'num_stages': 2}, {'BLOCK_M': 512, 'BLOCK_N': 16, 'num_warps': 8, 'num_stages': 4}, {'BLOCK_M': 256, 'BLOCK_N': 64, 'num_warps': 8, 'num_stages': 1}, {'BLOCK_M': 32, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 2}, {'BLOCK_M': 64, 'BLOCK_N': 128, 'num_warps': 8, 'num_stages': 2}, {'BLOCK_M': 32, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 4}, {'BLOCK_M': 256, 'BLOCK_N': 32, 'num_warps': 8, 'num_stages': 2}, {'BLOCK_M': 256, 'BLOCK_N': 256, 'num_warps': 4, 'num_stages': 8}, {'BLOCK_M': 32, 'BLOCK_N': 16, 'num_warps': 4, 'num_stages': 4}, {'BLOCK_M': 64, 'BLOCK_N': 256, 'num_warps': 4, 'num_stages': 1}, {'BLOCK_M': 32, 'BLOCK_N': 128, 'num_warps': 4, 'num_stages': 6}, {'BLOCK_M': 512, 'BLOCK_N': 64, 'num_warps': 2, 'num_stages': 4}, {'BLOCK_M': 16, 'BLOCK_N': 512, 'num_warps': 4, 'num_stages': 6}, {'BLOCK_M': 16, 'BLOCK_N': 32, 'num_warps': 8, 'num_stages': 8}, {'BLOCK_M': 64, 'BLOCK_N': 64, 'num_warps': 8, 'num_stages': 8}, {'BLOCK_M': 128, 'BLOCK_N': 64, 'num_warps': 2, 'num_stages': 1}, {'BLOCK_M': 128, 'BLOCK_N': 16, 'num_warps': 8, 'num_stages': 4}, {'BLOCK_M': 512, 'BLOCK_N': 256, 'num_warps': 4, 'num_stages': 6}, {'BLOCK_M': 16, 'BLOCK_N': 16, 'num_warps': 2, 'num_stages': 2}, {'BLOCK_M': 64, 'BLOCK_N': 16, 'num_warps': 4, 'num_stages': 8}, {'BLOCK_M': 32, 'BLOCK_N': 256, 'num_warps': 2, 'num_stages': 1}, {'BLOCK_M': 128, 'BLOCK_N': 512, 'num_warps': 8, 'num_stages': 6}, {'BLOCK_M': 512, 'BLOCK_N': 128, 'num_warps': 2, 'num_stages': 2}, {'BLOCK_M': 256, 'BLOCK_N': 128, 'num_warps': 8, 'num_stages': 8}, {'BLOCK_M': 128, 'BLOCK_N': 32, 'num_warps': 2, 'num_stages': 4}]
+    # configs = [{'BLOCK_M': 64, 'BLOCK_N': 64, 'num_warps': 8, 'num_stages': 8}, {'BLOCK_M': 512, 'BLOCK_N': 16, 'num_warps': 2, 'num_stages': 6}, {'BLOCK_M': 256, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 8}, {'BLOCK_M': 256, 'BLOCK_N': 512, 'num_warps': 8, 'num_stages': 1}, {'BLOCK_M': 32, 'BLOCK_N': 32, 'num_warps': 2, 'num_stages': 1}, {'BLOCK_M': 32, 'BLOCK_N': 256, 'num_warps': 8, 'num_stages': 2}, {'BLOCK_M': 32, 'BLOCK_N': 512, 'num_warps': 8, 'num_stages': 2}, {'BLOCK_M': 32, 'BLOCK_N': 128, 'num_warps': 2, 'num_stages': 4}, {'BLOCK_M': 512, 'BLOCK_N': 32, 'num_warps': 4, 'num_stages': 4}, {'BLOCK_M': 128, 'BLOCK_N': 16, 'num_warps': 4, 'num_stages': 1}, {'BLOCK_M': 128, 'BLOCK_N': 16, 'num_warps': 8, 'num_stages': 2}, {'BLOCK_M': 256, 'BLOCK_N': 256, 'num_warps': 8, 'num_stages': 8}, {'BLOCK_M': 64, 'BLOCK_N': 32, 'num_warps': 8, 'num_stages': 1}, {'BLOCK_M': 64, 'BLOCK_N': 32, 'num_warps': 4, 'num_stages': 4}, {'BLOCK_M': 16, 'BLOCK_N': 64, 'num_warps': 2, 'num_stages': 6}, {'BLOCK_M': 256, 'BLOCK_N': 512, 'num_warps': 2, 'num_stages': 4}, {'BLOCK_M': 64, 'BLOCK_N': 128, 'num_warps': 4, 'num_stages': 6}, {'BLOCK_M': 64, 'BLOCK_N': 64, 'num_warps': 4, 'num_stages': 2}, {'BLOCK_M': 512, 'BLOCK_N': 256, 'num_warps': 4, 'num_stages': 6}, {'BLOCK_M': 128, 'BLOCK_N': 128, 'num_warps': 2, 'num_stages': 6}, {'BLOCK_M': 16, 'BLOCK_N': 32, 'num_warps': 4, 'num_stages': 2}, {'BLOCK_M': 128, 'BLOCK_N': 512, 'num_warps': 4, 'num_stages': 4}, {'BLOCK_M': 16, 'BLOCK_N': 16, 'num_warps': 2, 'num_stages': 8}, {'BLOCK_M': 512, 'BLOCK_N': 128, 'num_warps': 2, 'num_stages': 8}, {'BLOCK_M': 16, 'BLOCK_N': 128, 'num_warps': 8, 'num_stages': 1}, {'BLOCK_M': 16, 'BLOCK_N': 256, 'num_warps': 4, 'num_stages': 6}, {'BLOCK_M': 256, 'BLOCK_N': 64, 'num_warps': 8, 'num_stages': 2}]
+    return [
+    triton.Config(
+        {'BLOCK_M': cfg['BLOCK_M'], 'BLOCK_N': cfg['BLOCK_N']},
+        num_warps=cfg['num_warps'],
+        num_stages=cfg['num_stages']
+    )
+    for cfg in configs
+]
+
 @triton_dejavu.autotune(
-        configs=get_17_configs(),
+        configs=get_27_configs(),
     # config_space=triton_dejavu.ConfigSpace(
     #     {
     #         'BLOCK_N': [16, 32, 64, 128, 256, 512],
@@ -332,7 +347,7 @@ def get_17_configs():
            "stride_k_cache_3", "stride_v_cache_3"
            ],
     custom_data_storage=os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "unified_attention_lhs_10")),
+        os.path.join(os.path.dirname(__file__), "unified_attention_lhs5_5")),
     use_cuda_graph=True,
     # use_bo=True,
     # search_max_search_t=360,
