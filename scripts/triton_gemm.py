@@ -242,14 +242,29 @@ def get_autotune_config():
 # else:
 #     group_size = [16]
 
+# group_size = [1,2,4,8,16]
+# block_size_m = [16, 32, 64, 128, 256]
+# block_size_n = [16, 32, 64, 128, 256]
+# block_size_k = [16, 32, 64, 128, 256]
+# warp_size = [2** i for i in range(6)]
+# stage_size = list(range(8))
 
 def make_matmul_kernel(configurations):
     @triton_dejavu.autotune(
+    # config_space=triton_dejavu.ConfigSpace(
+    #     {'BLOCK_SIZE_M': [16, 32, 64, 128, 256],
+    #      'BLOCK_SIZE_N': [16, 32, 64, 128, 256],
+    #      'BLOCK_SIZE_K': [16, 32, 64, 128, 256],
+    #      'GROUP_SIZE_M': [1,2,4,8,16]},
+    #     num_warps=[2**i for i in range(6)],
+    #     num_stages=[i for i in range(8)],
+    #     num_ctas=[1],
+    # ),
     configs=configurations,
     key=['M', 'N', 'K'],
     use_cuda_graph=True,
     custom_data_storage=os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "gemm_data_random_60_1_percent")
+        os.path.join(os.path.dirname(__file__), "gemm_data_lhs_60_1_percent_2")
     ),
     )
     @triton.jit
@@ -331,17 +346,17 @@ def make_matmul_kernel(configurations):
 
     return matmul_kernel
 
-# `triton.jit`'ed functions can be auto-tuned by using the `triton.autotune` decorator, which consumes:
-#   - A list of `triton.Config` objects that define different configurations of
-#       meta-parameters (e.g., `BLOCK_SIZE_M`) and compilation options (e.g., `num_warps`) to try
-#   - An auto-tuning *key* whose change in values will trigger evaluation of all the
-#       provided configs
+# # `triton.jit`'ed functions can be auto-tuned by using the `triton.autotune` decorator, which consumes:
+# #   - A list of `triton.Config` objects that define different configurations of
+# #       meta-parameters (e.g., `BLOCK_SIZE_M`) and compilation options (e.g., `num_warps`) to try
+# #   - An auto-tuning *key* whose change in values will trigger evaluation of all the
+# #       provided configs
 # @triton_dejavu.autotune(
-#     configs=configurations,
+#     configs=triton.dejavu.Con,
 #     key=['M', 'N', 'K'],
 #     use_cuda_graph=True,
 #     custom_data_storage=os.path.abspath(
-#         os.path.join(os.path.dirname(__file__), "gemm_data_final")
+#         os.path.join(os.path.dirname(__file__), "scenario_bao")
 #     ),
 # )
 # @triton.jit

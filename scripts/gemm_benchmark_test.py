@@ -19,14 +19,14 @@ all_dim_combinations = list(itertools.product(dimensions, repeat=3))
 
 # Randomly sample 100 unique combinations
 random.seed(113)  # for reproducibility
-sampled_dim_combinations = random.sample(all_dim_combinations, 50)
+sampled_dim_combinations = random.sample(all_dim_combinations, 1)
 
-group_size = [1,2,4,8,16]
-block_size_m = [16, 32, 64, 128, 256]
-block_size_n = [16, 32, 64, 128, 256]
-block_size_k = [16, 32, 64, 128, 256]
-warp_size = [2** i for i in range(6)]
-stage_size = list(range(8))
+group_size = [1]
+block_size_m = [16]
+block_size_n = [16,]
+block_size_k = [16, 32]
+warp_size = [2,4]
+stage_size = list(range(1))
 
 configurations = []
 all_combinations = list(itertools.product(block_size_m, block_size_n, block_size_k, group_size, warp_size, stage_size))
@@ -35,7 +35,7 @@ all_combinations_filtered = [
     if not ((combo[1] > 128 and combo[2] > 128)) 
 ]
 
-for m, n, k in sampled_dim_combinations:
+for m, n, k in [(512, 512, 512)]:
     print("Starting to create the matrices")
     a = torch.randn((m, k), device=DEVICE, dtype=torch.float16)
     b = torch.randn((k, n), device=DEVICE, dtype=torch.float16)

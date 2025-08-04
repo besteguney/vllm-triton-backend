@@ -29,7 +29,7 @@ num_warps = [2**i for i in range(6)]
 num_stages = [i for i in range(6)]
 tokens = sorted(set(s * b for s, b in itertools.product(seqlen, batch)))
 print(len(tokens))
-
+print(tokens)
 def swiglu_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_combined=False):
     if is_combined:
         search_dict = {
@@ -60,12 +60,12 @@ def swiglu_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_com
             'num_stages': num_stages,
         }
 
-        lhs = LatinHypercubeSampler(search_dict_cfg, seed)
-        samples_cfg = lhs.generate_new_categorical_samples(n_samples_cfg)
         samples = []
         for s in samples_prob:
             sample = {**s}
             sample['cfgs'] = []
+            lhs = LatinHypercubeSampler(search_dict_cfg, random.randint(1, 1000))
+            samples_cfg = lhs.generate_new_categorical_samples(n_samples_cfg)
             for cfg in samples_cfg:
                 sample['cfgs'].append(triton.Config({'BLOCK_SIZE': cfg['block_size']}, 
                                                     num_stages=cfg['num_stages'],
@@ -73,7 +73,7 @@ def swiglu_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_com
             samples.append(sample)
         return samples
 
-final_samples = swiglu_lhs_sampler(5, 54)
+final_samples = swiglu_lhs_sampler(5, 27)
 # print(final_samples)
 for ex in final_samples:
     num_tokens = ex['tokens']
