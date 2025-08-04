@@ -72,12 +72,13 @@ def gemm_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_combi
             'num_stages': stage_size
         }
 
-        lhs = LatinHypercubeSampler(search_dict_cfg, seed)
-        samples_cfg = lhs.generate_new_categorical_samples(n_samples_cfg)
+        
         samples = []
         for s in samples_prob:
             sample = {**s}
             sample['cfgs'] = []
+            lhs = LatinHypercubeSampler(search_dict_cfg, random.randint(1, 1000))
+            samples_cfg = lhs.generate_new_categorical_samples(n_samples_cfg)
             for cfg in samples_cfg:
                 sample['cfgs'].append(triton.Config({'BLOCK_SIZE_M': cfg['block_size_m'], 'BLOCK_SIZE_N': cfg['block_size_n'], 'BLOCK_SIZE_K': cfg['block_size_k'], 'GROUP_SIZE_M': cfg['group_size_m']}, 
                                                     num_stages=cfg['num_stages'],
@@ -85,7 +86,7 @@ def gemm_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_combi
             samples.append(sample)
         return samples
 
-final_samples = gemm_lhs_sampler(15, 864)
+final_samples = gemm_lhs_sampler(60, 288)
 for ex in final_samples:
     try:
         a = torch.randn((ex['m'], ex['k']), device=DEVICE, dtype=torch.float16)

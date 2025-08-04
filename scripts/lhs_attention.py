@@ -10,32 +10,51 @@ import itertools
 from collections import defaultdict
 from triton_gemm import matmul 
 
-DEVICE = 'cuda'
-seed = 42
 
-## GEMM Search Space Dimensions
-sequence_length = [16, 32, 64, 128, 512, 1024, 2048, 4096]
+# ## GEMM Search Space Dimensions
+seed = 0
+# sequence_length = [16, 32, 64, 128, 512, 1024, 2048, 4096]
 block_m = [16, 32, 64, 128, 256, 512]
 block_n = [16, 32, 64, 128, 256, 512]
 warp_size = [2, 4, 8]
 stage_size = [1, 2, 4, 6, 8]
 
+BATCH_SIZES = [1, 2, 4, 8, 16, 32, 64, 128]
+SEQUENCE_LENGTHS = [16, 32, 64, 128, 512, 1024, 2048, 4096]
+PROMPT_PATTERNS = [0,1]
+PREFIX_PREFILL_SHARE_OF_DECODE = [0.0, 0.5]
+# PREFIX_PREFILL_SHARE_OF_DECODE = [0.5]
+PREFIX_PREFILL_SHARE_OF_PARTIAL_PREFILL = [0.0, 0.5]
+
 def attention_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_combined=False):
     
     ## Sampling in the problem size dimension
     search_dict_prob = {
-        'MAX_SEQ_Q': sequence_length,
-        'MAX_SEQ_K': sequence_length,
-        'AVG_SEQ_Q': sequence_length,
-        'AVG_SEQ_K': sequence_length
+        # 'max_seq_q': unique_values['max_seq_q'],
+        # 'max_seq_k': unique_values['max_seq_k'],
+        # 'avg_seq_q': unique_values['avg_seq_q'],
+        # 'avg_seq_k': unique_values['avg_seq_k']
+        'batch_size':BATCH_SIZES,
+        'seq_len':SEQUENCE_LENGTHS,
+        'prompt':PROMPT_PATTERNS,
+        'prefix_prefill':PREFIX_PREFILL_SHARE_OF_DECODE,
+        'partial_prefill':PREFIX_PREFILL_SHARE_OF_PARTIAL_PREFILL
     }
     lhs = LatinHypercubeSampler(search_dict_prob, seed)
     samples_prob = lhs.generate_new_categorical_samples(n_samples_prob)
 
-    print(samples_prob)
+    for sample in samples_prob:
+        # mask = (df[list(sample)] == pd.Series(sample)).all(axis=1)
+
+        # # Filter the DataFrame
+        # matching_rows = df[mask]
+        # print(matching_rows.shape)
+        # print("****")
+        print(sample)
+
     search_dict_cfg = {
-        'block_m': block_m,
-        'block_n': block_n,
+        'BLOCK_M': block_m,
+        'BLOCK_N': block_n,
         'num_warps': warp_size,
         'num_stages': stage_size
     }
@@ -52,9 +71,9 @@ def attention_lhs_sampler(n_samples_prob=10, n_samples_cfg=10, n_samples=10, is_
     #                                             num_stages=cfg['num_stages'],
     #                                             num_warps=cfg['num_warps']))
     #     samples.append(sample)
-    return samples_cfg
+    return samples_prob
 
-final_samples = attention_lhs_sampler(80, 17)
+final_samples = attention_lhs_sampler(10, 17)
 # for ex in final_samples:
 #     print(ex)
 

@@ -35,7 +35,7 @@ all_combinations_filtered = [
     if not ((combo[1] > 128 and combo[2] > 128)) 
 ]
 
-for m, n, k in sampled_dim_combinations:
+for m, n, k in [(512, 512, 512)]:
     print("Starting to create the matrices")
     a = torch.randn((m, k), device=DEVICE, dtype=torch.float16)
     b = torch.randn((k, n), device=DEVICE, dtype=torch.float16)
